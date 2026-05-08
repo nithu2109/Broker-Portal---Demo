@@ -52,7 +52,7 @@ export default function DashboardHeader({ title, subtitle, showUser = true, head
 
     // Fallback to UserContext
     if (user?.email || user?.name) {
-      setDisplayName(user.email || user.name);
+      setDisplayName((user.email || user.name) as string);
       return;
     }
 
