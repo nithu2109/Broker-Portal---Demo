@@ -9,4 +9,5 @@ export const ROUTES = {
   training: "/training",
   chatbot: "/chatbot",
   faq: "/faq",
+  policies: "/policies",
 } as const;
