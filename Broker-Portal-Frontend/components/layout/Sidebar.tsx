@@ -142,7 +142,7 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
         }}
       >
         <img
-          src="/rma-logo.png"
+          src="/brokerPortal/rma-logo.png"
           alt="RMA Logo"
           className="h-6 w-auto"
         />
