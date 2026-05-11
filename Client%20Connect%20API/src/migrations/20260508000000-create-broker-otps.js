@@ -1,87 +1,86 @@
 "use strict";
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable(
-      "bp_employers",
+      { tableName: "bp_otps", schema: "broker" },
       {
-        employer_id: {
+        otp_id: {
           allowNull: false,
           primaryKey: true,
           type: Sequelize.UUID,
           defaultValue: Sequelize.UUIDV4,
         },
-        lead_id: {
+        reference_id: {
           type: Sequelize.UUID,
           allowNull: false,
-          references: {
-            model: {
-              tableName: "bp_leads",
-              schema: "broker",
-            },
-            key: "lead_id",
-          },
-          onUpdate: "CASCADE",
-          onDelete: "CASCADE",
         },
-        employer_name: {
+        reference_type: {
           type: Sequelize.STRING,
           allowNull: false,
         },
-        registration_number: {
-          type: Sequelize.STRING,
-          allowNull: true,
-        },
-        industry_type: {
-          type: Sequelize.STRING,
+        otp_code: {
+          type: Sequelize.STRING(6),
           allowNull: false,
         },
-        number_of_employees: {
+        expires_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+        },
+        is_verified: {
+          type: Sequelize.BOOLEAN,
+          defaultValue: false,
+        },
+        attempts: {
           type: Sequelize.INTEGER,
-          allowNull: false,
+          defaultValue: 0,
         },
-        average_salary: {
-          type: Sequelize.DECIMAL(18, 2),
+        is_blocked: {
+          type: Sequelize.BOOLEAN,
+          defaultValue: false,
+        },
+        last_attempt_at: {
+          type: Sequelize.DATE,
           allowNull: true,
         },
-        province: {
+        sent_to: {
           type: Sequelize.STRING,
           allowNull: false,
+        },
+        sent_method: {
+          type: Sequelize.STRING,
+          defaultValue: "Email",
         },
         created_at: {
           type: Sequelize.DATE,
-          allowNull: true,
           defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
         },
         updated_at: {
           type: Sequelize.DATE,
-          allowNull: true,
           defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
         },
         createdAt: {
           allowNull: false,
           type: Sequelize.DATE,
+          defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
         },
         updatedAt: {
           allowNull: false,
           type: Sequelize.DATE,
+          defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
         },
-      },
-      {
-        schema: "broker",
-      },
+      }
     );
 
+    // Add indexes
     await queryInterface.addIndex(
-      { tableName: "bp_employers", schema: "broker" },
-      ["lead_id"],
+      { tableName: "bp_otps", schema: "broker" },
+      ["reference_id"]
     );
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable({
-      tableName: "bp_employers",
-      schema: "broker",
-    });
+    await queryInterface.dropTable({ tableName: "bp_otps", schema: "broker" });
   },
 };

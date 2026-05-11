@@ -1,12 +1,55 @@
 import { Request, Response } from "express";
-const { BrokerQuote, BrokerLead, BrokerQuoteBenefit, BrokerQuickQuoteData, sequelize } = require("../models");
+const { BrokerQuote, BrokerLead, BrokerQuoteBenefit, BrokerQuickQuoteData, BrokerEmployee, sequelize } = require("../models");
 import { sequelizeErrorHandler } from "../middleware/sequelize_error";
 import { v4 as uuidv4 } from "uuid";
 import { PricingService } from "../services/pricingService";
 import { quickQuoteSchema, fullQuoteSchema } from "../utils/validation";
+import { UploadedFile } from "express-fileupload";
+import { parseAndValidateEmployeesFile } from "../services/broker.employee.upload.service";
 
+/**
+ * @swagger
+ * /broker/quotes/quick:
+ *   post:
+ *     summary: Generate a quick quote based on average workforce data
+ *     tags: [Broker Quotes]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - lead_id
+ *               - workforce_count
+ *               - average_age
+ *               - average_salary
+ *               - province
+ *               - industry
+ *               - benefits
+ *             properties:
+ *               lead_id:
+ *                 type: string
+ *               workforce_count:
+ *                 type: integer
+ *               average_age:
+ *                 type: integer
+ *               average_salary:
+ *                 type: number
+ *               province:
+ *                 type: string
+ *               industry:
+ *                 type: string
+ *               benefits:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *     responses:
+ *       201:
+ *         description: Quick quote generated successfully
+ */
 export const generateQuickQuote = async (req: Request, res: Response) => {
-  const t = await sequelize.transaction();
+    const t = await sequelize.transaction();
   try {
     const validatedBody = await quickQuoteSchema.validate(req.body, { abortEarly: false });
     const { lead_id } = validatedBody;
@@ -50,7 +93,7 @@ export const generateQuickQuote = async (req: Request, res: Response) => {
         industry: validatedBody.industry,
       },
       benefits: validatedBody.benefits,
-    });
+    }, t);
 
     await t.commit();
 
@@ -64,7 +107,14 @@ export const generateQuickQuote = async (req: Request, res: Response) => {
       },
     });
   } catch (err: any) {
-    if (t) await t.rollback();
+    if (t) {
+        try {
+            await t.rollback();
+        } catch (rollbackErr) {
+            // Transaction might have already been rolled back by the database on severe error
+            console.error("Rollback failed or not needed:", rollbackErr);
+        }
+    }
     return res.status(err.name === "ValidationError" ? 400 : 500).json({
       success: false,
       message: err.message || "An error occurred while generating quick quote",
@@ -73,9 +123,45 @@ export const generateQuickQuote = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @swagger
+ * /broker/quotes/full:
+ *   post:
+ *     summary: Generate a full quote by uploading an employee list
+ *     tags: [Broker Quotes]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               lead_id:
+ *                 type: string
+ *               product_id:
+ *                 type: string
+ *               benefits:
+ *                 type: string
+ *                 description: JSON string of benefits
+ *               employeeFile:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: Full quote generated successfully
+ */
 export const generateFullQuote = async (req: Request, res: Response) => {
   const t = await sequelize.transaction();
   try {
+    // If benefits is a string (happens in multipart/form-data), parse it
+    if (typeof req.body.benefits === "string") {
+      try {
+        req.body.benefits = JSON.parse(req.body.benefits);
+      } catch (e) {
+        // Ignore parse error, validation will catch it
+      }
+    }
+
     const validatedBody = await fullQuoteSchema.validate(req.body, { abortEarly: false });
     const { lead_id, product_id, benefits } = validatedBody;
 
@@ -83,6 +169,34 @@ export const generateFullQuote = async (req: Request, res: Response) => {
     if (!lead) {
       await t.rollback();
       return res.status(404).json({ success: false, message: "Lead not found" });
+    }
+
+    let employees_list = [];
+
+    // Check if file is uploaded
+    if (req.files && req.files.employeeFile) {
+      const file = req.files.employeeFile as UploadedFile;
+      const validationResult = parseAndValidateEmployeesFile(file.data);
+      
+      if (validationResult.errors.length > 0) {
+        if (t) await t.rollback();
+        return res.status(400).json({
+          success: false,
+          message: "Employee file has validation errors",
+          errors: validationResult.errors
+        });
+      }
+
+      employees_list = validationResult.employees;
+
+      // Save employees to DB
+      for (const emp of employees_list) {
+        await BrokerEmployee.create({
+          ...emp,
+          lead_id: lead.lead_id,
+          employee_id: uuidv4()
+        }, { transaction: t });
+      }
     }
 
     const quote_reference = `QT-F-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
@@ -95,6 +209,14 @@ export const generateFullQuote = async (req: Request, res: Response) => {
       quote_type: "Full",
       quote_status: "Draft",
       quote_version: 1,
+      rma_member_number: validatedBody.rma_member_number,
+      is_permanent_employees: validatedBody.is_permanent_employees,
+      is_actively_at_work: validatedBody.is_actively_at_work,
+      is_replacing_policy: validatedBody.is_replacing_policy,
+      replaced_policy_includes_disability: validatedBody.replaced_policy_includes_disability,
+      is_policy_older_than_6_months: validatedBody.is_policy_older_than_6_months,
+      replaced_policy_start_date: validatedBody.replaced_policy_start_date,
+      province: validatedBody.province,
     }, { transaction: t });
 
     // Calculate pricing
@@ -103,7 +225,8 @@ export const generateFullQuote = async (req: Request, res: Response) => {
       quote_type: "Full",
       product_id,
       benefits,
-    });
+      employees_list: employees_list.length > 0 ? employees_list : undefined
+    }, t);
 
     await t.commit();
 
@@ -114,10 +237,12 @@ export const generateFullQuote = async (req: Request, res: Response) => {
         quoteId: quote.quote_id,
         quoteReference: quote.quote_reference,
         pricing: pricingResult,
+        employeeCount: employees_list.length
       },
     });
   } catch (err: any) {
     if (t) await t.rollback();
+    console.error("FULL QUOTE ERROR:", err);
     return res.status(err.name === "ValidationError" ? 400 : 500).json({
       success: false,
       message: err.message || "An error occurred while generating full quote",
@@ -125,6 +250,33 @@ export const generateFullQuote = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @swagger
+ * /broker/quotes/{quoteReference}/reprice:
+ *   post:
+ *     summary: Reprice an existing quote with new benefits
+ *     tags: [Broker Quotes]
+ *     parameters:
+ *       - in: path
+ *         name: quoteReference
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               benefits:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *     responses:
+ *       200:
+ *         description: Quote repriced successfully
+ */
 export const repriceQuote = async (req: Request, res: Response) => {
   try {
     const { quoteReference } = req.params;
@@ -157,6 +309,22 @@ export const repriceQuote = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @swagger
+ * /broker/quotes/{quoteReference}:
+ *   get:
+ *     summary: Get details of a specific quote
+ *     tags: [Broker Quotes]
+ *     parameters:
+ *       - in: path
+ *         name: quoteReference
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Quote details
+ */
 export const getQuoteDetail = async (req: Request, res: Response) => {
   try {
     const { quoteReference } = req.params;
@@ -230,7 +398,13 @@ export const saveQuoteToLead = async (req: Request, res: Response) => {
       message: "Quote saved to lead and status updated",
     });
   } catch (err: any) {
-    if (t) await t.rollback();
+    if (t) {
+        try {
+            await t.rollback();
+        } catch (rollbackErr) {
+            console.error("Rollback failed or not needed:", rollbackErr);
+        }
+    }
     return res.status(500).json(sequelizeErrorHandler(err));
   }
 };
@@ -262,6 +436,33 @@ export const getQuoteByIdController = async (req: Request, res: Response) => {
   return getQuoteDetail(req, res);
 };
 
+/**
+ * @swagger
+ * /broker/quotes/{quoteId}/status:
+ *   patch:
+ *     summary: Update the status of a quote
+ *     tags: [Broker Quotes]
+ *     parameters:
+ *       - in: path
+ *         name: quoteId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - status
+ *             properties:
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Quote status updated
+ */
 export const updateQuoteStatusController = async (req: Request, res: Response) => {
   try {
     const { quoteId } = req.params;
