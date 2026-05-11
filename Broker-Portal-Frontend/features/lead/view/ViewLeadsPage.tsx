@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Search, Eye, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { getLeads, cancelLead, Lead } from "@/lib/api/leads";
-import { getValidToken } from "@/lib/auth";
 import { ROUTES } from "@/lib/constants";
 
 const PAGE_SIZE = 10;
@@ -106,9 +105,8 @@ export default function ViewLeadsPage() {
   useEffect(() => {
     (async () => {
       try {
-        const token = getValidToken() ?? "dev-token";
         const representativeId = localStorage.getItem("bp_broker_id") ?? undefined;
-        const data = await getLeads(token, representativeId);
+        const data = await getLeads(representativeId);
         setLeads(data.length ? data : MOCK_LEADS);
       } catch {
         setLeads(MOCK_LEADS);
