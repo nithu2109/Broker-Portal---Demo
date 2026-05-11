@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
+import { verifyOTP } from "@/lib/api/otp";
 
 interface OtpVerificationModalProps {
   isOpen: boolean;
   onClose: () => void;
   email: string;
   onVerify: (otp: string) => void;
+  quoteId?: string;
 }
 
 export default function OtpVerificationModal({
@@ -15,8 +17,11 @@ export default function OtpVerificationModal({
   onClose,
   email,
   onVerify,
+  quoteId,
 }: OtpVerificationModalProps) {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -43,11 +48,31 @@ export default function OtpVerificationModal({
     }
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     const otpValue = otp.join("");
-    if (otpValue.length === 6) {
-      // Bypass validation for now - just verify any 6-digit OTP
+    if (otpValue.length !== 6) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      if (!quoteId) {
+        throw new Error("Quote ID is required for OTP verification");
+      }
+
+      await verifyOTP({
+        referenceId: quoteId,
+        otpCode: otpValue,
+      });
+
       onVerify(otpValue);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to verify OTP");
+      console.error("Error verifying OTP:", err);
+      // Reset OTP on error
+      setOtp(["", "", "", "", "", ""]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -118,6 +143,22 @@ export default function OtpVerificationModal({
             Enter OTP
           </label>
 
+          {/* Error Message */}
+          {error && (
+            <div
+              style={{
+                padding: "12px",
+                background: "rgba(239, 68, 68, 0.1)",
+                border: "1px solid rgba(239, 68, 68, 0.3)",
+                borderRadius: "6px",
+                color: "#EF4444",
+                fontSize: "14px",
+              }}
+            >
+              {error}
+            </div>
+          )}
+
           {/* OTP Input Boxes */}
           <div className="flex gap-2 w-full">
             {otp.map((digit, index) => (
@@ -131,6 +172,7 @@ export default function OtpVerificationModal({
                 value={digit}
                 onChange={(e) => handleOtpChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
+                disabled={isLoading}
                 className="text-center text-white font-bold text-sm focus:outline-none"
                 style={{
                   width: "57.13px",
@@ -138,6 +180,8 @@ export default function OtpVerificationModal({
                   background: "#262626",
                   border: "0.625px solid #363636",
                   borderRadius: "8px",
+                  opacity: isLoading ? 0.6 : 1,
+                  cursor: isLoading ? "not-allowed" : "text",
                 }}
               />
             ))}
@@ -146,20 +190,20 @@ export default function OtpVerificationModal({
           {/* Verify Button */}
           <button
             onClick={handleVerify}
-            disabled={otp.join("").length !== 6}
+            disabled={otp.join("").length !== 6 || isLoading}
             className="w-full h-9 rounded-lg transition-opacity"
             style={{
-              background: otp.join("").length === 6 ? "#1FC3EB" : "#3A3A3A",
+              background: otp.join("").length === 6 && !isLoading ? "#1FC3EB" : "#3A3A3A",
               fontSize: "14px",
               fontWeight: 500,
               lineHeight: "20px",
               letterSpacing: "-0.150391px",
               color: "#FFFFFF",
-              opacity: otp.join("").length === 6 ? 1 : 0.5,
-              cursor: otp.join("").length === 6 ? "pointer" : "not-allowed",
+              opacity: otp.join("").length === 6 && !isLoading ? 1 : 0.5,
+              cursor: otp.join("").length === 6 && !isLoading ? "pointer" : "not-allowed",
             }}
           >
-            Verify OTP
+            {isLoading ? "Verifying..." : "Verify OTP"}
           </button>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-const { BrokerOTP, BrokerQuote, BrokerLead, BrokerContact, sequelize } = require("../models");
 import { sendBrokerEmail } from "../utils/brokerSendEmail";
 import { sendOtpSchema, verifyOtpSchema } from "../utils/validation";
 import { v4 as uuidv4 } from "uuid";
@@ -7,6 +6,14 @@ import { BrokerOnboardingService } from "../services/broker.onboarding.service";
 import { logger } from "../middleware/logger";
 import { Op } from "sequelize";
 
+// Lazy load models to avoid blocking on startup
+let models: any = null;
+const getModels = () => {
+  if (!models) {
+    models = require("../models");
+  }
+  return models;
+};
 
 /**
  * @swagger
@@ -40,6 +47,7 @@ import { Op } from "sequelize";
  *         description: Internal server error
  */
 export const sendOTP = async (req: Request, res: Response) => {
+  const { BrokerOTP, BrokerQuote, BrokerLead, BrokerContact, sequelize } = getModels();
 
   const t = await sequelize.transaction();
   try {
@@ -159,6 +167,7 @@ export const sendOTP = async (req: Request, res: Response) => {
  *         description: Internal server error
  */
 export const verifyOTP = async (req: Request, res: Response) => {
+  const { BrokerOTP, BrokerQuote, BrokerLead, sequelize } = getModels();
   const t = await sequelize.transaction();
   try {
     const validatedBody = await verifyOtpSchema.validate(req.body, { abortEarly: false });

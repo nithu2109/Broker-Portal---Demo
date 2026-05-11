@@ -22,6 +22,9 @@ if (config.use_env_variable) {
   );
 }
 
+// Add connection error handling
+// Don't authenticate on startup - let it happen lazily on first query
+
 // sequelizeHistory.DEFAULTS = {
 //   // String to indicate a field name to use to store the
 //   // author of the revisions to the model, or null if you

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import OtpVerificationModal from "./OtpVerificationModal";
+import { sendOTP } from "@/lib/api/otp";
 
 interface ApproveQuoteModalProps {
   isOpen: boolean;
@@ -20,6 +21,8 @@ export default function ApproveQuoteModal({
   onSendOTP,
 }: ApproveQuoteModalProps) {
   const [showOtpModal, setShowOtpModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -31,14 +34,25 @@ export default function ApproveQuoteModal({
     phone: "8282828233",
   };
 
-  const handleSendOTP = () => {
-    // In real app, call API to send OTP
-    console.log("Sending OTP to:", contactDetails.email);
-    setShowOtpModal(true);
+  const handleSendOTP = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await sendOTP({
+        referenceId: quoteId,
+        referenceType: "Quote",
+      });
+      setShowOtpModal(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to send OTP");
+      console.error("Error sending OTP:", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleVerifyOTP = (otp: string) => {
-    // Bypass validation - accept any 6-digit OTP
+    // OTP verification is handled in OtpVerificationModal
     console.log("OTP verified:", otp);
     setShowOtpModal(false);
     onSendOTP(); // Call parent handler to close approve modal and switch to approved tab
@@ -162,6 +176,22 @@ export default function ApproveQuoteModal({
           }}
         />
 
+        {/* Error Message */}
+        {error && (
+          <div
+            style={{
+              padding: "12px",
+              background: "rgba(239, 68, 68, 0.1)",
+              border: "1px solid rgba(239, 68, 68, 0.3)",
+              borderRadius: "6px",
+              color: "#EF4444",
+              fontSize: "14px",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
         {/* Action Buttons */}
         <div className="flex justify-end gap-6">
           <button
@@ -178,15 +208,18 @@ export default function ApproveQuoteModal({
           </button>
           <button
             onClick={handleSendOTP}
+            disabled={isLoading}
             className="px-4 py-2 rounded-lg"
             style={{
-              background: "#1FC3EB",
+              background: isLoading ? "#00B8DB" : "#1FC3EB",
               fontSize: "14px",
               fontWeight: 700,
               color: "#0A0A0A",
+              opacity: isLoading ? 0.6 : 1,
+              cursor: isLoading ? "not-allowed" : "pointer",
             }}
           >
-            Send OTP to the Lead
+            {isLoading ? "Sending OTP..." : "Send OTP to the Lead"}
           </button>
         </div>
       </div>
@@ -198,6 +231,7 @@ export default function ApproveQuoteModal({
           onClose={handleCloseOtpModal}
           email={contactDetails.email}
           onVerify={handleVerifyOTP}
+          quoteId={quoteId}
         />
       )}
     </div>
