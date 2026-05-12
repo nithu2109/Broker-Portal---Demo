@@ -14,14 +14,13 @@ let PORT: number = Number(process.env.PORT) || 8000;
 let NODE_ENV: string = process.env.NODE_ENV || "development"; // NODE_ENV should be set to test or production in config.env
 
 import { logger } from "./middleware/logger";
-import { sequelize } from "./models";
 import { errorHandler } from "./middleware/error";
 import router from "./routes";
 import { confirmToken } from "./middleware/auth";
 import { getRmaAccessToken } from "./middleware/getRmaToken";
 import { health } from "./controllers/healthController";
 
-//console.log(APP_GLOBAL_URL)
+// Start server immediately without waiting for database connection
 const app = express();
 
 app.use(cors());
@@ -71,6 +70,20 @@ const server = app.listen(PORT, async () => {
 
   logger.debug("Server Authenticated");
   logger.debug("Client Connect Server Up");
+
+  // Attempt database connection asynchronously (non-blocking)
+  try {
+    const { sequelize } = require("./models");
+    await Promise.race([
+      sequelize.authenticate(),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Database connection timeout")), 5000)
+      ),
+    ]);
+    logger.debug("Database connection established");
+  } catch (err: any) {
+    logger.warn(`Database connection warning: ${err.message}. Server will continue running.`);
+  }
 });
 
 process.on("unhandledRejection", (err: Error, promise) => {

@@ -169,7 +169,25 @@ export default function ViewLeadsPage() {
 
       <div style={{ position: "relative", zIndex: 1 }}>
 
-        <h1 style={{ fontSize: "22px", fontWeight: 600, color: "var(--foreground)", marginBottom: "24px" }}>Leads</h1>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+          <h1 style={{ fontSize: "22px", fontWeight: 600, color: "var(--foreground)", margin: 0 }}>Leads</h1>
+          <button
+            onClick={() => router.push(ROUTES.newLead)}
+            style={{
+              display: "flex", alignItems: "center", gap: "10px",
+              padding: "8px 13px", height: "40px",
+              background: "#1FC3EB", color: "#0A0A0A",
+              border: "none", borderRadius: "8px",
+              fontFamily: "'Inter', sans-serif", fontSize: "14px", fontWeight: 700,
+              cursor: "pointer", transition: "background 0.2s ease"
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#0DB5D8")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "#1FC3EB")}
+          >
+            <Plus size={20} color="#0A0A0A" />
+            Add New Lead
+          </button>
+        </div>
 
         {/* Stats Cards */}
         <div style={{ display: "flex", gap: "22px", marginBottom: "26px" }}>
