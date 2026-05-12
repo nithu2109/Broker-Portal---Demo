@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft, Download, Plus } from "lucide-react";
 import { getLeads, Lead } from "@/lib/api/leads";
 import { getValidToken } from "@/lib/auth";
 import { ROUTES } from "@/lib/constants";
@@ -145,10 +145,9 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
     // Try to fetch real data in the background
     (async () => {
       try {
-        const token = getValidToken() ?? "dev-token";
         const representativeId = localStorage.getItem("bp_broker_id") ?? undefined;
         
-        const data = await getLeads(token, representativeId);
+        const data = await getLeads(representativeId);
         const foundLead = data.find((l: Lead) => l.leadId === leadId);
         
         if (foundLead) {
@@ -202,35 +201,103 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
       }} />
 
       <div style={{ position: "relative", zIndex: 1 }}>
-        {/* Back Button */}
-        <button
-          onClick={() => router.push(ROUTES.viewLeads)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "8px 12px",
-            background: "#0F1619",
-            border: "1px solid #1E3339",
-            borderRadius: "8px",
-            color: "#00C0E8",
+
+        {/* Lead Details Header with Action Buttons */}
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "20px",
+        }}>
+          <h2 style={{
             fontFamily: "'Inter', sans-serif",
-            fontSize: "14px",
-            fontWeight: 400,
-            lineHeight: "17px",
-            cursor: "pointer",
-            marginBottom: "20px",
-          }}
-        >
-          <ArrowLeft size={16} />
-          Back
-        </button>
+            fontSize: "18px",
+            fontWeight: 500,
+            lineHeight: "36px",
+            letterSpacing: "0.0703125px",
+            color: "#FFFFFF",
+            margin: 0,
+          }}>
+            Lead Details
+          </h2>
+          
+          <div style={{
+            display: "flex",
+            gap: "12px",
+          }}>
+            {/* Mark as Cancelled Button */}
+            <button
+              onClick={() => {
+                if (confirm("Are you sure you want to mark this lead as cancelled?")) {
+                  // TODO: Call API to cancel lead
+                  console.log("Cancelling lead:", leadId);
+                }
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "8px 13px",
+                gap: "10px",
+                width: "150px",
+                height: "40px",
+                background: "#FF6C6C",
+                border: "none",
+                borderRadius: "8px",
+                fontFamily: "'Inter', sans-serif",
+                fontSize: "14px",
+                fontWeight: 700,
+                lineHeight: "20px",
+                letterSpacing: "-0.150391px",
+                color: "#0A0A0A",
+                cursor: "pointer",
+                transition: "background 0.2s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "#FF5252")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "#FF6C6C")}
+            >
+              Mark as Cancelled
+            </button>
+
+            {/* New Quote Button */}
+            <button
+              onClick={() => {
+                router.push(`${ROUTES.newQuote}?leadId=${leadId}`);
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "8px 13px",
+                gap: "10px",
+                width: "135px",
+                height: "40px",
+                background: "#1FC3EB",
+                border: "none",
+                borderRadius: "8px",
+                fontFamily: "'Inter', sans-serif",
+                fontSize: "14px",
+                fontWeight: 700,
+                lineHeight: "20px",
+                letterSpacing: "-0.150391px",
+                color: "#0A0A0A",
+                cursor: "pointer",
+                transition: "background 0.2s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "#0DB5D8")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "#1FC3EB")}
+            >
+              <Plus size={20} color="#0A0A0A" />
+              New Quote
+            </button>
+          </div>
+        </div>
 
         {/* Divider */}
         <div style={{
           width: "100%",
           height: "0px",
-          border: "1px solid #2D343B",
+          border: "1px solid #101D28",
           marginBottom: "31px",
         }} />
 

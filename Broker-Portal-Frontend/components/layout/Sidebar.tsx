@@ -67,6 +67,7 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
   const isNewLead = mounted && pathname === ROUTES.newLead;
   const isQuoteJourney = mounted && /^\/lead\/[^/]+\/quote/.test(pathname ?? "");
   const isQuoteTypeSelection = mounted && pathname === "/quotes/new";
+  const isLeadDetail = mounted && /^\/lead\/[^/]+$/.test(pathname ?? "") && pathname !== "/lead/new" && pathname !== "/lead/view";
 
   return (
     <aside
@@ -150,14 +151,14 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-4 py-3 space-y-1">
-        {!mounted ? null : isNewLead || isQuoteJourney || isQuoteTypeSelection ? (
-          /* Minimal nav for new lead / quote journey / quote type selection */
+        {!mounted ? null : isNewLead || isQuoteJourney || isQuoteTypeSelection || isLeadDetail ? (
+          /* Minimal nav for new lead / quote journey / quote type selection / lead detail */
           <>
             <p className="text-[10px] uppercase tracking-wide px-3 mb-1.5" style={{ color: C.fgMuted }}>
               Actions
             </p>
             {[
-              { label: "Back", icon: ArrowLeft, href: isQuoteTypeSelection ? ROUTES.quotes : ROUTES.dashboard },
+              { label: "Back", icon: ArrowLeft, href: isLeadDetail ? ROUTES.viewLeads : (isQuoteTypeSelection ? ROUTES.quotes : ROUTES.dashboard) },
             ].map(({ label, icon: Icon, href }) => (
               <button
                 key={label}
@@ -173,8 +174,8 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
                   border: "1px solid #1E3339",
                   background: "#0F1619",
                   color: C.primary,
-                  fontSize: "12px",
-                  fontWeight: 500,
+                  fontSize: "14px",
+                  fontWeight: 400,
                   gap: "10px",
                   cursor: "pointer",
                   transition: "background 0.15s, color 0.15s",
@@ -186,7 +187,7 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
                   (e.currentTarget as HTMLElement).style.background = "#0F1619";
                 }}
               >
-                <Icon size={14} style={{ flexShrink: 0 }} />
+                <Icon size={16} style={{ flexShrink: 0 }} />
                 <span>{label}</span>
               </button>
             ))}
