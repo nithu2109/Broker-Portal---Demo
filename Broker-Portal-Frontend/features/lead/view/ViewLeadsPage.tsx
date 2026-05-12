@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Search, Eye, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { getLeads, cancelLead, Lead } from "@/lib/api/leads";
-import { getValidToken } from "@/lib/auth";
 import { ROUTES } from "@/lib/constants";
 
 const PAGE_SIZE = 10;
@@ -106,9 +105,8 @@ export default function ViewLeadsPage() {
   useEffect(() => {
     (async () => {
       try {
-        const token = getValidToken() ?? "dev-token";
         const representativeId = localStorage.getItem("bp_broker_id") ?? undefined;
-        const data = await getLeads(token, representativeId);
+        const data = await getLeads(representativeId);
         setLeads(data.length ? data : MOCK_LEADS);
       } catch {
         setLeads(MOCK_LEADS);
@@ -171,7 +169,25 @@ export default function ViewLeadsPage() {
 
       <div style={{ position: "relative", zIndex: 1 }}>
 
-        <h1 style={{ fontSize: "22px", fontWeight: 600, color: "var(--foreground)", marginBottom: "24px" }}>Leads</h1>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+          <h1 style={{ fontSize: "22px", fontWeight: 600, color: "var(--foreground)", margin: 0 }}>Leads</h1>
+          <button
+            onClick={() => router.push(ROUTES.newLead)}
+            style={{
+              display: "flex", alignItems: "center", gap: "10px",
+              padding: "8px 13px", height: "40px",
+              background: "#1FC3EB", color: "#0A0A0A",
+              border: "none", borderRadius: "8px",
+              fontFamily: "'Inter', sans-serif", fontSize: "14px", fontWeight: 700,
+              cursor: "pointer", transition: "background 0.2s ease"
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#0DB5D8")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "#1FC3EB")}
+          >
+            <Plus size={20} color="#0A0A0A" />
+            Add New Lead
+          </button>
+        </div>
 
         {/* Stats Cards */}
         <div style={{ display: "flex", gap: "22px", marginBottom: "26px" }}>

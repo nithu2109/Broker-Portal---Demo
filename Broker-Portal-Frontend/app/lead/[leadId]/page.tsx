@@ -21,61 +21,11 @@ export default function LeadDetailRoute() {
     router.push(ROUTES.viewLeads);
   };
 
-  const headerAction = (
-    <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-      <button
-        onClick={() => setShowCancelModal(true)}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "10px",
-          padding: "8px 13px",
-          height: "40px",
-          background: "#FF6C6C",
-          color: "#0A0A0A",
-          border: "none",
-          borderRadius: "8px",
-          fontFamily: "'Inter', sans-serif",
-          fontWeight: 700,
-          fontSize: "14px",
-          lineHeight: "20px",
-          letterSpacing: "-0.150391px",
-          cursor: "pointer",
-        }}
-      >
-        Mark as Cancelled
-      </button>
-      <button
-        onClick={() => router.push(`/quotes/new?leadId=${leadId}`)}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "10px",
-          padding: "8px 13px",
-          height: "40px",
-          background: "#1FC3EB",
-          color: "#0A0A0A",
-          border: "none",
-          borderRadius: "8px",
-          fontFamily: "'Inter', sans-serif",
-          fontWeight: 700,
-          fontSize: "14px",
-          lineHeight: "20px",
-          letterSpacing: "-0.150391px",
-          cursor: "pointer",
-        }}
-      >
-        <Plus size={24} />
-        New Quote
-      </button>
-    </div>
-  );
+
 
   return (
     <>
-      <DashboardLayout title="Lead Details" subtitle="" headerAction={headerAction}>
+      <DashboardLayout>
         <div style={{ padding: "24px" }}>
           <LeadDetailsPage leadId={leadId} />
         </div>
