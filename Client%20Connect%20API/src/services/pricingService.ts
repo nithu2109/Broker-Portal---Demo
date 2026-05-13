@@ -142,16 +142,11 @@ export class PricingService {
     }
 
     const fcl = this.getFreeCoverLimit(employees_to_process.length);
-    const industry = employer?.industry_type || "";
     const province = employer?.province || "";
-    const isHighRisk = this.HIGH_RISK_INDUSTRIES.some(i => industry.includes(i));
 
     let riskFactor = 1.0;
     if (["Limpopo", "Eastern Cape", "Mpumalanga"].includes(province)) {
       riskFactor = 1.12;
-    }
-    if (isHighRisk) {
-      riskFactor *= 1.18;
     }
 
     let total_monthly = 0;
@@ -165,9 +160,6 @@ export class PricingService {
       for (const b of benefits) {
         const code = b.benefit_type?.toUpperCase() || "LIFE";
         
-        // Block Disability for high-risk
-        if (isHighRisk && (code === "DISABILITY" || code === "OCCUPATIONAL DISABILITY")) continue;
-
         let cover = b.cover_amount || 0;
         if (b.multiple && annualSalary > 0) {
           cover = annualSalary * b.multiple;

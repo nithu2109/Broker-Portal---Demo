@@ -40,6 +40,8 @@ import { parseAndValidateEmployeesFile } from "../services/broker.employee.uploa
  *                 type: string
  *               industry:
  *                 type: string
+ *               generate_options:
+ *                 type: boolean
  *               benefits:
  *                 type: array
  *                 items:
@@ -140,6 +142,23 @@ export const generateQuickQuote = async (req: Request, res: Response) => {
  *                 type: string
  *               product_id:
  *                 type: string
+ *               rma_member_number:
+ *                 type: string
+ *               is_permanent_employees:
+ *                 type: boolean
+ *               is_actively_at_work:
+ *                 type: boolean
+ *               is_replacing_policy:
+ *                 type: boolean
+ *               replaced_policy_includes_disability:
+ *                 type: boolean
+ *               is_policy_older_than_6_months:
+ *                 type: boolean
+ *               replaced_policy_start_date:
+ *                 type: string
+ *                 format: date
+ *               province:
+ *                 type: string
  *               benefits:
  *                 type: string
  *                 description: JSON string of benefits
@@ -165,7 +184,9 @@ export const generateFullQuote = async (req: Request, res: Response) => {
     const validatedBody = await fullQuoteSchema.validate(req.body, { abortEarly: false });
     const { lead_id, product_id, benefits } = validatedBody;
 
-    const lead = await BrokerLead.findByPk(lead_id);
+    const lead = await BrokerLead.findByPk(lead_id, {
+      include: [{ model: require("../models").BrokerEmployer, as: "employer" }]
+    });
     if (!lead) {
       await t.rollback();
       return res.status(404).json({ success: false, message: "Lead not found" });
