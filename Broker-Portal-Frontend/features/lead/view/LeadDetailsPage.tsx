@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Download, Plus } from "lucide-react";
-import { getLeads, Lead } from "@/lib/api/leads";
+import { getLeads, cancelLead, Lead } from "@/lib/api/leads";
 import { ROUTES } from "@/lib/constants";
 
 interface LeadDetailsPageProps {
@@ -120,28 +120,9 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
   const router = useRouter();
   const [lead, setLead] = useState<Lead | null>(null);
   const [quotes, setQuotes] = useState<Quote[]>(MOCK_QUOTES);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Set mock data immediately
-    setLead({
-      leadId,
-      leadReference: leadId,
-      employerName: "Universal Mining",
-      registrationNumber: "2737182",
-      industry: "healthcare",
-      numberOfEmployees: 343,
-      address: "western cape, Johannesburg, 4444.",
-      contactFirstName: "John",
-      contactLastName: "Doe",
-      contactEmail: "Johndoe@gmail.com",
-      contactPhone: "8282828233",
-      contactPosition: "General HR Manager",
-      status: "Active",
-      createdAt: new Date().toISOString(),
-    } as any);
-
-    // Try to fetch real data in the background
     (async () => {
       try {
         const representativeId = localStorage.getItem("bp_broker_id") ?? undefined;
@@ -152,7 +133,9 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
           setLead(foundLead);
         }
       } catch (error) {
-        console.warn("Could not fetch lead from API, using mock data:", error);
+        console.error("Could not fetch lead from API:", error);
+      } finally {
+        setLoading(false);
       }
     })();
   }, [leadId]);
@@ -225,10 +208,21 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
           }}>
             {/* Mark as Cancelled Button */}
             <button
-              onClick={() => {
-                if (confirm("Are you sure you want to mark this lead as cancelled?")) {
-                  // TODO: Call API to cancel lead
-                  console.log("Cancelling lead:", leadId);
+              onClick={async () => {
+                const reason = prompt("Please provide a reason for cancelling this lead (min 5 characters):");
+                if (reason !== null) {
+                  if (reason.length < 5) {
+                    alert("Reason must be at least 5 characters.");
+                    return;
+                  }
+                  try {
+                    await cancelLead(leadId, reason);
+                    setLead(prev => prev ? { ...prev, status: "Cancelled" } : null);
+                    alert("Lead cancelled successfully.");
+                  } catch (err: any) {
+                    console.error("Failed to cancel lead:", err);
+                    alert(err.message || "Failed to cancel lead.");
+                  }
                 }
               }}
               style={{
@@ -260,7 +254,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
             {/* New Quote Button */}
             <button
               onClick={() => {
-                router.push(`${ROUTES.newQuote}?leadId=${leadId}`);
+                router.push(`/quotes/new?leadId=${leadId}${lead ? `&ref=${lead.leadReference}&company=${encodeURIComponent(lead.employerName)}` : ""}`);
               }}
               style={{
                 display: "flex",

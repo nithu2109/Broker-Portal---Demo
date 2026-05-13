@@ -21,6 +21,7 @@ export default async function QuoteRoute({ params, searchParams }: QuotePageProp
   return (
     <DashboardLayout>
       <QuoteJourneyPage 
+        leadId={leadId}
         leadReference={leadReference} 
         companyName={companyName}
         initialType={quoteType}
