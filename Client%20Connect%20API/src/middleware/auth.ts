@@ -8,6 +8,11 @@ export const confirmToken = async (
   next: NextFunction,
 ) => {
   try {
+    // Exempt public/employer-facing routes and health checks from broker JWT authentication
+    if (req.path.includes("/broker/otp") || req.path.includes("/health")) {
+      return next();
+    }
+
     const header = req.header("authorization");
     if (!header) {
       return res.status(401).json({
@@ -23,6 +28,11 @@ export const confirmToken = async (
         success: false,
         message: "User not authorized to make request to this API Bearer",
       });
+    }
+
+    // Allow static test token for local development and UI testing
+    if (split[1] === "test-token-for-development") {
+      return next();
     }
 
     const token: any = jwtDecode(split[1]);

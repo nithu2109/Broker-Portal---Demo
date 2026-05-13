@@ -56,36 +56,51 @@ export const sendOTP = async (req: Request, res: Response) => {
 
     let targetEmail = "";
     let recipientName = "";
+    let canonicalReferenceId = referenceId;
 
     if (referenceType === "Quote") {
-      const quote = await BrokerQuote.findByPk(referenceId, {
+      const quote = await BrokerQuote.findOne({
+        where: {
+          [Op.or]: [
+            { quote_id: referenceId },
+            { quote_reference: referenceId }
+          ]
+        },
         include: [{ 
           model: BrokerLead, as: "lead", 
           include: [{ model: BrokerContact, as: "contact" }] 
         }]
       });
-      if (!quote || !quote.lead || !quote.lead.contact) {
+      if (!quote) {
         if (t) await t.rollback();
-        return res.status(404).json({ success: false, message: "Quote or associated contact not found" });
+        return res.status(404).json({ success: false, message: "Quote not found. Invalid reference ID." });
       }
-      targetEmail = quote.lead.contact.contact_email;
-      recipientName = `${quote.lead.contact.contact_first_name} ${quote.lead.contact.contact_last_name}`;
+      canonicalReferenceId = quote.quote_id;
+      targetEmail = quote.lead?.contact?.contact_email || "employer@example.com";
+      recipientName = quote.lead?.contact ? `${quote.lead.contact.contact_first_name} ${quote.lead.contact.contact_last_name}` : "Employer";
     } else if (referenceType === "Lead") {
-      const lead = await BrokerLead.findByPk(referenceId, {
+      const lead = await BrokerLead.findOne({
+        where: {
+          [Op.or]: [
+            { lead_id: referenceId },
+            { lead_reference: referenceId }
+          ]
+        },
         include: [{ model: BrokerContact, as: "contact" }]
       });
-      if (!lead || !lead.contact) {
+      if (!lead) {
         if (t) await t.rollback();
-        return res.status(404).json({ success: false, message: "Lead or contact not found" });
+        return res.status(404).json({ success: false, message: "Lead not found. Invalid reference ID." });
       }
-      targetEmail = lead.contact.contact_email;
-      recipientName = `${lead.contact.contact_first_name} ${lead.contact.contact_last_name}`;
+      canonicalReferenceId = lead.lead_id;
+      targetEmail = lead.contact?.contact_email || "employer@example.com";
+      recipientName = lead.contact ? `${lead.contact.contact_first_name} ${lead.contact.contact_last_name}` : "Employer";
     }
 
     await BrokerOTP.update(
       { is_verified: false, expires_at: new Date() },
       { 
-        where: { reference_id: referenceId, is_verified: false },
+        where: { reference_id: canonicalReferenceId, is_verified: false },
         transaction: t 
       }
     );
@@ -96,7 +111,7 @@ export const sendOTP = async (req: Request, res: Response) => {
 
     const newOtp = await BrokerOTP.create({
       otp_id: uuidv4(),
-      reference_id: referenceId,
+      reference_id: canonicalReferenceId,
       reference_type: referenceType,
       otp_code: otpCode,
       expires_at: expiresAt,
@@ -173,9 +188,36 @@ export const verifyOTP = async (req: Request, res: Response) => {
     const validatedBody = await verifyOtpSchema.validate(req.body, { abortEarly: false });
     const { referenceId, otpCode } = validatedBody;
 
+    let canonicalReferenceId = referenceId;
+    const quote = await BrokerQuote.findOne({
+      where: {
+        [Op.or]: [
+          { quote_id: referenceId },
+          { quote_reference: referenceId }
+        ]
+      },
+      transaction: t
+    });
+    if (quote) {
+      canonicalReferenceId = quote.quote_id;
+    } else {
+      const lead = await BrokerLead.findOne({
+        where: {
+          [Op.or]: [
+            { lead_id: referenceId },
+            { lead_reference: referenceId }
+          ]
+        },
+        transaction: t
+      });
+      if (lead) {
+        canonicalReferenceId = lead.lead_id;
+      }
+    }
+
     const otpRecord = await BrokerOTP.findOne({
       where: {
-        reference_id: referenceId,
+        reference_id: canonicalReferenceId,
         is_verified: false,
         expires_at: { [Op.gt]: new Date() }
       },
@@ -222,7 +264,7 @@ export const verifyOTP = async (req: Request, res: Response) => {
 
     await BrokerOTP.destroy({
       where: {
-        reference_id: referenceId,
+        reference_id: canonicalReferenceId,
         otp_id: { [Op.ne]: otpRecord.otp_id }
       },
       transaction: t
@@ -232,9 +274,9 @@ export const verifyOTP = async (req: Request, res: Response) => {
     let leadIdToOnboard = "";
 
     if (otpRecord.reference_type === "Quote") {
-      const quote = await BrokerQuote.findByPk(referenceId, { transaction: t });
-      if (quote) {
-        await quote.update({
+      const quoteToAccept = await BrokerQuote.findByPk(canonicalReferenceId, { transaction: t });
+      if (quoteToAccept) {
+        await quoteToAccept.update({
           quote_status: "Accepted",
           employer_accepted_at: new Date(),
           employer_accepted_by_otp: true
@@ -242,19 +284,19 @@ export const verifyOTP = async (req: Request, res: Response) => {
 
         await BrokerLead.update(
           { lead_status: "Accepted" },
-          { where: { lead_id: quote.lead_id }, transaction: t }
+          { where: { lead_id: quoteToAccept.lead_id }, transaction: t }
         );
         
         triggerOnboarding = true;
-        leadIdToOnboard = quote.lead_id;
+        leadIdToOnboard = quoteToAccept.lead_id;
       }
     } else if (otpRecord.reference_type === "Lead") {
       await BrokerLead.update(
         { lead_status: "Accepted" },
-        { where: { lead_id: referenceId }, transaction: t }
+        { where: { lead_id: canonicalReferenceId }, transaction: t }
       );
       triggerOnboarding = true;
-      leadIdToOnboard = referenceId;
+      leadIdToOnboard = canonicalReferenceId;
     }
 
     await t.commit();

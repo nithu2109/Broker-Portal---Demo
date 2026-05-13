@@ -9,10 +9,12 @@ import {
   saveQuoteToLead,
   getQuotesByLeadController,
   updateQuoteStatusController,
+  getAllQuotesController,
 } from "../controllers/brokerQuotesController";
 
 const router = Router();
 
+router.get("/", getAllQuotesController);
 router.post("/quick", generateQuickQuote);
 router.post("/full", fileUpload(), generateFullQuote);
 router.post("/:quoteReference/reprice", repriceQuote);

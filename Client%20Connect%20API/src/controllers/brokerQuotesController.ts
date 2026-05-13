@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-const { BrokerQuote, BrokerLead, BrokerQuoteBenefit, BrokerQuickQuoteData, BrokerEmployee, sequelize } = require("../models");
+const { BrokerQuote, BrokerLead, BrokerQuoteBenefit, BrokerQuickQuoteData, BrokerEmployee, BrokerEmployer, BrokerContact, sequelize } = require("../models");
 import { sequelizeErrorHandler } from "../middleware/sequelize_error";
 import { v4 as uuidv4 } from "uuid";
 import { PricingService } from "../services/pricingService";
@@ -89,6 +89,8 @@ export const generateQuickQuote = async (req: Request, res: Response) => {
       },
       benefits: validatedBody.benefits,
     }, t);
+
+
 
     await t.commit();
 
@@ -246,6 +248,8 @@ export const generateFullQuote = async (req: Request, res: Response) => {
       benefits,
       employees_list: employees_list.length > 0 ? employees_list : undefined
     }, t);
+
+
 
     await t.commit();
 
@@ -498,6 +502,33 @@ export const updateQuoteStatusController = async (req: Request, res: Response) =
       success: true,
       message: "Quote status updated",
       data: quote,
+    });
+  } catch (err: any) {
+    return res.status(400).json(sequelizeErrorHandler(err));
+  }
+};
+
+export const getAllQuotesController = async (req: Request, res: Response) => {
+  try {
+    const quotes = await BrokerQuote.findAll({
+      order: [["createdAt", "DESC"]],
+      include: [
+        { model: BrokerQuoteBenefit, as: "benefits" },
+        { model: BrokerQuickQuoteData, as: "quick_quote_data" },
+        { 
+          model: BrokerLead, 
+          as: "lead",
+          include: [
+            { model: BrokerEmployer, as: "employer" },
+            { model: BrokerContact, as: "contact" }
+          ]
+        }
+      ]
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: quotes,
     });
   } catch (err: any) {
     return res.status(400).json(sequelizeErrorHandler(err));
