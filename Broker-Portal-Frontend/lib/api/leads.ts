@@ -38,7 +38,7 @@ export async function createLead(payload: CreateLeadPayload) {
 
 export async function getLeads(representativeId?: string): Promise<Lead[]> {
   const repId = representativeId || "00000000-0000-0000-0000-000000000000";
-  const params = new URLSearchParams({ representativeId: repId });
+  const params = new URLSearchParams({ representativeId: repId, limit: "10000" });
 
   const json = await apiClient<{ success: boolean; data: any }>(
     `/broker/leads?${params.toString()}`,
@@ -62,10 +62,10 @@ export async function getLeads(representativeId?: string): Promise<Lead[]> {
   }));
 }
 
-export async function cancelLead(leadId: string): Promise<void> {
-  try {
-    await apiClient(`/broker/leads/${leadId}/cancel`, { method: "POST" });
-  } catch {
-    // silently fail — UI updates optimistically
-  }
+export async function cancelLead(leadId: string, reason: string): Promise<void> {
+  const representativeId = localStorage.getItem("bp_broker_id") ?? undefined;
+  await apiClient(`/broker/leads/${leadId}/cancel`, { 
+    method: "POST",
+    body: JSON.stringify({ reason, representativeId })
+  });
 }

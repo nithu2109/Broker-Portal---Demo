@@ -28,10 +28,18 @@ const fmt = (d: string) => {
 
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, { bg: string; color: string }> = {
-    "Active":    { bg: "#00B8DB", color: "#fff" },
-    "Draft":     { bg: "#3A3A3A", color: "#fff" },
-    "Cancelled": { bg: "#EF4444", color: "#fff" },
-    "Completed": { bg: "#22c55e", color: "#fff" },
+    "Draft":                { bg: "#3A3A3A", color: "#fff" },
+    "In Progress":          { bg: "#00B8DB", color: "#fff" },
+    "Quote Generated":      { bg: "#00B8DB", color: "#fff" },
+    "Accepted":             { bg: "#22c55e", color: "#fff" },
+    "Onboarding Submitted": { bg: "#22c55e", color: "#fff" },
+    "Approved":             { bg: "#22c55e", color: "#fff" },
+    "Rejected":             { bg: "#EF4444", color: "#fff" },
+    "Expired":              { bg: "#EF4444", color: "#fff" },
+    "Cancelled":            { bg: "#EF4444", color: "#fff" },
+    // Legacy support
+    "Active":               { bg: "#00B8DB", color: "#fff" },
+    "Completed":            { bg: "#22c55e", color: "#fff" },
   };
   const s = styles[status] ?? { bg: "#4B4B4B", color: "#fff" };
   return (
@@ -107,9 +115,10 @@ export default function ViewLeadsPage() {
       try {
         const representativeId = localStorage.getItem("bp_broker_id") ?? undefined;
         const data = await getLeads(representativeId);
-        setLeads(data.length ? data : MOCK_LEADS);
-      } catch {
-        setLeads(MOCK_LEADS);
+        setLeads(data || []);
+      } catch (error) {
+        console.error("Failed to fetch leads:", error);
+        setLeads([]);
       } finally {
         setLoading(false);
       }
@@ -133,12 +142,12 @@ export default function ViewLeadsPage() {
   const rows       = filtered.slice(start, start + PAGE_SIZE);
 
   const total     = leads.length;
-  const active    = leads.filter((l) => l.status === "Active" || l.status === "In Progress").length;
-  const accepted  = leads.filter((l) => l.status === "Completed").length;
-  const cancelled = leads.filter((l) => l.status === "Cancelled").length;
+  const active    = leads.filter((l) => ["Draft", "In Progress", "Quote Generated", "Onboarding Submitted"].includes(l.status)).length;
+  const accepted  = leads.filter((l) => ["Accepted", "Approved"].includes(l.status)).length;
+  const cancelled = leads.filter((l) => ["Cancelled", "Rejected", "Expired"].includes(l.status)).length;
 
-  const statusOptions = ["All", "Active", "Draft", "Cancelled", "Completed"];
-  const quoteOptions  = ["All", "Quick Quote", "Full Quote", "Submitted for Onboarding", "Expired", "Cancelled", "Approved"];
+  const statusOptions = ["All", ...Array.from(new Set(leads.map(l => l.status))).filter(Boolean)];
+  const quoteOptions  = ["All", ...Array.from(new Set(leads.map(l => l.quoteStatus))).filter((s): s is string => Boolean(s))];
 
   return (
     <div style={{

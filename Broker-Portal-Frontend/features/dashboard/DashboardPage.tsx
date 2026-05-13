@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   Plus,
   ClipboardList,
@@ -11,29 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/lib/constants";
 import DashboardCard from "@/components/ui/DashboardCard";
-
-const statCards = [
-  {
-    value: "1000",
-    label: "Active Leads",
-    icon: Users,
-  },
-  {
-    value: "1000",
-    label: "Failed Invoices",
-    icon: CircleDollarSign,
-  },
-  {
-    value: "100",
-    label: "Active Quotes",
-    icon: ClipboardList,
-  },
-  {
-    value: "12",
-    label: "Quotes Near Expiry (Today)",
-    icon: TriangleAlert,
-  },
-];
+import { getLeads } from "@/lib/api/leads";
 
 const quickActions = [
   {
@@ -58,6 +37,63 @@ const quickActions = [
 
 export default function DashboardPage() {
   const router = useRouter();
+  const [stats, setStats] = useState({
+    activeLeads: 0,
+    failedInvoices: 0, // Placeholder as we don't have invoice API yet
+    activeQuotes: 0,
+    quotesNearExpiry: 0,
+  });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const representativeId = localStorage.getItem("bp_broker_id") ?? undefined;
+        const leads = await getLeads(representativeId);
+        
+        const activeLeads = leads.filter((l) => ["Draft", "In Progress", "Quote Generated", "Onboarding Submitted"].includes(l.status)).length;
+        
+        // Active Quotes: Assuming any quote status other than Expired/Cancelled/Rejected is "Active"
+        const activeQuotes = leads.filter((l) => l.quoteStatus && !["Expired", "Cancelled", "Rejected"].includes(l.quoteStatus)).length;
+        
+        // Near Expiry: Assuming quotes expire in 30 days. For simplicity, we just count quotes created > 25 days ago and < 30 days.
+        // Or if backend provides expiration date, use that. Since we only have createdAt, let's estimate or just return 0 if no field.
+        // For demonstration, let's return 0 for now until expiration logic is implemented.
+        const quotesNearExpiry = 0;
+
+        setStats({
+          activeLeads,
+          failedInvoices: 0,
+          activeQuotes,
+          quotesNearExpiry,
+        });
+      } catch (err) {
+        console.error("Failed to fetch dashboard stats", err);
+      }
+    })();
+  }, []);
+
+  const statCards = [
+    {
+      value: stats.activeLeads.toString(),
+      label: "Active Leads",
+      icon: Users,
+    },
+    {
+      value: stats.failedInvoices.toString(),
+      label: "Failed Invoices",
+      icon: CircleDollarSign,
+    },
+    {
+      value: stats.activeQuotes.toString(),
+      label: "Active Quotes",
+      icon: ClipboardList,
+    },
+    {
+      value: stats.quotesNearExpiry.toString(),
+      label: "Quotes Near Expiry (Today)",
+      icon: TriangleAlert,
+    },
+  ];
 
   return (
     <main

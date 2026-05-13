@@ -10,6 +10,10 @@ interface ApproveQuoteModalProps {
   onClose: () => void;
   quoteId: string;
   companyName: string;
+  contactFirstName?: string;
+  contactLastName?: string;
+  contactEmail?: string;
+  contactMobile?: string;
   onSendOTP: () => void;
 }
 
@@ -18,6 +22,10 @@ export default function ApproveQuoteModal({
   onClose,
   quoteId,
   companyName,
+  contactFirstName,
+  contactLastName,
+  contactEmail,
+  contactMobile,
   onSendOTP,
 }: ApproveQuoteModalProps) {
   const [showOtpModal, setShowOtpModal] = useState(false);
@@ -26,12 +34,11 @@ export default function ApproveQuoteModal({
 
   if (!isOpen) return null;
 
-  // Mock contact details - in real app, fetch from API
   const contactDetails = {
-    contactPerson: "John Doe",
-    position: "General HR Manager",
-    email: "Johndoe@gmail.com",
-    phone: "8282828233",
+    contactPerson: [contactFirstName, contactLastName].filter(Boolean).join(" ") || "—",
+    position: "HR Manager",
+    email: contactEmail || "—",
+    phone: contactMobile || "—",
   };
 
   const handleSendOTP = async () => {
