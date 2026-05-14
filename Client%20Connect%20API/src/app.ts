@@ -18,6 +18,8 @@ import router from "./routes";
 import { confirmToken } from "./middleware/auth";
 import { getRmaAccessToken } from "./middleware/getRmaToken";
 import { health } from "./controllers/healthController";
+import swaggerUi from "swagger-ui-express";
+import { specs } from "./utils/swagger";
 
 //console.log(APP_GLOBAL_URL)
 const app = express();
@@ -28,6 +30,9 @@ app.use(express.urlencoded({ extended: false, limit: "10Mb" }));
 
 // health endpoint that does a database query to confirm db available
 app.get("/apirma/health", health);
+
+// Swagger documentation
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // added middelware to confirm expiry auth0 not doing this for some reason
 // Lourens 2023/12/07
@@ -49,7 +54,7 @@ const jwtCheck = auth({
 
 app.use(
   `/apirma/${APP_VERSION}`,
-  // jwtCheck, // requires Auth0 JWKS network call — not needed locally since confirmToken handles expiry
+  jwtCheck, // requires Auth0 JWKS network call — not needed locally since confirmToken handles expiry
   // no longer needed as this is breaking shit 20250527
   // addUserToRequest,
   getRmaAccessToken,
