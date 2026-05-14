@@ -56,7 +56,9 @@ export const generateQuickQuote = async (req: Request, res: Response) => {
     const validatedBody = await quickQuoteSchema.validate(req.body, { abortEarly: false });
     const { lead_id } = validatedBody;
 
-    const lead = await BrokerLead.findByPk(lead_id);
+    const lead = await BrokerLead.findByPk(lead_id, {
+      attributes: ["lead_id"]
+    });
     if (!lead) {
       await t.rollback();
       return res.status(404).json({ success: false, message: "Lead not found" });
@@ -72,7 +74,18 @@ export const generateQuickQuote = async (req: Request, res: Response) => {
       quote_status: "Draft",
       quote_version: 1,
       province: validatedBody.province,
-    }, { transaction: t });
+    }, {
+      fields: [
+        "quote_id",
+        "lead_id",
+        "quote_reference",
+        "quote_type",
+        "quote_status",
+        "quote_version",
+        "province",
+      ],
+      transaction: t
+    });
 
 
     // Calculate pricing
@@ -183,7 +196,7 @@ export const generateFullQuote = async (req: Request, res: Response) => {
     const { lead_id, product_id, benefits } = validatedBody;
 
     const lead = await BrokerLead.findByPk(lead_id, {
-      include: [{ model: require("../models").BrokerEmployer, as: "employer" }]
+      attributes: ["lead_id"]
     });
     if (!lead) {
       await t.rollback();
@@ -238,7 +251,26 @@ export const generateFullQuote = async (req: Request, res: Response) => {
       is_policy_older_than_6_months: validatedBody.is_policy_older_than_6_months,
       replaced_policy_start_date: validatedBody.replaced_policy_start_date,
       province: validatedBody.province,
-    }, { transaction: t });
+    }, {
+      fields: [
+        "quote_id",
+        "lead_id",
+        "product_id",
+        "quote_reference",
+        "quote_type",
+        "quote_status",
+        "quote_version",
+        "rma_member_number",
+        "is_permanent_employees",
+        "is_actively_at_work",
+        "is_replacing_policy",
+        "replaced_policy_includes_disability",
+        "is_policy_older_than_6_months",
+        "replaced_policy_start_date",
+        "province",
+      ],
+      transaction: t
+    });
 
     // Calculate pricing
     const pricingResult = await PricingService.calculateQuotePricing({
@@ -353,10 +385,55 @@ export const getQuoteDetail = async (req: Request, res: Response) => {
     const { quoteReference } = req.params;
     const quote = await BrokerQuote.findOne({
       where: { [sequelize.Op.or]: [{ quote_id: quoteReference }, { quote_reference: quoteReference }] },
+      attributes: [
+        "quote_id",
+        "lead_id",
+        "quote_reference",
+        "quote_type",
+        "quote_status",
+        "total_premium",
+        "province",
+        "created_at",
+      ],
       include: [
-        { model: BrokerQuoteBenefit, as: "benefits" },
-        { model: BrokerQuickQuoteData, as: "quick_quote_data" },
-        { model: BrokerLead, as: "lead" }
+        { 
+          model: BrokerQuoteBenefit, 
+          as: "benefits",
+          attributes: [
+            "benefit_type",
+            "benefit_name",
+            "cover_amount",
+            "premium_amount",
+          ]
+        },
+        { 
+          model: BrokerLead, 
+          as: "lead",
+          attributes: ["lead_id"],
+          include: [
+            { 
+              model: BrokerEmployer, 
+              as: "employer",
+              attributes: [
+                "employer_name",
+                "registration_number",
+                "number_of_employees",
+                "industry_type",
+                "province",
+              ]
+            },
+            { 
+              model: BrokerContact, 
+              as: "contact",
+              attributes: [
+                "contact_first_name",
+                "contact_last_name",
+                "contact_email",
+                "contact_mobile",
+              ]
+            }
+          ]
+        }
       ]
     });
 
@@ -398,7 +475,8 @@ export const saveQuoteToLead = async (req: Request, res: Response) => {
     const { quoteId } = req.body;
 
     const lead = await BrokerLead.findOne({
-      where: { [sequelize.Op.or]: [{ lead_id: leadReference }, { lead_reference: leadReference }] }
+      where: { [sequelize.Op.or]: [{ lead_id: leadReference }, { lead_reference: leadReference }] },
+      attributes: ["lead_id", "lead_status"]
     });
 
     if (!lead) {
@@ -406,7 +484,9 @@ export const saveQuoteToLead = async (req: Request, res: Response) => {
       return res.status(404).json({ success: false, message: "Lead not found" });
     }
 
-    const quote = await BrokerQuote.findByPk(quoteId);
+    const quote = await BrokerQuote.findByPk(quoteId, {
+      attributes: ["quote_id", "quote_status"]
+    });
     if (!quote) {
       await t.rollback();
       return res.status(404).json({ success: false, message: "Quote not found" });
@@ -432,18 +512,34 @@ export const saveQuoteToLead = async (req: Request, res: Response) => {
   }
 };
 
-export const createQuoteController = async (req: Request, res: Response) => {
-  // Legacy or generic create quote
-  return generateQuickQuote(req, res);
-};
-
 export const getQuotesByLeadController = async (req: Request, res: Response) => {
   try {
     const { leadId } = req.params;
     const quotes = await BrokerQuote.findAll({
       where: { lead_id: leadId },
+      attributes: [
+        "quote_id",
+        "lead_id",
+        "quote_reference",
+        "quote_type",
+        "quote_status",
+        "total_premium",
+        "province",
+        "created_at",
+      ],
       order: [["createdAt", "DESC"]],
-      include: [{ model: BrokerQuoteBenefit, as: "benefits" }]
+      include: [
+        { 
+          model: BrokerQuoteBenefit, 
+          as: "benefits",
+          attributes: [
+            "benefit_type",
+            "benefit_name",
+            "cover_amount",
+            "premium_amount",
+          ]
+        }
+      ]
     });
 
     return res.status(200).json({
@@ -453,10 +549,6 @@ export const getQuotesByLeadController = async (req: Request, res: Response) => 
   } catch (err: any) {
     return res.status(400).json(sequelizeErrorHandler(err));
   }
-};
-
-export const getQuoteByIdController = async (req: Request, res: Response) => {
-  return getQuoteDetail(req, res);
 };
 
 /**
@@ -491,7 +583,18 @@ export const updateQuoteStatusController = async (req: Request, res: Response) =
     const { quoteId } = req.params;
     const { status } = req.body;
 
-    const quote = await BrokerQuote.findByPk(quoteId);
+    const quote = await BrokerQuote.findByPk(quoteId, {
+      attributes: [
+        "quote_id",
+        "quote_reference",
+        "lead_id",
+        "quote_type",
+        "quote_status",
+        "total_premium",
+        "province",
+        "created_at",
+      ]
+    });
     if (!quote) {
       return res.status(404).json({ success: false, message: "Quote not found" });
     }
@@ -511,16 +614,54 @@ export const updateQuoteStatusController = async (req: Request, res: Response) =
 export const getAllQuotesController = async (req: Request, res: Response) => {
   try {
     const quotes = await BrokerQuote.findAll({
+      attributes: [
+        "quote_id",
+        "lead_id",
+        "quote_reference",
+        "quote_type",
+        "quote_status",
+        "total_premium",
+        "province",
+        "created_at",
+      ],
       order: [["createdAt", "DESC"]],
       include: [
-        { model: BrokerQuoteBenefit, as: "benefits" },
-        { model: BrokerQuickQuoteData, as: "quick_quote_data" },
+        { 
+          model: BrokerQuoteBenefit, 
+          as: "benefits",
+          attributes: [
+            "benefit_type",
+            "benefit_name",
+            "cover_amount",
+            "premium_amount",
+          ]
+        },
         { 
           model: BrokerLead, 
           as: "lead",
+          attributes: ["lead_id"],
           include: [
-            { model: BrokerEmployer, as: "employer" },
-            { model: BrokerContact, as: "contact" }
+            { 
+              model: BrokerEmployer, 
+              as: "employer",
+              attributes: [
+                "employer_name",
+                "registration_number",
+                "number_of_employees",
+                "industry_type",
+                "province",
+              ]
+            },
+            { 
+              model: BrokerContact, 
+              as: "contact",
+              attributes: [
+                "contact_first_name",
+                "contact_last_name",
+                "contact_email",
+                "contact_mobile",
+              ]
+            }
           ]
         }
       ]
