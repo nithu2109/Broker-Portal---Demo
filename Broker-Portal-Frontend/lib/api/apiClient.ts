@@ -33,7 +33,15 @@ export async function apiClient<T>(path: string, options: FetchOptions = {}): Pr
 
   if (res.status === 304) return { success: true, data: [] } as unknown as T;
 
-  const json = await res.json();
+  const text = await res.text();
+  let json;
+  try {
+    json = text ? JSON.parse(text) : {};
+  } catch (err) {
+    if (!res.ok) throw new Error(text || `Request failed with status ${res.status}`);
+    return text as unknown as T;
+  }
+
   if (!res.ok) throw new Error(json.message || "Request failed");
   return json;
 }

@@ -114,18 +114,25 @@ export default function ViewLeadsPage() {
   }, [statusOpen, quoteOpen]);
 
   useEffect(() => {
-    (async () => {
+    let intervalId: NodeJS.Timeout;
+
+    const fetchLeads = async (isInitial = false) => {
       try {
         const representativeId = localStorage.getItem("bp_broker_id") ?? undefined;
         const data = await getLeads(representativeId);
         setLeads(data || []);
       } catch (error) {
         console.error("Failed to fetch leads:", error);
-        setLeads([]);
+        if (isInitial) setLeads([]);
       } finally {
-        setLoading(false);
+        if (isInitial) setLoading(false);
       }
-    })();
+    };
+
+    fetchLeads(true);
+    intervalId = setInterval(() => fetchLeads(false), 5000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => { setPage(1); }, [search, statusFilter, quoteFilter]);

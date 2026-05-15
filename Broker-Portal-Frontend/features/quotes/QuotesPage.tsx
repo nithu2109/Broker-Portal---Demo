@@ -60,8 +60,10 @@ export default function QuotesPage() {
 
   // Load leads (for the "Add New Quote" modal) and load real-time quotes directly from backend
   useEffect(() => {
-    async function load() {
-      setLeadsLoading(true);
+    let intervalId: NodeJS.Timeout;
+
+    async function load(isInitial = false) {
+      if (isInitial) setLeadsLoading(true);
       try {
         const [leadsRes, quotesRes] = await Promise.allSettled([
           getLeads(),
@@ -110,10 +112,14 @@ export default function QuotesPage() {
       } catch {
         // keep existing state on error
       } finally {
-        setLeadsLoading(false);
+        if (isInitial) setLeadsLoading(false);
       }
     }
-    load();
+
+    load(true);
+    intervalId = setInterval(() => load(false), 5000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   // Filter quotes by active tab and search query

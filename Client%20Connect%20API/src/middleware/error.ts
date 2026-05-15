@@ -7,10 +7,8 @@ export const errorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  let error = { ...err, statusCode: 500 };
-  error.message = err.message;
-  // console.log(err.name);
-
+  const statusCode = (err as any).statusCode || (err.name === 'UnauthorizedError' ? 401 : 500);
+  
   if (err instanceof SyntaxError) {
     return res.status(400).json({
       success: false,
@@ -18,10 +16,9 @@ export const errorHandler = (
     });
   }
 
-  // if (err instanceof InvalidTokenError) {
-  //   return res.status(401).json({
-  //     success: false,
-  //     message: "User not authorized please login again",
-  //   });
-  // }
+  return res.status(statusCode).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack, error: err })
+  });
 };
