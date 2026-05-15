@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createLead } from "@/lib/api/leads";
-import { redirectToAuth } from "@/lib/auth";
+import { redirectToAuth, getRepresentativeId, getBrokerId } from "@/lib/auth";
 import {
   validateSAMobileNumber,
   validateEmail,
@@ -147,7 +147,6 @@ export default function StartNewLeadPage() {
  
   useEffect(() => {
     setMounted(true);
-    setBrokerId(localStorage.getItem("bp_broker_id") ?? "");
   }, []);
  
   // Don't render until mounted to avoid hydration issues
@@ -174,6 +173,9 @@ export default function StartNewLeadPage() {
     setSubmitting(true);
     setSubmitError(null);
     try {
+      const repId = getRepresentativeId() || "00000000-0000-0000-0000-000000000000";
+      const bId = getBrokerId() || "00000000-0000-0000-0000-000000000000";
+
       const [firstName, ...rest] = contact.contactName.trim().split(" ");
       const result = await createLead({
         employerName: employer.companyName,
@@ -186,8 +188,8 @@ export default function StartNewLeadPage() {
         contactEmail: contact.email,
         contactMobile: contact.phone,
         preferredCommunicationMethod: "Email",
-        representativeId: brokerId || "00000000-0000-0000-0000-000000000000",
-        brokerId: brokerId || "00000000-0000-0000-0000-000000000000",
+        representativeId: repId,
+        brokerId: bId,
       });
       const { leadId, leadReference } = result.data;
       showToast("Lead created successfully");

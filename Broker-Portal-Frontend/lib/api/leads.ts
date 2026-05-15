@@ -1,3 +1,4 @@
+import { getRepresentativeId } from "@/lib/auth";
 import { apiClient } from "./apiClient";
 
 export interface CreateLeadPayload {
@@ -63,7 +64,7 @@ export async function getLeads(representativeId?: string): Promise<Lead[]> {
 }
 
 export async function cancelLead(leadId: string, reason: string): Promise<void> {
-  const representativeId = localStorage.getItem("bp_broker_id") ?? undefined;
+  const representativeId = getRepresentativeId() ?? undefined;
   await apiClient(`/broker/leads/${leadId}/cancel`, { 
     method: "POST",
     body: JSON.stringify({ reason, representativeId })

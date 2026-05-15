@@ -2,7 +2,56 @@ import { jwtDecode } from "jwt-decode";
 
 interface DecodedToken {
   exp: number;
+  user?: string;
+  rmaAppRoles?: string[];
+  rmaAppAppMetadata?: {
+    brokerId?: string;
+    representativeId?: string;
+  };
+  rmaAppBrokerId?: string;
+  rmaAppRepresentativeId?: string;
   [key: string]: any;
+}
+
+/**
+ * Decode the stored token and return its content
+ */
+export function getDecodedToken(): DecodedToken | null {
+  try {
+    const token = localStorage.getItem("bp_token");
+    if (!token) return null;
+    return jwtDecode<DecodedToken>(token);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Extract representativeId from the token (rmaAppAppMetadata.representativeId)
+ */
+export function getRepresentativeId(): string | null {
+  const decoded = getDecodedToken();
+  if (!decoded) return null;
+  
+  return (
+    decoded.rmaAppAppMetadata?.representativeId || 
+    decoded.rmaAppRepresentativeId || 
+    null
+  );
+}
+
+/**
+ * Extract brokerId from the token (rmaAppAppMetadata.brokerId)
+ */
+export function getBrokerId(): string | null {
+  const decoded = getDecodedToken();
+  if (!decoded) return null;
+
+  return (
+    decoded.rmaAppAppMetadata?.brokerId || 
+    decoded.rmaAppBrokerId || 
+    null
+  );
 }
 
 /**
