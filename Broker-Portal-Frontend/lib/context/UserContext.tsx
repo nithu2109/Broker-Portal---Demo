@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { getRepresentativeId, getBrokerId } from "@/lib/auth";
 
 interface User {
   email: string;
@@ -37,8 +38,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
         // Check localStorage for existing user data
         const storedEmail = localStorage.getItem("userEmail");
-        const storedBrokerId = localStorage.getItem("bp_broker_id");
-        const storedRepresentativeId = localStorage.getItem("bp_representative_id");
+        const storedBrokerId = getBrokerId() || localStorage.getItem("bp_broker_id");
+        const storedRepresentativeId = getRepresentativeId() || localStorage.getItem("bp_representative_id");
         const storedName = localStorage.getItem("userName");
 
         // Prioritize URL params, then localStorage

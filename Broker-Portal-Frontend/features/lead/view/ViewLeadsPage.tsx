@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Plus, Search, Eye, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { getLeads, cancelLead, Lead } from "@/lib/api/leads";
 import { ROUTES } from "@/lib/constants";
+import { getRepresentativeId } from "@/lib/auth";
 
 const PAGE_SIZE = 10;
 
@@ -113,7 +114,7 @@ export default function ViewLeadsPage() {
   useEffect(() => {
     (async () => {
       try {
-        const representativeId = localStorage.getItem("bp_broker_id") ?? undefined;
+        const representativeId = getRepresentativeId() ?? undefined;
         const data = await getLeads(representativeId);
         setLeads(data || []);
       } catch (error) {

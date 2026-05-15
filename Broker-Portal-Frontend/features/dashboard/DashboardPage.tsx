@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { ROUTES } from "@/lib/constants";
 import DashboardCard from "@/components/ui/DashboardCard";
 import { getLeads } from "@/lib/api/leads";
+import { getRepresentativeId } from "@/lib/auth";
 
 const quickActions = [
   {
@@ -47,7 +48,7 @@ export default function DashboardPage() {
   useEffect(() => {
     (async () => {
       try {
-        const representativeId = localStorage.getItem("bp_broker_id") ?? undefined;
+        const representativeId = getRepresentativeId() ?? undefined;
         const leads = await getLeads(representativeId);
         
         const activeLeads = leads.filter((l) => ["Draft", "In Progress", "Quote Generated", "Onboarding Submitted"].includes(l.status)).length;
