@@ -1,4 +1,9 @@
 import * as Yup from "yup";
+import { 
+  PREFERRED_COMMUNICATION_METHOD_OPTIONS, 
+  REFERENCE_TYPE_OPTIONS, 
+  BANK_ACCOUNT_TYPE_OPTIONS 
+} from "../enums/brokerPortalEnums";
 
 // Lead Management Validations
 export const createLeadSchema = Yup.object().shape({
@@ -14,7 +19,7 @@ export const createLeadSchema = Yup.object().shape({
   contactMobile: Yup.string()
     .matches(/^0[6-8]\d{8}$/, "Must be a valid South African mobile number (e.g., 0821234567)")
     .required("Mobile cannot be empty"),
-  preferredCommunicationMethod: Yup.string().oneOf(["Email", "SMS", "Phone"], "Must be valid communication preference").nullable(),
+  preferredCommunicationMethod: Yup.string().oneOf(PREFERRED_COMMUNICATION_METHOD_OPTIONS, "Must be valid communication preference").nullable(),
   representativeId: Yup.string().uuid("Must be valid ID format").required("Representative ID is required"),
   brokerId: Yup.string().uuid("Must be valid ID format").required("Broker ID is required"),
 });
@@ -33,7 +38,7 @@ export const updateLeadSchema = Yup.object().shape({
     contact_last_name: Yup.string().min(1, "Contact surname cannot be empty"),
     contact_email: Yup.string().email("Must be a valid email format"),
     contact_mobile: Yup.string().matches(/^0[6-8]\d{8}$/, "Must be a valid South African mobile number"),
-    preferred_communication_method: Yup.string().oneOf(["Email", "SMS", "Phone"], "Must be valid communication preference"),
+    preferred_communication_method: Yup.string().oneOf(PREFERRED_COMMUNICATION_METHOD_OPTIONS, "Must be valid communication preference"),
   }).nullable(),
   lastSavedStep: Yup.number().integer().min(1).nullable(),
 });
@@ -78,20 +83,11 @@ export const fullQuoteSchema = Yup.object().shape({
       cover_amount: Yup.number().min(0).optional(),
     })
   ).required(),
-  employees: Yup.array().of(Yup.object().shape({
-    firstName: Yup.string().optional(),
-    surname: Yup.string().optional(),
-    gender: Yup.string().optional(),
-    salary: Yup.number().optional(),
-    income: Yup.number().optional(),
-    dob: Yup.string().optional(),
-    identification: Yup.string().optional(),
-  })).optional(),
 });
 
 export const sendOtpSchema = Yup.object().shape({
   referenceId: Yup.string().uuid("Invalid reference ID").required(),
-  referenceType: Yup.string().oneOf(["Lead", "Quote"]).required(),
+  referenceType: Yup.string().oneOf(REFERENCE_TYPE_OPTIONS).required(),
 });
 
 export const verifyOtpSchema = Yup.object().shape({
@@ -144,10 +140,31 @@ export const employerOnboardingSchema = Yup.object().shape({
   // Payment Details
   bank_name: Yup.string().required("Bank name is required"),
   bank_account_number: Yup.string().required("Bank account number is required"),
-  bank_account_type: Yup.string().oneOf(["Cheque", "Current", "Savings", "Transmission"], "Invalid account type").required(),
+  bank_account_type: Yup.string().oneOf(BANK_ACCOUNT_TYPE_OPTIONS, "Invalid account type").required(),
   debit_day_of_month: Yup.number().integer().min(1).max(31).required("Debit day is required"),
   source_of_funds: Yup.string().required("Source of funds is required"),
   company_tax_number: Yup.string().required("Company tax number is required"),
   company_vat_number: Yup.string().nullable(),
   debit_order_authorised: Yup.boolean().oneOf([true], "Debit order must be authorised").required(),
 });
+
+export const brokerEmployeeSchema = Yup.object().shape({
+  firstName: Yup.string().required("First name is required"),
+  surname: Yup.string().required("Surname is required"),
+  gender: Yup.string().oneOf(["M", "F", "Other"], "Invalid gender").required("Gender is required"),
+  income: Yup.number().positive("Income must be a positive number").required("Income is required"),
+  dateOfBirth: Yup.date().required("Date of birth is required"),
+  email: Yup.string().email("Invalid email format").required("Email is required"),
+  cellNumber: Yup.string()
+    .matches(/^0[6-8]\d{8}$/, "Invalid cell number format")
+    .required("Cell number is required"),
+  employmentStartDate: Yup.date().required("Employment start date is required"),
+  idNumber: Yup.string().required("ID number is required"),
+  nationality: Yup.string().required("Nationality is required"),
+});
+
+export const brokerImportEmployeesSchema = Yup.object().shape({
+  lead_id: Yup.string().uuid("Invalid lead ID").required("Lead ID is required"),
+  employees: Yup.array().of(brokerEmployeeSchema).min(5, "At least 5 employees are required for submission").required("Employees array is required"),
+});
+

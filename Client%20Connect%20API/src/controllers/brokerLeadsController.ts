@@ -4,9 +4,8 @@ import {
   createLeadSchema,
   updateLeadSchema,
   cancelLeadSchema,
-} from "../utils/validation";
-import { UploadedFile } from "express-fileupload";
-import { parseAndValidateEmployeesFile } from "../services/broker.employee.upload.service"; // Force re-parse
+} from "../utils/brokerValidation";
+import { applyFilters } from "../utils/filterHelper";
 
 const {
   BrokerLead,
@@ -209,22 +208,32 @@ export const createLead = async (req: Request, res: Response) => {
  *         name: limit
  *         schema:
  *           type: integer
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: sortOrder
+ *         schema:
+ *           type: string
+ *           enum: [ASC, DESC]
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: searchFields
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
  *     responses:
  *       200:
  *         description: List of leads
  */
 export const getLeads = async (req: Request, res: Response) => {
   try {
-    const {
-      representativeId,
-      leadId,
-      clientName,
-      leadStatus,
-      dateCreatedStart,
-      dateCreatedEnd,
-      page = 1,
-      limit = 10,
-    } = req.query;
+    const { representativeId, clientName } = req.query;
 
     if (!representativeId) {
       return res.status(400).json({
@@ -233,42 +242,36 @@ export const getLeads = async (req: Request, res: Response) => {
       });
     }
 
-    const offset = (Number(page) - 1) * Number(limit);
+    const { where, limit, offset, order, pagination } = applyFilters(
+      req.query,
+      ["lead_status", "lead_reference", "broker_id"],
+      "lead_created_at"
+    );
 
-    const leadWhere: any = { representative_id: representativeId };
+    // Force representativeId filter
+    where.representative_id = representativeId;
+
+    // Handle employer-specific filtering (clientName)
     const employerWhere: any = {};
-
-    if (leadId) {
-      leadWhere.lead_reference = { [Op.like]: `%${leadId}%` };
-    }
-    if (leadStatus) {
-      leadWhere.lead_status = leadStatus;
-    }
-    if (dateCreatedStart && dateCreatedEnd) {
-      leadWhere.lead_created_at = {
-        [Op.between]: [new Date(dateCreatedStart as string), new Date(dateCreatedEnd as string)]
-      };
-    }
-
     if (clientName) {
       employerWhere.employer_name = { [Op.like]: `%${clientName}%` };
     }
 
     const { count, rows: leads } = await BrokerLead.findAndCountAll({
-      where: leadWhere,
+      where,
       include: [
         { 
           model: BrokerEmployer, 
           as: "employer",
-          where: Object.keys(employerWhere).length ? employerWhere : undefined,
-          required: Object.keys(employerWhere).length > 0
+          where: clientName ? employerWhere : undefined,
+          required: !!clientName
         },
         { model: BrokerContact, as: "contact" },
         { model: BrokerQuote, as: "quotes", required: false }
       ],
-      order: [["lead_created_at", "DESC"]],
-      limit: Number(limit),
-      offset: offset,
+      order: order.length > 0 ? order : [["lead_created_at", "DESC"]],
+      limit,
+      offset,
       distinct: true,
     });
 
@@ -279,9 +282,8 @@ export const getLeads = async (req: Request, res: Response) => {
         leads,
         pagination: {
           total: count,
-          page: Number(page),
-          limit: Number(limit),
-          totalPages: Math.ceil(count / Number(limit))
+          ...pagination,
+          totalPages: Math.ceil(count / limit)
         }
       },
     });
@@ -289,6 +291,7 @@ export const getLeads = async (req: Request, res: Response) => {
     return res.status(500).json(sequelizeErrorHandler(error));
   }
 };
+
 
 /**
  * @swagger
@@ -667,177 +670,6 @@ export const getLeadHistory = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     return res.status(500).json(sequelizeErrorHandler(error));
-  }
-};
-
-/**
- * @swagger
- * /broker/leads/{leadId}/upload-employees:
- *   post:
- *     summary: Upload an Excel or CSV file containing employee data for a lead
- *     tags: [Broker Leads]
- *     parameters:
- *       - in: path
- *         name: leadId
- *         required: true
- *         schema:
- *           type: string
- *         description: The ID of the lead
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               file:
- *                 type: string
- *                 format: binary
- *                 description: The Excel (.xlsx) or CSV file to upload
- *     responses:
- *       200:
- *         description: File uploaded and processed successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 message:
- *                   type: string
- *                 summary:
- *                   type: object
- *                   properties:
- *                     totalRows:
- *                       type: integer
- *                     validCount:
- *                       type: integer
- *                     invalidCount:
- *                       type: integer
- *                     errors:
- *                       type: array
- *                       items:
- *                         type: object
- *       400:
- *         description: Invalid file format or missing file
- *       404:
- *         description: Lead not found
- *       500:
- *         description: Internal server error
- */
-export const uploadEmployeesController = async (req: Request, res: Response) => {
-  const t = await sequelize.transaction();
-  try {
-    const { leadId } = req.params;
-
-    // 1. Verify Lead exists
-    const lead = await BrokerLead.findOne({
-      where: { [Op.or]: [{ lead_id: leadId }, { lead_reference: leadId }] },
-    });
-
-    if (!lead) {
-      await t.rollback();
-      return res.status(404).json({
-        success: false,
-        message: "Lead not found",
-      });
-    }
-
-    // 2. Extract file from request
-    if (!req.files || Object.keys(req.files).length === 0) {
-      await t.rollback();
-      return res.status(400).json({
-        success: false,
-        message: "No file was uploaded.",
-      });
-    }
-
-    const fileKey = Object.keys(req.files)[0];
-    const uploadedFile = req.files[fileKey] as UploadedFile;
-
-    // 3. Check file size (limit to 10MB)
-    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
-    if (uploadedFile.size > MAX_FILE_SIZE) {
-      await t.rollback();
-      return res.status(400).json({
-        success: false,
-        message: "File is too large. Maximum size allowed is 10MB.",
-      });
-    }
-
-    // 4. Check allowed extensions (csv, xlsx)
-    const allowedMimeTypes = [
-      "text/csv",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "application/vnd.ms-excel",
-    ];
-    
-    const fileExtension = uploadedFile.name.split(".").pop()?.toLowerCase();
-    const allowedExtensions = ["csv", "xlsx"];
-
-    if (!allowedMimeTypes.includes(uploadedFile.mimetype) && !allowedExtensions.includes(fileExtension || "")) {
-      await t.rollback();
-      return res.status(400).json({
-        success: false,
-        message: "Invalid file type. Only CSV and XLSX are allowed.",
-      });
-    }
-
-    // 4. Parse and validate file using the service
-    const validationResult = parseAndValidateEmployeesFile(uploadedFile.data);
-
-    if (validationResult.totalRows === 0) {
-      await t.rollback();
-      return res.status(400).json({
-        success: false,
-        message: "The uploaded file is empty or missing expected headers.",
-      });
-    }
-
-    // 5. Bulk insert all parsed employees into the table with the lead_id.
-    const employeesToInsert = validationResult.employees.map((emp: any) => ({
-      ...emp,
-      lead_id: lead.lead_id,
-    }));
-
-    await BrokerEmployee.bulkCreate(employeesToInsert, { transaction: t });
-
-    await logHistory(
-      "BrokerLead",
-      lead.lead_id,
-      "UPDATE",
-      null,
-      { action: "Employees Uploaded", count: validationResult.totalRows },
-      "System",
-      t
-    );
-
-    await t.commit();
-
-    return res.status(200).json({
-      success: true,
-      message: "Employees processed successfully.",
-      data: {
-        totalRows: validationResult.totalRows,
-        validCount: validationResult.validCount,
-        invalidCount: validationResult.invalidCount,
-        errors: validationResult.errors,
-      },
-    });
-  } catch (error: any) {
-    if (t) {
-      try {
-        await t.rollback();
-      } catch (rbErr) {
-        // Already rolled back by DB
-      }
-    }
-    console.error("UPLOAD EMPLOYEES ERROR:", error);
-    return res.status(500).json({
-      success: false,
-      message: error.message || "An error occurred while uploading employees.",
-    });
   }
 };
 
