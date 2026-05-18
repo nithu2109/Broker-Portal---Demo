@@ -75,6 +75,8 @@ export default function AppNavBar2({ children, setThemeState, themeState }) {
     setThemeState(!themeState);
   };
 
+  const isBrokerPortal = router.pathname.startsWith("/brokerPortal");
+
   const hideNavBar = ["/"];
   const shouldHideNavBar = hideNavBar.includes(router.pathname);
   const [open, setOpen] = React.useState(false);
@@ -86,6 +88,17 @@ export default function AppNavBar2({ children, setThemeState, themeState }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  if (isBrokerPortal) {
+    return (
+      <Box sx={{ display: "flex", width: '100%' }}>
+        <CssBaseline />
+        <Box component="main" sx={{ flexGrow: 1, width: '100%' }}>
+          {children}
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
