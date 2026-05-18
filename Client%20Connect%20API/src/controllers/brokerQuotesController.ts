@@ -4,9 +4,7 @@ const { Op } = require("sequelize");
 import { sequelizeErrorHandler } from "../middleware/sequelize_error";
 import { v4 as uuidv4 } from "uuid";
 import { PricingService } from "../services/pricingService";
-import { quickQuoteSchema, fullQuoteSchema, employerOnboardingSchema } from "../utils/validation";
-import { UploadedFile } from "express-fileupload";
-import { parseAndValidateEmployeesFile } from "../services/broker.employee.upload.service";
+import { quickQuoteSchema, fullQuoteSchema, employerOnboardingSchema } from "../utils/brokerValidation";
 import { applyFilters } from "../utils/filterHelper";
 
 /**
@@ -124,12 +122,12 @@ export const generateQuickQuote = async (req: Request, res: Response) => {
  * @swagger
  * /broker/quotes/full:
  *   post:
- *     summary: Generate a full quote by uploading an employee list
+ *     summary: Generate a full quote based on captured lead data and employees
  *     tags: [Broker Quotes]
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
@@ -155,11 +153,9 @@ export const generateQuickQuote = async (req: Request, res: Response) => {
  *               province:
  *                 type: string
  *               benefits:
- *                 type: string
- *                 description: JSON string of benefits
- *               employeeFile:
- *                 type: string
- *                 format: binary
+ *                 type: array
+ *                 items:
+ *                   type: object
  *     responses:
  *       201:
  *         description: Full quote generated successfully
@@ -190,35 +186,12 @@ export const generateFullQuote = async (req: Request, res: Response) => {
       return res.status(404).json({ success: false, message: "Lead not found" });
     }
 
-    let employees_list = [];
-
-    // Check if file is uploaded
-    if (req.files && req.files.employeeFile) {
-      const file = req.files.employeeFile as UploadedFile;
-      const validationResult = parseAndValidateEmployeesFile(file.data);
-      
-      if (validationResult.errors.length > 0) {
-        if (t) await t.rollback();
-        return res.status(400).json({
-          success: false,
-          message: "Employee file has validation errors",
-          errors: validationResult.errors
-        });
-      }
-
-      employees_list = validationResult.employees;
-    }
-
-    // Save employees to DB (if any)
-    if (employees_list.length > 0) {
-      for (const emp of employees_list) {
-        await BrokerEmployee.create({
-          ...emp,
-          lead_id: lead.lead_id,
-          employee_id: uuidv4()
-        }, { transaction: t });
-      }
-    }
+    // Employees are now handled by a separate /broker/employees/import API
+    // We fetch existing employees for this lead to pass to the pricing service
+    const employees_list = await BrokerEmployee.findAll({
+      where: { lead_id: lead.lead_id },
+      transaction: t
+    });
 
     const quote_reference = `QT-F-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
 

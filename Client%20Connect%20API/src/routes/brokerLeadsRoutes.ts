@@ -8,9 +8,7 @@ import {
   cancelLead,
   continueLead,
   getLeadHistory,
-  uploadEmployeesController,
 } from "../controllers/brokerLeadsController";
-import fileUpload from "express-fileupload";
 import { saveQuoteToLead } from "../controllers/brokerQuotesController";
 
 const router = Router();
@@ -24,6 +22,5 @@ router.get("/:leadId/continue", continueLead);
 router.post("/:leadId/cancel", cancelLead);
 router.get("/:leadId/history", getLeadHistory);
 router.post("/:leadId/quote", saveQuoteToLead);
-router.post("/:leadId/upload-employees", fileUpload(), uploadEmployeesController);
 
 export default router;

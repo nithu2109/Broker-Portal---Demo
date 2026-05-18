@@ -83,15 +83,6 @@ export const fullQuoteSchema = Yup.object().shape({
       cover_amount: Yup.number().min(0).optional(),
     })
   ).required(),
-  employees: Yup.array().of(Yup.object().shape({
-    firstName: Yup.string().optional(),
-    surname: Yup.string().optional(),
-    gender: Yup.string().optional(),
-    salary: Yup.number().optional(),
-    income: Yup.number().optional(),
-    dob: Yup.string().optional(),
-    identification: Yup.string().optional(),
-  })).optional(),
 });
 
 export const sendOtpSchema = Yup.object().shape({
@@ -156,3 +147,24 @@ export const employerOnboardingSchema = Yup.object().shape({
   company_vat_number: Yup.string().nullable(),
   debit_order_authorised: Yup.boolean().oneOf([true], "Debit order must be authorised").required(),
 });
+
+export const brokerEmployeeSchema = Yup.object().shape({
+  firstName: Yup.string().required("First name is required"),
+  surname: Yup.string().required("Surname is required"),
+  gender: Yup.string().oneOf(["M", "F", "Other"], "Invalid gender").required("Gender is required"),
+  income: Yup.number().positive("Income must be a positive number").required("Income is required"),
+  dateOfBirth: Yup.date().required("Date of birth is required"),
+  email: Yup.string().email("Invalid email format").required("Email is required"),
+  cellNumber: Yup.string()
+    .matches(/^0[6-8]\d{8}$/, "Invalid cell number format")
+    .required("Cell number is required"),
+  employmentStartDate: Yup.date().required("Employment start date is required"),
+  idNumber: Yup.string().required("ID number is required"),
+  nationality: Yup.string().required("Nationality is required"),
+});
+
+export const brokerImportEmployeesSchema = Yup.object().shape({
+  lead_id: Yup.string().uuid("Invalid lead ID").required("Lead ID is required"),
+  employees: Yup.array().of(brokerEmployeeSchema).min(5, "At least 5 employees are required for submission").required("Employees array is required"),
+});
+
