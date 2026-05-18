@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { getSession } from "@auth0/nextjs-auth0";
 import UserCards from "components/Dashboards/UserCards";
 import useToken from "hooks/useToken";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
@@ -70,18 +71,10 @@ const Home = () => {
   const normalizedRoles = roles.map(normalizeRole);
   const isAdministrator = normalizedRoles.includes("administrator");
   
-  console.log("Diagnostic - Roles in Token:", roles);
-  console.log("Diagnostic - Normalized Roles:", normalizedRoles);
-  console.log("Diagnostic - isAdministrator:", isAdministrator);
-
   const normalizedCCRoles = clientConnectRoles.map(normalizeRole);
   const hasCCRole = normalizedRoles.some(r => normalizedCCRoles.includes(r));
-  const isBrokerRep = normalizedRoles.includes(normalizeRole("BP_BROKER_REP"));
-
-  //Not Rendering Portal Selection Cards
-  // if (isBrokerRep || hasCCRole) {
-  //     return <LinearProgress />;
-  // }
+  const isBrokerRep = normalizedRoles.includes(normalizeRole("BP_BROKER_REP")) || 
+                      normalizedRoles.includes(normalizeRole("BP_REP"));
 
   /**  Show Portal Selection only for users with Administrator Role Without
   Client Connect or Broker Portal Roles */
@@ -119,9 +112,66 @@ const Home = () => {
       </div>
     );
   }
+
+  // Fallback if not redirected yet
   return (
     <LinearProgress />
   )
 }
+
+export const getServerSideProps = async ({ req, res }) => {
+  try {
+    const session = await getSession(req, res);
+
+    if (!session || !session.user) {
+      return {
+        redirect: {
+          destination: '/api/auth/login',
+          permanent: false,
+        },
+      };
+    }
+
+    const roles = session.user.rmaAppRoles || [];
+    const normalizeRole = (role) => role ? role.toLowerCase().replace(/[\s-]/g, "") : "";
+    const normalizedRoles = roles.map(normalizeRole);
+
+    if (normalizedRoles.includes("administrator")) {
+      return { props: {} };
+    }
+
+    const isBrokerRep = normalizedRoles.includes(normalizeRole("BP_BROKER_REP"))
+    if (isBrokerRep) {
+      return {
+        redirect: {
+          destination: '/brokerPortal/dashboard',
+          permanent: false,
+        },
+      };
+    }
+
+    const clientConnectRoles = [
+      "CDA-RMA-Policy Admin",
+      "CDA-RMA-User Admin",
+      "CDA-BROKERAGE-Broker Manager",
+      "CDA-SCHEME-Scheme Representative",
+      "new-Broker-onboarding-user"
+    ];
+    const normalizedCCRoles = clientConnectRoles.map(normalizeRole);
+    if (normalizedRoles.some(r => normalizedCCRoles.includes(r))) {
+      return {
+        redirect: {
+          destination: '/Dashboard',
+          permanent: false,
+        },
+      };
+    }
+
+    return { props: {} };
+  } catch (error) {
+    console.error("Error in getServerSideProps:", error);
+    return { props: {} };
+  }
+};
 
 export default Home;
