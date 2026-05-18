@@ -6,6 +6,7 @@ import { Plus, Search, Eye, ChevronDown, ChevronLeft, ChevronRight } from "lucid
 import { getLeads, cancelLead, Lead } from "@/lib/api/leads";
 import { ROUTES } from "@/lib/constants";
 import { getRepresentativeId } from "@/lib/auth";
+import { LeadStatus } from "@/lib/enums";
 
 const PAGE_SIZE = 10;
 
@@ -16,18 +17,18 @@ const fmt = (d: string) => {
 
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, { bg: string; color: string }> = {
-    "Draft":                { bg: "#3A3A3A", color: "#fff" },
-    "In Progress":          { bg: "#00B8DB", color: "#fff" },
-    "Quote Generated":      { bg: "#00B8DB", color: "#fff" },
-    "Accepted":             { bg: "#22c55e", color: "#fff" },
-    "Onboarding Submitted": { bg: "#22c55e", color: "#fff" },
-    "Approved":             { bg: "#22c55e", color: "#fff" },
-    "Rejected":             { bg: "#EF4444", color: "#fff" },
-    "Expired":              { bg: "#EF4444", color: "#fff" },
-    "Cancelled":            { bg: "#EF4444", color: "#fff" },
+    [LeadStatus.DRAFT]: { bg: "#3A3A3A", color: "#fff" },
+    [LeadStatus.IN_PROGRESS]: { bg: "#00B8DB", color: "#fff" },
+    [LeadStatus.QUOTE_GENERATED]: { bg: "#00B8DB", color: "#fff" },
+    [LeadStatus.ACCEPTED]: { bg: "#22c55e", color: "#fff" },
+    [LeadStatus.ONBOARDING_SUBMITTED]: { bg: "#22c55e", color: "#fff" },
+    [LeadStatus.APPROVED]: { bg: "#22c55e", color: "#fff" },
+    [LeadStatus.REJECTED]: { bg: "#EF4444", color: "#fff" },
+    [LeadStatus.EXPIRED]: { bg: "#EF4444", color: "#fff" },
+    [LeadStatus.CANCELLED]: { bg: "#EF4444", color: "#fff" },
     // Legacy support
-    "Active":               { bg: "#00B8DB", color: "#fff" },
-    "Completed":            { bg: "#22c55e", color: "#fff" },
+    "Active": { bg: "#00B8DB", color: "#fff" },
+    "Completed": { bg: "#22c55e", color: "#fff" },
   };
   const s = styles[status] ?? { bg: "#4B4B4B", color: "#fff" };
   return (
@@ -50,12 +51,12 @@ function QuoteBadge({ quoteStatus }: { quoteStatus?: string }) {
   if (!quoteStatus) return <span style={{ color: "#A0A0A0", fontSize: "14px" }}>—</span>;
 
   const styles: Record<string, { bg: string; color: string; opacity?: number }> = {
-    "Quick Quote":              { bg: "#4B4B4B", color: "#fff" },
-    "Full Quote":               { bg: "#6B6B6B", color: "#fff" },
+    "Quick Quote": { bg: "#4B4B4B", color: "#fff" },
+    "Full Quote": { bg: "#6B6B6B", color: "#fff" },
     "Submitted for Onboarding": { bg: "rgba(0,201,80,0.9)", color: "#fff" },
-    "Expired":                  { bg: "#4B4B4B", color: "#fff", opacity: 0.5 },
-    "Cancelled":                { bg: "#EF4444", color: "#fff" },
-    "Approved":                 { bg: "rgba(0,201,80,0.9)", color: "#fff" },
+    "Expired": { bg: "#4B4B4B", color: "#fff", opacity: 0.5 },
+    "Cancelled": { bg: "#EF4444", color: "#fff" },
+    "Approved": { bg: "rgba(0,201,80,0.9)", color: "#fff" },
   };
   const s = styles[quoteStatus] ?? { bg: "#4B4B4B", color: "#fff" };
   return (
@@ -77,14 +78,14 @@ function QuoteBadge({ quoteStatus }: { quoteStatus?: string }) {
 
 export default function ViewLeadsPage() {
   const router = useRouter();
-  const [leads, setLeads]         = useState<Lead[]>([]);
-  const [loading, setLoading]     = useState(true);
-  const [search, setSearch]       = useState("");
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
   const [statusFilter, setStatus] = useState("All");
-  const [quoteFilter, setQuote]   = useState("All");
-  const [page, setPage]           = useState(1);
+  const [quoteFilter, setQuote] = useState("All");
+  const [page, setPage] = useState(1);
   const [statusOpen, setStatusOpen] = useState(false);
-  const [quoteOpen, setQuoteOpen]   = useState(false);
+  const [quoteOpen, setQuoteOpen] = useState(false);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -120,22 +121,22 @@ export default function ViewLeadsPage() {
     return (
       (!q || l.employerName.toLowerCase().includes(q) || l.leadReference.toLowerCase().includes(q) || (l.registrationNumber ?? "").toLowerCase().includes(q)) &&
       (statusFilter === "All" || l.status === statusFilter) &&
-      (quoteFilter  === "All" || l.quoteStatus === quoteFilter)
+      (quoteFilter === "All" || l.quoteStatus === quoteFilter)
     );
   });
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const safePage   = Math.min(page, totalPages);
-  const start      = (safePage - 1) * PAGE_SIZE;
-  const rows       = filtered.slice(start, start + PAGE_SIZE);
+  const safePage = Math.min(page, totalPages);
+  const start = (safePage - 1) * PAGE_SIZE;
+  const rows = filtered.slice(start, start + PAGE_SIZE);
 
-  const total     = leads.length;
-  const active    = leads.filter((l) => ["Draft", "In Progress", "Quote Generated", "Onboarding Submitted"].includes(l.status)).length;
-  const accepted  = leads.filter((l) => ["Accepted", "Approved"].includes(l.status)).length;
+  const total = leads.length;
+  const active = leads.filter((l) => ["Draft", "In Progress", "Quote Generated", "Onboarding Submitted"].includes(l.status)).length;
+  const accepted = leads.filter((l) => ["Accepted", "Approved"].includes(l.status)).length;
   const cancelled = leads.filter((l) => ["Cancelled", "Rejected", "Expired"].includes(l.status)).length;
 
   const statusOptions = ["All", ...Array.from(new Set(leads.map(l => l.status))).filter(Boolean)];
-  const quoteOptions  = ["All", ...Array.from(new Set(leads.map(l => l.quoteStatus))).filter((s): s is string => Boolean(s))];
+  const quoteOptions = ["All", ...Array.from(new Set(leads.map(l => l.quoteStatus))).filter((s): s is string => Boolean(s))];
 
   return (
     <div style={{
@@ -190,9 +191,9 @@ export default function ViewLeadsPage() {
         <div style={{ display: "flex", gap: "22px", marginBottom: "26px" }}>
           {[
             { label: "Total Leads", value: total },
-            { label: "Active",      value: active },
-            { label: "Accepted",    value: accepted },
-            { label: "Cancelled",   value: cancelled },
+            { label: "Active", value: active },
+            { label: "Accepted", value: accepted },
+            { label: "Cancelled", value: cancelled },
           ].map(({ label, value }) => (
             <div key={label} style={{
               flex: 1,
@@ -518,24 +519,24 @@ export default function ViewLeadsPage() {
                       {/* Actions */}
                       <td style={{ padding: "10px 8px" }}>
                         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                            <button
-                              onClick={() => router.push(`/lead/${lead.leadId}`)}
-                              style={{
-                                display: "flex", alignItems: "center", gap: "6px",
-                                padding: "6px 10px", height: "32px",
-                                background: "rgba(58,58,58,0.5)", border: "0.625px solid #4A4A4A",
-                                borderRadius: "8px", color: "#FFFFFF",
-                                fontFamily: "'Inter', sans-serif",
-                                fontSize: "14px", fontWeight: 500,
-                                lineHeight: "20px",
-                                letterSpacing: "-0.150391px",
-                                cursor: "pointer",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              <Eye size={14} />
-                              View
-                            </button>
+                          <button
+                            onClick={() => router.push(`/lead/${lead.leadId}`)}
+                            style={{
+                              display: "flex", alignItems: "center", gap: "6px",
+                              padding: "6px 10px", height: "32px",
+                              background: "rgba(58,58,58,0.5)", border: "0.625px solid #4A4A4A",
+                              borderRadius: "8px", color: "#FFFFFF",
+                              fontFamily: "'Inter', sans-serif",
+                              fontSize: "14px", fontWeight: 500,
+                              lineHeight: "20px",
+                              letterSpacing: "-0.150391px",
+                              cursor: "pointer",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            <Eye size={14} />
+                            View
+                          </button>
                           {lead.status !== "Cancelled" && lead.status !== "Completed" && (
                             <button
                               onClick={() => router.push(`/quotes/new?leadId=${lead.leadId}&ref=${lead.leadReference}&company=${encodeURIComponent(lead.employerName)}`)}
