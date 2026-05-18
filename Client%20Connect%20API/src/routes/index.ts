@@ -13,6 +13,7 @@ import brokers from "./brokers";
 import brokerLeadsRoutes from "./brokerLeadsRoutes";
 import brokerQuotesRoutes from "./brokerQuotesRoutes";
 import brokerOtpRoutes from "./brokerOtpRoutes";
+import brokerEmployeeRoutes from "./brokerEmployeeRoutes";
 import productCatalog from "./productCatalogRoutes";
 import tasks from "./tasksRoutes";
 import rules from "./rules";
@@ -26,6 +27,7 @@ const router = Router();
 router.use("/broker/leads", brokerLeadsRoutes);
 router.use("/broker/quotes", brokerQuotesRoutes);
 router.use("/broker/otp", brokerOtpRoutes);
+router.use("/broker/employees", brokerEmployeeRoutes);
 router.use("/product", productCatalog);
 
 router.use([

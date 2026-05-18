@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { sendBrokerEmail } from "../utils/brokerSendEmail";
-import { sendOtpSchema, verifyOtpSchema } from "../utils/validation";
+import { sendOtpSchema, verifyOtpSchema } from "../utils/brokerValidation";
 import { v4 as uuidv4 } from "uuid";
-import { BrokerOnboardingService } from "../services/broker.onboarding.service";
+import { BrokerOnboardingService } from "../services/brokerOnboardingService";
 import { logger } from "../middleware/logger";
 import { Op } from "sequelize";
 
