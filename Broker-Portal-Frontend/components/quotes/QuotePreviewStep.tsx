@@ -34,20 +34,20 @@ export function QuotePreviewStep({
   const sectionHeading: React.CSSProperties = {
     fontSize: "0.75rem",
     fontWeight: 600,
-    color: "#1FC3EB",
+    color: "var(--primary)",
     textTransform: "uppercase",
     letterSpacing: "0.05em",
     marginBottom: "10px",
   };
-  const fieldLabel: React.CSSProperties = { fontSize: "0.75rem", color: "#6b7280", marginBottom: "2px" };
-  const fieldValue: React.CSSProperties = { fontSize: "0.8125rem", color: "#ffffff", fontWeight: 500 };
-  const divider: React.CSSProperties = { borderTop: "1px solid #30363D", margin: "12px 0" };
+  const fieldLabel: React.CSSProperties = { fontSize: "0.75rem", color: "var(--text-secondary)", marginBottom: "2px" };
+  const fieldValue: React.CSSProperties = { fontSize: "0.8125rem", color: "var(--text-primary)", fontWeight: 500 };
+  const divider: React.CSSProperties = { borderTop: "1px solid var(--border)", margin: "12px 0" };
 
   return (
     <div
       style={{
-        background: "#1E1E1E",
-        border: "0.63px solid #30363D",
+        background: "var(--card-secondary)",
+        border: "1px solid var(--border)",
         borderRadius: "10px",
         padding: "24px",
         display: "flex",
@@ -57,7 +57,7 @@ export function QuotePreviewStep({
     >
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <span style={{ fontSize: "1rem", fontWeight: 600, color: "#ffffff" }}>Quote Details</span>
+        <span style={{ fontSize: "1rem", fontWeight: 600, color: "var(--text-primary)" }}>Quote Details</span>
         <button
           style={{
             display: "flex",
@@ -65,7 +65,7 @@ export function QuotePreviewStep({
             gap: "6px",
             background: "transparent",
             border: "none",
-            color: "#9ca3af",
+            color: "var(--text-secondary)",
             fontSize: "0.8125rem",
             cursor: "pointer",
           }}
@@ -148,7 +148,7 @@ export function QuotePreviewStep({
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
           <div>
             <p style={fieldLabel}>Estimated Monthly Premium</p>
-            <p style={{ ...fieldValue, color: "#1FC3EB", fontSize: "1rem" }}>{fmt(monthlyPremium)}</p>
+            <p style={{ ...fieldValue, color: "var(--primary)", fontSize: "1rem" }}>{fmt(monthlyPremium)}</p>
           </div>
           <div>
             <p style={fieldLabel}>Total Coverage Amount</p>
@@ -165,23 +165,23 @@ export function QuotePreviewStep({
 
       {/* Coverage Details */}
       <div>
-        <p style={{ fontSize: "0.9375rem", fontWeight: 600, color: "#ffffff", marginBottom: "12px" }}>
+        <p style={{ fontSize: "0.9375rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "12px" }}>
           Coverage Details
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-          <div style={{ background: "#2a2a2a", border: "1px solid #30363D", borderRadius: "8px", padding: "14px" }}>
-            <p style={{ fontSize: "0.75rem", color: "#9ca3af", marginBottom: "4px" }}>Life Cover</p>
-            <p style={{ fontSize: "1.125rem", fontWeight: 700, color: "#ffffff", marginBottom: "4px" }}>
+          <div style={{ background: "var(--table-header-bg)", border: "1px solid var(--border)", borderRadius: "8px", padding: "14px" }}>
+            <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginBottom: "4px" }}>Life Cover</p>
+            <p style={{ fontSize: "1.125rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "4px" }}>
               R {lifeCover}x monthly salary
             </p>
-            <p style={{ fontSize: "0.75rem", color: "#6b7280" }}>Avg of R 9,000.00 per employee</p>
+            <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>Avg of R 9,000.00 per employee</p>
           </div>
-          <div style={{ background: "#2a2a2a", border: "1px solid #30363D", borderRadius: "8px", padding: "14px" }}>
-            <p style={{ fontSize: "0.75rem", color: "#9ca3af", marginBottom: "4px" }}>Funeral Cover</p>
-            <p style={{ fontSize: "1.125rem", fontWeight: 700, color: "#ffffff", marginBottom: "4px" }}>
+          <div style={{ background: "var(--table-header-bg)", border: "1px solid var(--border)", borderRadius: "8px", padding: "14px" }}>
+            <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginBottom: "4px" }}>Funeral Cover</p>
+            <p style={{ fontSize: "1.125rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "4px" }}>
               R {funeralCover.toLocaleString("en-ZA")}
             </p>
-            <p style={{ fontSize: "0.75rem", color: "#6b7280" }}>per employee</p>
+            <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>per employee</p>
           </div>
         </div>
       </div>

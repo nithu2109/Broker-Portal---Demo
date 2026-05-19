@@ -35,14 +35,14 @@ interface AdjustCoverageStepProps {
 const labelStyle: React.CSSProperties = {
   fontSize: "0.8125rem",
   fontWeight: 400,
-  color: "#9ca3af",
+  color: "var(--text-secondary)",
   display: "block",
   marginBottom: "8px",
 };
 
 const coverageItemStyle: React.CSSProperties = {
-  background: "#2a2a2a",
-  border: "1px solid #30363D",
+  background: "var(--table-header-bg)",
+  border: "1px solid var(--border)",
   borderRadius: "8px",
   padding: "16px",
   display: "flex",
@@ -196,7 +196,7 @@ export default function AdjustCoverageStep({
 
   return (
     <>
-      <h2 style={{ fontSize: "1.125rem", fontWeight: 600, color: "#ffffff", marginBottom: "16px" }}>
+      <h2 style={{ fontSize: "1.125rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "16px" }}>
         Quick Cost Estimate
       </h2>
 
@@ -211,16 +211,16 @@ export default function AdjustCoverageStep({
         
         {/* Left side - Adjust Cover Amounts */}
         <div style={{
-          background: "#1E1E1E",
-          border: "1px solid #30363D",
+          background: "var(--card-secondary)",
+          border: "1px solid var(--border)",
           borderRadius: "8px",
           padding: "20px",
           height: "fit-content",
         }}>
-          <h3 style={{ fontSize: "0.875rem", fontWeight: 600, color: "#ffffff", marginBottom: "8px" }}>
+          <h3 style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "8px" }}>
             Adjust Cover Amounts
           </h3>
-          <p style={{ fontSize: "0.8125rem", color: "#9ca3af", marginBottom: "24px" }}>
+          <p style={{ fontSize: "0.8125rem", color: "var(--text-secondary)", marginBottom: "24px" }}>
             For an average of <strong style={{ color: "#1FC3EB" }}>{formatCurrency(averageIncome)}</strong> per employee p/m, each now would get:
           </p>
 
@@ -230,7 +230,7 @@ export default function AdjustCoverageStep({
             <div style={coverageItemStyle}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <label style={labelStyle}>Life cover</label>
-                <span style={{ fontSize: "0.875rem", fontWeight: 600, color: "#ffffff" }}>
+                <span style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--text-primary)" }}>
                   {formatCurrency(lifeCover)}
                 </span>
               </div>
@@ -241,7 +241,7 @@ export default function AdjustCoverageStep({
                 value={lifeCover}
                 onChange={setLifeCover}
               />
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "#6b7280" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "var(--text-secondary)" }}>
                 <span>R0.00</span>
                 <span>R 2,000,000.00</span>
               </div>
@@ -251,7 +251,7 @@ export default function AdjustCoverageStep({
             <div style={coverageItemStyle}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <label style={labelStyle}>Funeral Cover</label>
-                <span style={{ fontSize: "0.875rem", fontWeight: 600, color: "#ffffff" }}>
+                <span style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--text-primary)" }}>
                   {formatCurrency(funeralCover)}
                 </span>
               </div>
@@ -262,7 +262,7 @@ export default function AdjustCoverageStep({
                 value={funeralCover}
                 onChange={setFuneralCover}
               />
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "#6b7280" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "var(--text-secondary)" }}>
                 <span>R5,000</span>
                 <span>R100,000</span>
               </div>
@@ -272,7 +272,7 @@ export default function AdjustCoverageStep({
             <div style={coverageItemStyle}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <label style={labelStyle}>Occupational Disability</label>
-                <span style={{ fontSize: "0.875rem", fontWeight: 600, color: "#ffffff" }}>
+                <span style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--text-primary)" }}>
                   {formatCurrency(occupationalDisability)}
                 </span>
               </div>
@@ -283,7 +283,7 @@ export default function AdjustCoverageStep({
                 value={occupationalDisability}
                 onChange={setOccupationalDisability}
               />
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "#6b7280" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "var(--text-secondary)" }}>
                 <span>R5,000</span>
                 <span>R200,000</span>
               </div>
@@ -324,15 +324,15 @@ export default function AdjustCoverageStep({
               style={{
                 height: "36px", padding: "0 20px",
                 borderRadius: "8px",
-                border: "1px solid #ffffff",
+                border: "1px solid var(--border)",
                 background: "transparent",
-                color: "#ffffff",
+                color: "var(--text-primary)",
                 fontSize: "0.875rem", fontWeight: 500,
                 cursor: "pointer",
                 transition: "background 0.15s",
                 boxSizing: "border-box",
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.08)"; }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "var(--border)"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
             >
               Continue to Full Quote

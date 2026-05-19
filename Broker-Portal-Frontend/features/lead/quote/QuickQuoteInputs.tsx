@@ -42,7 +42,7 @@ const PROVINCES = [
 const labelStyle: React.CSSProperties = {
   fontSize: "0.8125rem",
   fontWeight: 400,
-  color: "#9ca3af",
+  color: "var(--text-secondary)",
   display: "block",
   marginBottom: "6px",
 };
@@ -81,8 +81,8 @@ export default function QuickQuoteInputs({ formData, onFormChange, onBack, onGen
       <StepProgress steps={QUICK_STEPS} currentStep={0} variant="continuous" />
 
       <div style={{
-        background: "#181818CC",
-        border: "1px solid #30363D",
+        background: "var(--card-secondary)",
+        border: "1px solid var(--border)",
         borderRadius: "12px",
         padding: "24px",
         display: "flex",

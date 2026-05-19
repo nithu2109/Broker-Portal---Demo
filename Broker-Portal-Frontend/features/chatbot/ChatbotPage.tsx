@@ -159,7 +159,7 @@ export default function ChatbotPage() {
     >
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-medium mb-2" style={{ color: "#FFFFFF" }}>
+        <h1 className="text-2xl font-medium mb-2" style={{ color: "var(--text-primary)" }}>
           Chatbot
         </h1>
       </div>
@@ -168,8 +168,8 @@ export default function ChatbotPage() {
       <div
         className="rounded-lg overflow-hidden flex flex-col"
         style={{
-          background: "#1E1E1E",
-          border: "0.625px solid #333333",
+          background: "var(--card-secondary)",
+          border: "0.625px solid var(--border)",
           height: "calc(100vh - 200px)",
           maxHeight: "800px",
         }}
@@ -178,8 +178,8 @@ export default function ChatbotPage() {
         <div
           className="flex items-center gap-4 p-6"
           style={{
-            background: "rgba(35, 35, 35, 0.5)",
-            borderBottom: "0.625px solid #4A4A4A",
+            background: "var(--table-header-bg)",
+            borderBottom: "0.625px solid var(--border)",
           }}
         >
           <div
@@ -193,10 +193,10 @@ export default function ChatbotPage() {
             <MessageCircle size={24} style={{ color: "#FFFFFF" }} />
           </div>
           <div>
-            <h2 className="text-lg font-medium" style={{ color: "#FFFFFF" }}>
+            <h2 className="text-lg font-medium" style={{ color: "var(--text-primary)" }}>
               RMA Support Assistant
             </h2>
-            <p style={{ color: "#A0A0A0", fontSize: "14px" }}>
+            <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
               Always online
             </p>
           </div>
@@ -206,7 +206,7 @@ export default function ChatbotPage() {
         <div
           className="flex-1 overflow-y-auto p-6 space-y-4"
           style={{
-            background: "rgba(58, 58, 58, 0.1)",
+            background: "var(--background)",
           }}
         >
           {messages.map((message) => (
@@ -224,10 +224,10 @@ export default function ChatbotPage() {
                     }}
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-white truncate">
+                      <p className="text-sm font-medium truncate" style={{ color: "var(--text-primary)" }}>
                         📎 {message.file.name}
                       </p>
-                      <p className="text-xs text-[#A0A0A0]">
+                      <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
                         {(message.file.size / 1024).toFixed(2)} KB
                       </p>
                     </div>
@@ -238,9 +238,10 @@ export default function ChatbotPage() {
                   style={{
                     background:
                       message.sender === "user"
-                        ? "rgba(58, 58, 58, 0.8)"
-                        : "rgba(58, 58, 58, 0.8)",
-                    color: "#FFFFFF",
+                        ? "var(--table-header-bg)"
+                        : "var(--card-primary)",
+                    color: "var(--text-primary)",
+                    border: "1px solid var(--border)",
                     wordWrap: "break-word",
                     whiteSpace: "pre-wrap",
                   }}
@@ -256,7 +257,8 @@ export default function ChatbotPage() {
               <div
                 className="px-4 py-3 rounded-lg"
                 style={{
-                  background: "rgba(58, 58, 58, 0.8)",
+                  background: "var(--table-header-bg)",
+                  border: "1px solid var(--border)",
                 }}
               >
                 <div className="flex gap-2">
@@ -284,8 +286,8 @@ export default function ChatbotPage() {
         <div
           className="p-4"
           style={{
-            background: "rgba(58, 58, 58, 0.3)",
-            borderTop: "0.625px solid #4A4A4A",
+            background: "var(--table-header-bg)",
+            borderTop: "0.625px solid var(--border)",
           }}
         >
           {/* File Upload Preview */}
@@ -299,17 +301,18 @@ export default function ChatbotPage() {
             >
               <div className="flex items-center gap-2 flex-1 min-w-0">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">
+                  <p className="text-sm font-medium truncate" style={{ color: "var(--text-primary)" }}>
                     📎 {uploadedFile.name}
                   </p>
-                  <p className="text-xs text-[#A0A0A0]">
+                  <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
                     {(uploadedFile.size / 1024).toFixed(2)} KB
                   </p>
                 </div>
               </div>
               <button
                 onClick={removeUploadedFile}
-                className="ml-2 flex-shrink-0 text-[#A0A0A0] hover:text-white transition-colors"
+                className="ml-2 flex-shrink-0 transition-colors"
+                style={{ color: "var(--text-secondary)" }}
               >
                 ✕
               </button>
@@ -332,11 +335,11 @@ export default function ChatbotPage() {
                 background: "transparent",
                 width: "36px",
                 height: "36px",
-                color: "#A0A0A0",
+                color: "var(--text-secondary)",
               }}
               title="Upload file"
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(58, 58, 58, 0.5)";
+                e.currentTarget.style.background = "var(--border)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "transparent";
@@ -358,9 +361,9 @@ export default function ChatbotPage() {
               }}
               className="flex-1 px-3 py-2 rounded-lg outline-none text-sm"
               style={{
-                background: "#3A3A3A",
-                color: "#FFFFFF",
-                border: "none",
+                background: "var(--card-primary)",
+                color: "var(--text-primary)",
+                border: "1px solid var(--border)",
               }}
             />
 

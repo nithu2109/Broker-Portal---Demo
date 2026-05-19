@@ -1,9 +1,17 @@
 "use client";
 
-import { Bell } from "lucide-react";
-import { useUser } from "@/lib/context/UserContext";
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Badge from "@mui/material/Badge";
+import Tooltip from "@mui/material/Tooltip";
+import { Bell } from "lucide-react";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import { useUser } from "@/lib/context/UserContext";
+import { useThemeToggle } from "@/app/providers";
 
 interface DashboardHeaderProps {
   title: string;
@@ -22,11 +30,8 @@ interface DecodedToken {
   [key: string]: any;
 }
 
-const C = {
-  primary: "#1FC3EB",
-};
-
 export default function DashboardHeader({ title, subtitle, showUser = true }: DashboardHeaderProps) {
+  const { isDarkMode, toggleTheme } = useThemeToggle();
   const [displayName, setDisplayName] = useState("");
   let user = null;
   try {
@@ -93,64 +98,158 @@ export default function DashboardHeader({ title, subtitle, showUser = true }: Da
   }, [user]);
 
   return (
-    <header
-      className="flex items-center justify-between py-4 flex-shrink-0"
-      style={{
-        background: "#0B0D10",
-        borderBottom: "none",
-        paddingLeft: "0px",
-        paddingRight: "24px",
+    <Box
+      component="header"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        bgcolor: isDarkMode ? "#0B0D10" : "#FFFFFF",
+        borderBottom: "1px solid var(--border)",
+        pl: "0px",
+        pr: "24px",
         height: "56px",
         position: "sticky",
         top: 0,
         zIndex: 20,
+        flexShrink: 0,
       }}
     >
-      <div className="flex items-center h-full">
-        <div style={{
-          width: "1px",
-          height: "20px",
-          background: "#797979",
-          alignSelf: "center",
-          flexShrink: 0,
-        }} />
-        <div style={{
-          marginLeft: "12px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          height: "100%",
-          transform: "translateY(-2px)"
-        }}>
+      <Box sx={{ display: "flex", alignItems: "center", height: "100%" }}>
+        <Box
+          sx={{
+            width: "1px",
+            height: "20px",
+            bgcolor: "#797979",
+            alignSelf: "center",
+            flexShrink: 0,
+          }}
+        />
+        <Box
+          sx={{
+            ml: "12px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            height: "100%",
+            transform: "translateY(-2px)",
+          }}
+        >
           {showUser && (
-            <p style={{ fontSize: "0.8125rem", fontWeight: 400, color: "var(--muted-foreground)", marginBottom: "0.125rem" }}>
-              Welcome Back{displayName && <>! <span style={{ color: "var(--foreground)", fontWeight: 500 }}>{displayName}</span></>}
-            </p>
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: "0.8125rem",
+                fontWeight: 400,
+                color: "var(--muted-foreground)",
+                mb: "2px",
+              }}
+            >
+              Welcome Back
+              {displayName && (
+                <>
+                  !{" "}
+                  <Typography
+                    component="span"
+                    sx={{
+                      color: "var(--foreground)",
+                      fontWeight: 500,
+                      fontSize: "inherit",
+                    }}
+                  >
+                    {displayName}
+                  </Typography>
+                </>
+              )}
+            </Typography>
           )}
           {title ? (
-            <h1 style={{ fontSize: "1.5rem", fontWeight: 500, color: "var(--foreground)", lineHeight: 1.5 }}>
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: "1.5rem",
+                fontWeight: 500,
+                color: "var(--foreground)",
+                lineHeight: 1.5,
+              }}
+            >
               {title}
-            </h1>
+            </Typography>
           ) : null}
           {subtitle && (
-            <p style={{ fontSize: "0.875rem", fontWeight: 400, color: "var(--muted-foreground)", marginTop: "0.25rem", lineHeight: 1.5 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: "0.875rem",
+                fontWeight: 400,
+                color: "var(--muted-foreground)",
+                mt: "4px",
+                lineHeight: 1.5,
+              }}
+            >
               {subtitle}
-            </p>
+            </Typography>
           )}
-        </div>
-      </div>
-      <div className="flex items-center gap-3">
-        <button suppressHydrationWarning className="header-bell" aria-label="Notifications" style={{ width: "20px", height: "20px", padding: 0 }}>
-          <div style={{ width: "20px", height: "20px", position: "relative" }}>
-            <Bell size={16} style={{ position: "absolute", top: "2px", left: "2px", pointerEvents: "none" }} />
-            <span
-              className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full"
-              style={{ background: "var(--primary)" }}
-            />
-          </div>
-        </button>
-      </div>
-    </header>
+        </Box>
+      </Box>
+      <Box sx={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <Tooltip
+          title={isDarkMode ? "Light Mode" : "Dark Mode"}
+          aria-label="Toggle Theme"
+        >
+          <IconButton
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            sx={{
+              width: "36px",
+              height: "36px",
+              borderRadius: "6px",
+              color: isDarkMode ? "#FFFFFF" : "#616161",
+              bgcolor: "transparent",
+              "&:hover": {
+                bgcolor: "color-mix(in oklab, #1fc3eb 50%, transparent)",
+                color: isDarkMode ? "#FFFFFF" : "#0A0A0A",
+              },
+            }}
+          >
+            {isDarkMode ? (
+              <Brightness7Icon sx={{ fontSize: 18 }} />
+            ) : (
+              <Brightness4Icon sx={{ fontSize: 18 }} />
+            )}
+          </IconButton>
+        </Tooltip>
+
+        <IconButton
+          suppressHydrationWarning
+          aria-label="Notifications"
+          sx={{
+            width: "36px",
+            height: "36px",
+            borderRadius: "6px",
+            color: isDarkMode ? "#FFFFFF" : "#616161",
+            bgcolor: "transparent",
+            "&:hover": {
+              bgcolor: "color-mix(in oklab, #1fc3eb 50%, transparent)",
+              color: isDarkMode ? "#FFFFFF" : "#0A0A0A",
+            },
+          }}
+        >
+          <Badge
+            variant="dot"
+            sx={{
+              "& .MuiBadge-badge": {
+                bgcolor: "#1FC3EB",
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+              },
+            }}
+          >
+            <Bell size={16} />
+          </Badge>
+        </IconButton>
+      </Box>
+    </Box>
   );
 }
-  

@@ -4,7 +4,32 @@ import React, { useState } from "react";
 import { X, Lock, Info } from "lucide-react";
 import CustomInput from "@/components/ui/CustomInput";
 import CustomSelect from "@/components/ui/CustomSelect";
-import OptionToggleGroup from "@/components/ui/OptionToggleGroup";
+interface RadioGroupProps {
+  name: string;
+  options: string[];
+  value: string;
+  onChange: (val: string) => void;
+}
+
+function CustomRadioGroup({ name, options, value, onChange }: RadioGroupProps) {
+  return (
+    <div className="flex flex-col gap-3 mt-2">
+      {options.map((opt) => (
+        <label key={opt} className="flex items-center gap-2 cursor-pointer text-[15px] text-[var(--text-primary)] font-sans">
+          <input
+            type="radio"
+            name={name}
+            value={opt}
+            checked={value === opt}
+            onChange={() => onChange(opt)}
+            className="w-[18px] h-[18px] accent-[#1FC3EB] cursor-pointer"
+          />
+          {opt}
+        </label>
+      ))}
+    </div>
+  );
+}
 
 interface CheckoutInfoModalProps {
   isOpen: boolean;
@@ -75,12 +100,17 @@ export default function CheckoutInfoModal({
     dob.trim() !== "" &&
     cellphone.trim() !== "" &&
     idNumber.trim() !== "" &&
+    (hasSaId === "Yes" || passportExpiry.trim() !== "") &&
+    nationality.trim() !== "" &&
+    homeAddress.trim() !== "" &&
     emailForPolicy.trim() !== "" &&
     emailForInvoice.trim() !== "" &&
     bossFirstName.trim() !== "" &&
     bossSurname.trim() !== "" &&
     bossDob.trim() !== "" &&
     bossIdNumber.trim() !== "" &&
+    (bossHasSaId === "Yes" || bossPassportExpiry.trim() !== "") &&
+    bossNationality.trim() !== "" &&
     registeredName.trim() !== "" &&
     tradingName.trim() !== "" &&
     registrationNo.trim() !== "" &&
@@ -90,6 +120,7 @@ export default function CheckoutInfoModal({
     acknowledged &&
     accountNumber.trim() !== "" &&
     debitDay !== "";
+
 
   const handleNext = () => {
     onNext({
@@ -140,7 +171,7 @@ export default function CheckoutInfoModal({
   const labelStyle: React.CSSProperties = {
     fontSize: "16px",
     fontWeight: "bold",
-    color: "#FFFFFF",
+    color: "var(--text-primary)",
     display: "block",
     marginBottom: "10px",
   };
@@ -148,7 +179,7 @@ export default function CheckoutInfoModal({
   const sectionHeaderStyle: React.CSSProperties = {
     fontSize: "28px",
     fontWeight: "bold",
-    color: "#1FC3EB",
+    color: "var(--primary)",
     marginTop: "24px",
     marginBottom: "16px",
   };
@@ -166,9 +197,9 @@ export default function CheckoutInfoModal({
       <div
         className="flex flex-col w-full max-w-[550px] max-h-[95vh] rounded-[16px] overflow-hidden shadow-2xl relative"
         style={{
-          background: "#1E1E1E",
-          color: "#FFFFFF",
-          border: "0.625px solid #4A4A4A",
+          background: "var(--card-secondary)",
+          color: "var(--text-primary)",
+          border: "1px solid var(--border)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -176,16 +207,16 @@ export default function CheckoutInfoModal({
         <div className="flex-1 overflow-y-auto px-10 py-10 space-y-8 custom-scrollbar">
           {/* Main Title Area */}
           <div className="text-center space-y-4">
-            <h3 className="text-[32px] font-bold text-white leading-tight font-sans">
+            <h3 className="text-[32px] font-bold text-[var(--text-primary)] leading-tight font-sans">
               Lastly, we need some info for policy servicing and payment
             </h3>
-            <p className="text-[20px] text-[#A0A0A0] font-sans">
+            <p className="text-[20px] text-[var(--text-secondary)] font-sans">
               Please ensure the info is accurate
             </p>
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full h-10 bg-[#2D2D2D] rounded-sm overflow-hidden flex relative items-center border border-[#4A4A4A]">
+          <div className="w-full h-10 bg-[var(--table-header-bg)] rounded-sm overflow-hidden flex relative items-center border border-[var(--border)]">
             <div
               className="h-full bg-[#1FC3EB] transition-all duration-500 flex items-center justify-center"
               style={{ width: "80%" }}
@@ -201,7 +232,8 @@ export default function CheckoutInfoModal({
             <label style={labelStyle}>
               Are you authorised to act on behalf of the organisation?
             </label>
-            <OptionToggleGroup
+            <CustomRadioGroup
+              name="authorised"
               options={["Yes", "No"]}
               value={authorised}
               onChange={setAuthorised}
@@ -209,7 +241,7 @@ export default function CheckoutInfoModal({
           </div>
 
           {/* Section: Your Details */}
-          <div className="space-y-6 pt-4 border-t border-[#2D2D2D]">
+          <div className="space-y-6 pt-4 border-t border-[var(--border)]">
             <h4 style={sectionHeaderStyle}>Your Details</h4>
 
             {/* Question: Director */}
@@ -217,7 +249,8 @@ export default function CheckoutInfoModal({
               <label style={labelStyle}>
                 Are you a director or member of the organisation?
               </label>
-              <OptionToggleGroup
+              <CustomRadioGroup
+                name="isDirector"
                 options={["Yes", "No"]}
                 value={isDirector}
                 onChange={setIsDirector}
@@ -225,7 +258,7 @@ export default function CheckoutInfoModal({
             </div>
 
             {/* Inputs: First Name & Surname */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <div className="space-y-6">
               <div>
                 <label style={labelStyle}>First name</label>
                 <CustomInput
@@ -253,12 +286,11 @@ export default function CheckoutInfoModal({
                 type="date"
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
-                style={{ colorScheme: "dark" }}
               />
             </div>
 
             {/* Cellphone & Landline */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <div className="space-y-6">
               <div>
                 <label style={labelStyle}>Cellphone</label>
                 <CustomInput
@@ -284,7 +316,8 @@ export default function CheckoutInfoModal({
               <label style={labelStyle}>
                 Do you have a South African ID Number?
               </label>
-              <OptionToggleGroup
+              <CustomRadioGroup
+                name="hasSaId"
                 options={["Yes", "No"]}
                 value={hasSaId}
                 onChange={setHasSaId}
@@ -294,7 +327,7 @@ export default function CheckoutInfoModal({
             {/* ID or Passport Number */}
             <div>
               <label style={labelStyle}>ID or passport number</label>
-              <p className="text-[11px] text-[#A0A0A0] mb-2">Used as a password for opening documents containing employee details</p>
+              <p className="text-[11px] text-[var(--text-secondary)] mb-2">Used as a password for opening documents containing employee details</p>
               <CustomInput
                 type="text"
                 placeholder="ID or passport number"
@@ -310,7 +343,6 @@ export default function CheckoutInfoModal({
                 type="date"
                 value={passportExpiry}
                 onChange={(e) => setPassportExpiry(e.target.value)}
-                style={{ colorScheme: "dark" }}
               />
             </div>
 
@@ -341,7 +373,7 @@ export default function CheckoutInfoModal({
             {/* Emails */}
             <div>
               <label style={labelStyle}>Email address for policy document and logging in</label>
-              <p className="text-[11px] text-[#A0A0A0] mb-2">Please note sensitive employee info will be sent to this address</p>
+              <p className="text-[11px] text-[var(--text-secondary)] mb-2">Please note sensitive employee info will be sent to this address</p>
               <CustomInput
                 type="email"
                 placeholder="Email address for policy"
@@ -362,11 +394,11 @@ export default function CheckoutInfoModal({
           </div>
 
           {/* Section: Boss / MD / CEO details */}
-          <div className="space-y-6 pt-4 border-t border-[#2D2D2D]">
+          <div className="space-y-6 pt-4 border-t border-[var(--border)]">
             <h4 style={sectionHeaderStyle}>Boss / MD / CEO details</h4>
 
             {/* First Name & Surname */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <div className="space-y-6">
               <div>
                 <label style={labelStyle}>First name</label>
                 <CustomInput
@@ -394,7 +426,6 @@ export default function CheckoutInfoModal({
                 type="date"
                 value={bossDob}
                 onChange={(e) => setBossDob(e.target.value)}
-                style={{ colorScheme: "dark" }}
               />
             </div>
 
@@ -403,7 +434,8 @@ export default function CheckoutInfoModal({
               <label style={labelStyle}>
                 Does your Boss / MD / CEO have a South African ID Number?
               </label>
-              <OptionToggleGroup
+              <CustomRadioGroup
+                name="bossHasSaId"
                 options={["Yes", "No"]}
                 value={bossHasSaId}
                 onChange={setBossHasSaId}
@@ -413,7 +445,7 @@ export default function CheckoutInfoModal({
             {/* Boss ID or Passport */}
             <div>
               <label style={labelStyle}>ID or passport</label>
-              <p className="text-[11px] text-[#A0A0A0] mb-2">Used as a password for opening documents containing employee details</p>
+              <p className="text-[11px] text-[var(--text-secondary)] mb-2">Used as a password for opening documents containing employee details</p>
               <CustomInput
                 type="text"
                 placeholder="ID or passport"
@@ -429,7 +461,6 @@ export default function CheckoutInfoModal({
                 type="date"
                 value={bossPassportExpiry}
                 onChange={(e) => setBossPassportExpiry(e.target.value)}
-                style={{ colorScheme: "dark" }}
               />
             </div>
 
@@ -459,7 +490,7 @@ export default function CheckoutInfoModal({
           </div>
 
           {/* Section: Organisation details */}
-          <div className="space-y-6 pt-4 border-t border-[#2D2D2D]">
+          <div className="space-y-6 pt-4 border-t border-[var(--border)]">
             <h4 style={sectionHeaderStyle}>Organisation details</h4>
 
             <p className="text-[14px] text-[#EF4444] font-medium leading-relaxed mb-4">
@@ -483,7 +514,8 @@ export default function CheckoutInfoModal({
             {/* Country of Incorporation */}
             <div className="space-y-4">
               <label style={labelStyle}>Country of Incorporation/Registration</label>
-              <OptionToggleGroup
+              <CustomRadioGroup
+                name="countryOfInc"
                 options={["South Africa", "Other"]}
                 value={countryOfInc}
                 onChange={setCountryOfInc}
@@ -512,7 +544,7 @@ export default function CheckoutInfoModal({
             </div>
 
             {/* Registration No & Stock Exchange */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <div className="space-y-6">
               <div>
                 <label style={labelStyle}>Registration no</label>
                 <CustomInput
@@ -546,7 +578,7 @@ export default function CheckoutInfoModal({
 
             <div>
               <label style={labelStyle}>Physical Address</label>
-              <p className="text-[11px] text-[#A0A0A0] mb-2">Provide Head Office address if there are multiple addresses</p>
+              <p className="text-[11px] text-[var(--text-secondary)] mb-2">Provide Head Office address if there are multiple addresses</p>
               <CustomInput
                 type="text"
                 placeholder="Type physical address ..."
@@ -558,7 +590,8 @@ export default function CheckoutInfoModal({
             {/* Source of Funds */}
             <div className="space-y-4">
               <label style={labelStyle}>Source of Funds</label>
-              <OptionToggleGroup
+              <CustomRadioGroup
+                name="sourceOfFunds"
                 options={["Company profits", "Investment returns", "Donations", "Government"]}
                 value={sourceOfFunds}
                 onChange={setSourceOfFunds}
@@ -566,7 +599,7 @@ export default function CheckoutInfoModal({
             </div>
 
             {/* Tax & VAT Number */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <div className="space-y-6">
               <div>
                 <label style={labelStyle}>Company Tax Number</label>
                 <CustomInput
@@ -589,14 +622,14 @@ export default function CheckoutInfoModal({
           </div>
 
           {/* Section: Payment details */}
-          <div className="space-y-6 pt-4 border-t border-[#2D2D2D]">
+          <div className="space-y-6 pt-4 border-t border-[var(--border)]">
             <h4 style={sectionHeaderStyle}>Payment details</h4>
 
             {/* Legal Mandate Text */}
-            <div className="space-y-4 text-[13px] text-[#A0A0A0] leading-relaxed">
+            <div className="space-y-4 text-[13px] text-[var(--text-secondary)] leading-relaxed">
               <p>
                 I authorise By checking the box below, you authorise to deduct the monthly premium of{" "}
-                <strong className="text-white">Rand Mutual Assurance</strong> from R1,436's bank account (details below),
+                <strong className="text-[var(--text-primary)]">Rand Mutual Assurance</strong> from R1,436's bank account (details below),
                 on condition the amount deducted never exceeds the amount committed to under this policy. This mandate
                 will commence on the debit order date selected below and will continue monthly thereafter
                 until it is terminated by giving not less than one month's notice. The reference number for the
@@ -623,9 +656,9 @@ export default function CheckoutInfoModal({
                 type="checkbox"
                 checked={acknowledged}
                 onChange={(e) => setAcknowledged(e.target.checked)}
-                className="w-5 h-5 accent-[#1FC3EB] rounded bg-[#262626] border-[#4A4A4A] cursor-pointer"
+                className="w-5 h-5 accent-[#1FC3EB] rounded bg-[var(--input)] border-[var(--border)] cursor-pointer"
               />
-              <span className="text-[15px] font-bold text-white group-hover:text-[#1FC3EB] transition-colors">
+              <span className="text-[15px] font-bold text-[var(--text-primary)] group-hover:text-[#1FC3EB] transition-colors">
                 Acknowledge
               </span>
             </label>
@@ -662,7 +695,8 @@ export default function CheckoutInfoModal({
             {/* Bank Account Type */}
             <div className="space-y-4">
               <label style={labelStyle}>Bank account type</label>
-              <OptionToggleGroup
+              <CustomRadioGroup
+                name="accountType"
                 options={["Cheque", "Current", "Savings", "Transmission"]}
                 value={accountType}
                 onChange={setAccountType}
@@ -685,7 +719,7 @@ export default function CheckoutInfoModal({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex flex-col items-center justify-center p-8 bg-[#1E1E1E] border-t border-[#3A3A3A] space-y-4 flex-shrink-0">
+        <div className="flex flex-col items-center justify-center p-8 bg-[var(--card-secondary)] border-t border-[var(--border)] space-y-4 flex-shrink-0">
           <button
             onClick={() => alert("Downloading quote...")}
             className="text-[14px] text-[#1FC3EB] font-medium hover:underline transition-colors"
@@ -697,7 +731,7 @@ export default function CheckoutInfoModal({
             onClick={handleNext}
             disabled={!isFormValid}
             className={`w-[240px] h-[50px] rounded-lg font-bold text-[18px] transition-all flex items-center justify-center shadow-lg ${
-              !isFormValid ? "opacity-30 cursor-not-allowed bg-[#3A3A3A] text-[#666666]" : "bg-[#F59E0B] text-[#0A0A0A] hover:opacity-90"
+              !isFormValid ? "opacity-30 cursor-not-allowed bg-[var(--border)] text-[var(--text-secondary)]" : "bg-[#F59E0B] text-[#0A0A0A] hover:opacity-90"
             }`}
           >
             Next

@@ -31,8 +31,8 @@ export default function CancelQuoteModal({
         className="flex flex-col gap-6 p-6"
         style={{
           width: "407px",
-          background: "#1E1E1E",
-          border: "0.625px solid #4A4A4A",
+          background: "var(--card-secondary)",
+          border: "1px solid var(--border)",
           borderRadius: "10px",
         }}
         onClick={(e) => e.stopPropagation()}
@@ -45,7 +45,7 @@ export default function CancelQuoteModal({
               fontWeight: 700,
               lineHeight: "30px",
               letterSpacing: "-0.449219px",
-              color: "#FFFFFF",
+              color: "var(--text-primary)",
             }}
           >
             Cancel Quote
@@ -54,7 +54,7 @@ export default function CancelQuoteModal({
             onClick={onClose}
             className="flex items-center justify-center w-6 h-6"
           >
-            <X size={24} color="#E3E3E3" />
+            <X size={24} color="var(--text-secondary)" />
           </button>
         </div>
 
@@ -64,7 +64,7 @@ export default function CancelQuoteModal({
             fontSize: "14px",
             lineHeight: "20px",
             letterSpacing: "-0.150391px",
-            color: "#FFFFFF",
+            color: "var(--text-secondary)",
           }}
         >
           Are your sure you want to cancel the selected quote "{quoteId}"?
@@ -74,12 +74,13 @@ export default function CancelQuoteModal({
         <div className="flex justify-end gap-6">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg"
+            className="px-4 py-2 rounded-lg border"
             style={{
-              background: "#FFFFFF",
+              background: "transparent",
+              borderColor: "var(--border)",
               fontSize: "14px",
               fontWeight: 700,
-              color: "#0A0A0A",
+              color: "var(--text-primary)",
             }}
           >
             Cancel

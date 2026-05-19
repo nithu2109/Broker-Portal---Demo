@@ -189,8 +189,8 @@ export function AdjustFullCoverStep({
   const fmt = (v: number) => "R" + v.toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   const sliderCard: React.CSSProperties = {
-    background: "#1B1B1B",
-    border: "1px solid #2B3138",
+    background: "var(--table-header-bg)",
+    border: "1px solid var(--border)",
     borderRadius: "10px",
     padding: "12px 14px",
   };
@@ -223,16 +223,16 @@ export function AdjustFullCoverStep({
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
       )}
-      <div style={{ background: "#1E1E1E", border: "1px solid #273444", borderRadius: "10px", padding: "12px" }}>
+      <div style={{ background: "var(--card-secondary)", border: "1px solid var(--border)", borderRadius: "10px", padding: "12px" }}>
         <div style={{ display: "flex", gap: "8px", marginBottom: "14px" }}>
           <button
             onClick={() => setCoverMode?.("multiple")}
             style={{
               padding: "6px 10px",
-              background: coverMode === "multiple" ? "#2C3239" : "transparent",
-              border: "1px solid #3A4149",
+              background: coverMode === "multiple" ? "var(--border)" : "transparent",
+              border: "1px solid var(--border)",
               borderRadius: "6px",
-              color: coverMode === "multiple" ? "#E5E7EB" : "#9CA3AF",
+              color: coverMode === "multiple" ? "var(--text-primary)" : "var(--text-secondary)",
               fontSize: "0.72rem",
               cursor: "pointer",
             }}
@@ -243,10 +243,10 @@ export function AdjustFullCoverStep({
             onClick={() => setCoverMode?.("equal")}
             style={{
               padding: "6px 10px",
-              background: coverMode === "equal" ? "#2C3239" : "transparent",
-              border: "1px solid #3A4149",
+              background: coverMode === "equal" ? "var(--border)" : "transparent",
+              border: "1px solid var(--border)",
               borderRadius: "6px",
-              color: coverMode === "equal" ? "#E5E7EB" : "#9CA3AF",
+              color: coverMode === "equal" ? "var(--text-primary)" : "var(--text-secondary)",
               fontSize: "0.72rem",
               cursor: "pointer",
             }}
@@ -255,10 +255,10 @@ export function AdjustFullCoverStep({
           </button>
         </div>
 
-        <h3 style={{ fontSize: "0.875rem", fontWeight: 600, color: "#ffffff", marginBottom: "8px" }}>
+        <h3 style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "8px" }}>
           Adjust Cover Amounts
         </h3>
-        <p style={{ fontSize: "0.75rem", color: "#9ca3af", marginBottom: "14px" }}>
+        <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginBottom: "14px" }}>
           For an average of{" "}
           <span style={{ color: "#1FC3EB", fontWeight: 600 }}>
             R{averageIncome.toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -268,7 +268,7 @@ export function AdjustFullCoverStep({
 
         <div style={{ ...sliderCard, marginBottom: "10px" }}>
           <label
-            style={{ fontSize: "0.75rem", color: "#d1d5db", fontWeight: 500, display: "block", marginBottom: "8px" }}
+            style={{ fontSize: "0.75rem", color: "var(--text-primary)", fontWeight: 500, display: "block", marginBottom: "8px" }}
           >
             {coverMode === "multiple"
               ? `Life cover - ${lifeCover}x annual salary (max R2M)`
@@ -285,12 +285,12 @@ export function AdjustFullCoverStep({
             style={{ width: "100%" }}
           />
           <div
-            style={{ display: "flex", justifyContent: "space-between", fontSize: "0.68rem", color: "#6b7280", marginTop: "4px" }}
+            style={{ display: "flex", justifyContent: "space-between", fontSize: "0.68rem", color: "var(--text-secondary)", marginTop: "4px" }}
           >
             <span>{coverMode === "multiple" ? "0.5x annual salary" : "R50,000"}</span>
             <span>{coverMode === "multiple" ? "5x Annual Salary" : "R2,000,000"}</span>
           </div>
-          <ul style={{ fontSize: "0.67rem", color: "#9ca3af", margin: "8px 0 0 0", paddingLeft: "16px" }}>
+          <ul style={{ fontSize: "0.67rem", color: "var(--text-secondary)", margin: "8px 0 0 0", paddingLeft: "16px" }}>
             <li>0.19% of salary up to a max of R317 per employee p/m*</li>
             <li>1 employee will be added monthly to check if they qualify for full cover.</li>
             <li>1 employees has reached the max cover limit of R2M.</li>
@@ -299,7 +299,7 @@ export function AdjustFullCoverStep({
 
         <div style={{ ...sliderCard, marginBottom: "10px" }}>
           <label
-            style={{ fontSize: "0.75rem", color: "#d1d5db", fontWeight: 500, display: "block", marginBottom: "8px" }}
+            style={{ fontSize: "0.75rem", color: "var(--text-primary)", fontWeight: 500, display: "block", marginBottom: "8px" }}
           >
             {coverMode === "multiple"
               ? `Occupational Disability cover - ${occupationalDisability}x annual salary (max R2M)`
@@ -316,12 +316,12 @@ export function AdjustFullCoverStep({
             style={{ width: "100%" }}
           />
           <div
-            style={{ display: "flex", justifyContent: "space-between", fontSize: "0.68rem", color: "#6b7280", marginTop: "4px" }}
+            style={{ display: "flex", justifyContent: "space-between", fontSize: "0.68rem", color: "var(--text-secondary)", marginTop: "4px" }}
           >
             <span>{coverMode === "multiple" ? "0.5x annual salary" : "R5,000"}</span>
             <span>{coverMode === "multiple" ? "5x Annual Salary" : "R200,000"}</span>
           </div>
-          <ul style={{ fontSize: "0.67rem", color: "#9ca3af", margin: "8px 0 0 0", paddingLeft: "16px" }}>
+          <ul style={{ fontSize: "0.67rem", color: "var(--text-secondary)", margin: "8px 0 0 0", paddingLeft: "16px" }}>
             <li>0.19% of salary up to a max of R869 per employee p/m*</li>
             <li>1 employee will be added monthly to check if they qualify for full cover.</li>
             <li>1 employees has reached the max cover limit of R2M.</li>
@@ -330,7 +330,7 @@ export function AdjustFullCoverStep({
 
         <div style={{ ...sliderCard, marginBottom: "12px" }}>
           <label
-            style={{ fontSize: "0.75rem", color: "#d1d5db", fontWeight: 500, display: "block", marginBottom: "8px" }}
+            style={{ fontSize: "0.75rem", color: "var(--text-primary)", fontWeight: 500, display: "block", marginBottom: "8px" }}
           >
             Funeral cover - R{funeralCover.toLocaleString("en-ZA")}
           </label>
@@ -345,14 +345,14 @@ export function AdjustFullCoverStep({
             style={{ width: "100%" }}
           />
           <div
-            style={{ display: "flex", justifyContent: "space-between", fontSize: "0.68rem", color: "#6b7280", marginTop: "4px" }}
+            style={{ display: "flex", justifyContent: "space-between", fontSize: "0.68rem", color: "var(--text-secondary)", marginTop: "4px" }}
           >
             <span>R5,000</span>
             <span>R50,000</span>
           </div>
         </div>
 
-        <h4 style={{ fontSize: "0.86rem", fontWeight: 600, color: "#ffffff", marginBottom: "8px" }}>
+        <h4 style={{ fontSize: "0.86rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "8px" }}>
           Additional Benefits
         </h4>
 
@@ -411,7 +411,7 @@ export function AdjustFullCoverStep({
               <span
                 style={{
                   fontSize: "0.72rem",
-                  color: benefit.active ? "#d1d5db" : "#8b949e",
+                  color: benefit.active ? "var(--text-primary)" : "var(--text-secondary)",
                   fontWeight: 500,
                 }}
               >
@@ -421,14 +421,14 @@ export function AdjustFullCoverStep({
             {benefit.active && benefit.notes.length > 0 && (
               <div
                 style={{
-                  background: "#0F1419",
-                  border: "1px solid #1F2937",
+                  background: "var(--card-primary)",
+                  border: "1px solid var(--border)",
                   borderRadius: "8px",
                   padding: "10px 12px",
                   marginTop: "6px",
                 }}
               >
-                <ul style={{ margin: 0, padding: "0 0 0 16px", color: "#9ca3af", fontSize: "0.67rem" }}>
+                <ul style={{ margin: 0, padding: "0 0 0 16px", color: "var(--text-secondary)", fontSize: "0.67rem" }}>
                   {benefit.notes.map((note) => (
                     <li key={note} style={{ marginBottom: "4px" }}>
                       {note}
@@ -468,11 +468,11 @@ export function AdjustFullCoverStep({
           }
         `}</style>
       </div>
-      <div style={{ background: "#1E1E1E", border: "1px solid #273444", borderRadius: "10px", padding: "14px" }}>
+      <div style={{ background: "var(--card-secondary)", border: "1px solid var(--border)", borderRadius: "10px", padding: "14px" }}>
         <div
           style={{
-            background: "#151515",
-            border: "1px solid #2B3138",
+            background: "var(--card-primary)",
+            border: "1px solid var(--border)",
             borderRadius: "12px",
             padding: "20px",
             height: "fit-content",
@@ -483,7 +483,7 @@ export function AdjustFullCoverStep({
             style={{
               fontSize: "1rem",
               fontWeight: 600,
-              color: "#ffffff",
+              color: "var(--text-primary)",
               marginBottom: "18px",
             }}
           >
@@ -533,7 +533,7 @@ export function AdjustFullCoverStep({
                   <span
                     style={{
                       fontSize: "0.82rem",
-                      color: "#A1A1AA",
+                      color: "var(--text-secondary)",
                       lineHeight: 1.4,
                     }}
                   >
@@ -543,7 +543,7 @@ export function AdjustFullCoverStep({
                   <span
                     style={{
                       fontSize: "0.82rem",
-                      color: "#F4F4F5",
+                      color: "var(--text-primary)",
                       whiteSpace: "nowrap",
                     }}
                   >
@@ -557,7 +557,7 @@ export function AdjustFullCoverStep({
           {/* TOTAL PREMIUM */}
           <div
             style={{
-              borderTop: "1px solid #2B3138",
+              borderTop: "1px solid var(--border)",
               marginTop: "20px",
               paddingTop: "16px",
               marginBottom: "20px",
@@ -573,7 +573,7 @@ export function AdjustFullCoverStep({
               <span
                 style={{
                   fontSize: "0.9rem",
-                  color: "#A1A1AA",
+                  color: "var(--text-secondary)",
                 }}
               >
                 Total monthly premium
@@ -594,12 +594,12 @@ export function AdjustFullCoverStep({
               style={{
                 textAlign: "center",
                 fontSize: "0.72rem",
-                color: "#71717A",
+                color: "var(--text-secondary)",
                 marginTop: "8px",
               }}
             >
               {employeeCount} employees - average premium per employee{" "}
-              <span style={{ color: "#D4D4D8" }}>{fmt(costPerMember)} p/m</span>
+              <span style={{ color: "var(--text-primary)" }}>{fmt(costPerMember)} p/m</span>
             </p>
           </div>
 
@@ -608,7 +608,7 @@ export function AdjustFullCoverStep({
             style={{
               fontSize: "1rem",
               fontWeight: 600,
-              color: "#ffffff",
+              color: "var(--text-primary)",
               marginBottom: "18px",
             }}
           >
@@ -637,7 +637,7 @@ export function AdjustFullCoverStep({
               <span
                 style={{
                   fontSize: "0.82rem",
-                  color: "#A1A1AA",
+                  color: "var(--text-secondary)",
                   maxWidth: "45%",
                   lineHeight: 1.5,
                 }}
@@ -648,7 +648,7 @@ export function AdjustFullCoverStep({
               <span
                 style={{
                   fontSize: "0.82rem",
-                  color: "#F4F4F5",
+                  color: "var(--text-primary)",
                   textAlign: "right",
                   lineHeight: 1.5,
                 }}
@@ -660,7 +660,7 @@ export function AdjustFullCoverStep({
 
           <div
             style={{
-              borderTop: "1px solid #2B3138",
+              borderTop: "1px solid var(--border)",
               marginTop: "16px",
               paddingTop: "14px",
             }}
@@ -668,7 +668,7 @@ export function AdjustFullCoverStep({
             <p
               style={{
                 fontSize: "0.7rem",
-                color: "#71717A",
+                color: "var(--text-secondary)",
                 textAlign: "center",
                 lineHeight: 1.5,
               }}

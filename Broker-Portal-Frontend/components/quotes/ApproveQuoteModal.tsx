@@ -85,8 +85,8 @@ export default function ApproveQuoteModal({
         className="flex flex-col gap-6 p-6"
         style={{
           width: "407px",
-          background: "#1E1E1E",
-          border: "0.625px solid #4A4A4A",
+          background: "var(--card-secondary)",
+          border: "1px solid var(--border)",
           borderRadius: "10px",
         }}
         onClick={(e) => e.stopPropagation()}
@@ -99,7 +99,7 @@ export default function ApproveQuoteModal({
               fontWeight: 700,
               lineHeight: "30px",
               letterSpacing: "-0.449219px",
-              color: "#FFFFFF",
+              color: "var(--text-primary)",
             }}
           >
             Approve Quote ({quoteReference})
@@ -112,7 +112,7 @@ export default function ApproveQuoteModal({
             fontSize: "14px",
             lineHeight: "20px",
             letterSpacing: "-0.150391px",
-            color: "#FFFFFF",
+            color: "var(--text-secondary)",
           }}
         >
           An OTP Will be sent to the employer email ID.
@@ -123,7 +123,7 @@ export default function ApproveQuoteModal({
           style={{
             width: "100%",
             height: "1px",
-            background: "rgba(255, 255, 255, 0.12)",
+            background: "var(--border)",
           }}
         />
 
@@ -135,7 +135,7 @@ export default function ApproveQuoteModal({
               fontWeight: 700,
               lineHeight: "27px",
               letterSpacing: "-0.439453px",
-              color: "#E6E6E6",
+              color: "var(--text-primary)",
             }}
           >
             Contact Details
@@ -144,32 +144,32 @@ export default function ApproveQuoteModal({
           <div className="flex flex-col gap-1.5">
             {/* Contact Person */}
             <div className="flex justify-between">
-              <p style={{ fontSize: "14px", color: "#A0A0A0" }}>Contact Person</p>
-              <p style={{ fontSize: "14px", color: "#FFFFFF" }}>
+              <p style={{ fontSize: "14px", color: "var(--text-secondary)" }}>Contact Person</p>
+              <p style={{ fontSize: "14px", color: "var(--text-primary)" }}>
                 {contactDetails.contactPerson}
               </p>
             </div>
 
             {/* Position */}
             <div className="flex justify-between">
-              <p style={{ fontSize: "14px", color: "#A0A0A0" }}>Position</p>
-              <p style={{ fontSize: "14px", color: "#FFFFFF" }}>
+              <p style={{ fontSize: "14px", color: "var(--text-secondary)" }}>Position</p>
+              <p style={{ fontSize: "14px", color: "var(--text-primary)" }}>
                 {contactDetails.position}
               </p>
             </div>
 
             {/* Email */}
             <div className="flex justify-between">
-              <p style={{ fontSize: "14px", color: "#A0A0A0" }}>Email</p>
-              <p style={{ fontSize: "14px", color: "#FFFFFF" }}>
+              <p style={{ fontSize: "14px", color: "var(--text-secondary)" }}>Email</p>
+              <p style={{ fontSize: "14px", color: "var(--text-primary)" }}>
                 {contactDetails.email}
               </p>
             </div>
 
             {/* Phone */}
             <div className="flex justify-between">
-              <p style={{ fontSize: "14px", color: "#A0A0A0" }}>Phone</p>
-              <p style={{ fontSize: "14px", color: "#FFFFFF" }}>
+              <p style={{ fontSize: "14px", color: "var(--text-secondary)" }}>Phone</p>
+              <p style={{ fontSize: "14px", color: "var(--text-primary)" }}>
                 {contactDetails.phone}
               </p>
             </div>
@@ -181,7 +181,7 @@ export default function ApproveQuoteModal({
           style={{
             width: "100%",
             height: "1px",
-            background: "rgba(255, 255, 255, 0.12)",
+            background: "var(--border)",
           }}
         />
 
@@ -205,12 +205,13 @@ export default function ApproveQuoteModal({
         <div className="flex justify-end gap-6">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg"
+            className="px-4 py-2 rounded-lg border"
             style={{
-              background: "#FFFFFF",
+              background: "transparent",
+              borderColor: "var(--border)",
               fontSize: "14px",
               fontWeight: 700,
-              color: "#0A0A0A",
+              color: "var(--text-primary)",
             }}
           >
             Cancel

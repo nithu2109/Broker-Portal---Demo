@@ -78,7 +78,7 @@ export default function FailedInvoicesPage() {
     >
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-2xl font-medium mb-6" style={{ color: "#f4f4f5" }}>
+        <h2 className="text-2xl font-medium mb-6" style={{ color: "var(--text-primary)" }}>
           Failed Invoices
         </h2>
 
@@ -88,11 +88,11 @@ export default function FailedInvoicesPage() {
           <div
             className="flex items-center gap-2 px-3 py-2 rounded-lg flex-1"
             style={{
-              background: "#262626",
-              border: "1.875px solid #333333",
+              background: "var(--card-secondary)",
+              border: "1.875px solid var(--border)",
             }}
           >
-            <Search size={20} style={{ color: "#A0A0A0" }} />
+            <Search size={20} style={{ color: "var(--text-secondary)" }} />
             <input
               type="text"
               placeholder="Search by company name or policy no..."
@@ -102,7 +102,7 @@ export default function FailedInvoicesPage() {
                 setCurrentPage(1);
               }}
               className="flex-1 bg-transparent outline-none text-sm"
-              style={{ color: "#FFFFFF" }}
+              style={{ color: "var(--text-primary)" }}
             />
           </div>
 
@@ -110,12 +110,12 @@ export default function FailedInvoicesPage() {
           <div
             className="flex items-center gap-2 px-3 py-2 rounded-lg"
             style={{
-              background: "#262626",
-              border: "1.875px solid #333333",
+              background: "var(--card-secondary)",
+              border: "1.875px solid var(--border)",
               minWidth: "220px",
             }}
           >
-            <span style={{ color: "#A0A0A0", fontSize: "14px" }}>Status</span>
+            <span style={{ color: "var(--text-secondary)", fontSize: "14px" }}>Status</span>
             <svg
               width="16"
               height="16"
@@ -123,7 +123,7 @@ export default function FailedInvoicesPage() {
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              style={{ color: "#A0A0A0", marginLeft: "auto" }}
+              style={{ color: "var(--text-secondary)", marginLeft: "auto" }}
             >
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
@@ -135,8 +135,8 @@ export default function FailedInvoicesPage() {
       <div
         className="rounded-lg overflow-hidden"
         style={{
-          background: "#2D2D2D",
-          border: "0.625px solid #4A4A4A",
+          background: "var(--card-secondary)",
+          border: "0.625px solid var(--border)",
         }}
       >
         {/* Table */}
@@ -146,61 +146,61 @@ export default function FailedInvoicesPage() {
             <thead>
               <tr
                 style={{
-                  background: "rgba(58, 58, 58, 0.5)",
-                  borderBottom: "0.625px solid #4A4A4A",
+                  background: "var(--table-header-bg)",
+                  borderBottom: "0.625px solid var(--border)",
                 }}
               >
                 <th
                   className="px-2 py-2.5 text-left font-medium"
-                  style={{ color: "#FFFFFF", width: "142px" }}
+                  style={{ color: "var(--text-primary)", width: "142px" }}
                 >
                   Invoice Number
                 </th>
                 <th
                   className="px-2 py-2.5 text-left font-medium"
-                  style={{ color: "#FFFFFF", width: "133px" }}
+                  style={{ color: "var(--text-primary)", width: "133px" }}
                 >
                   Policy Number
                 </th>
                 <th
                   className="px-2 py-2.5 text-left font-medium"
-                  style={{ color: "#FFFFFF", width: "169px" }}
+                  style={{ color: "var(--text-primary)", width: "169px" }}
                 >
                   Company Name
                 </th>
                 <th
                   className="px-2 py-2.5 text-left font-medium"
-                  style={{ color: "#FFFFFF", width: "86px" }}
+                  style={{ color: "var(--text-primary)", width: "86px" }}
                 >
                   Premium
                 </th>
                 <th
                   className="px-2 py-2.5 text-left font-medium"
-                  style={{ color: "#FFFFFF", width: "111px" }}
+                  style={{ color: "var(--text-primary)", width: "111px" }}
                 >
                   Due Date
                 </th>
                 <th
                   className="px-2 py-2.5 text-left font-medium"
-                  style={{ color: "#FFFFFF", width: "113px" }}
+                  style={{ color: "var(--text-primary)", width: "113px" }}
                 >
                   Payment Method
                 </th>
                 <th
                   className="px-2 py-2.5 text-left font-medium"
-                  style={{ color: "#FFFFFF", width: "119px" }}
+                  style={{ color: "var(--text-primary)", width: "119px" }}
                 >
                   Failure Reason
                 </th>
                 <th
                   className="px-2 py-2.5 text-left font-medium"
-                  style={{ color: "#FFFFFF", width: "98px" }}
+                  style={{ color: "var(--text-primary)", width: "98px" }}
                 >
                   Attempts
                 </th>
                 <th
                   className="px-2 py-2.5 text-left font-medium"
-                  style={{ color: "#FFFFFF", width: "192px" }}
+                  style={{ color: "var(--text-primary)", width: "192px" }}
                 >
                   Actions
                 </th>
@@ -213,31 +213,31 @@ export default function FailedInvoicesPage() {
                 <tr
                   key={invoice.id}
                   style={{
-                    borderBottom: "0.625px solid #4A4A4A",
+                    borderBottom: "0.625px solid var(--border)",
                   }}
                 >
                   <td
                     className="px-2 py-3"
-                    style={{ color: "#FFFFFF", fontFamily: "Menlo" }}
+                    style={{ color: "var(--text-primary)", fontFamily: "Menlo" }}
                   >
                     {invoice.invoiceNumber}
                   </td>
                   <td
                     className="px-2 py-3"
-                    style={{ color: "#FFFFFF", fontFamily: "Menlo" }}
+                    style={{ color: "var(--text-primary)", fontFamily: "Menlo" }}
                   >
                     {invoice.policyNumber}
                   </td>
-                  <td className="px-2 py-3" style={{ color: "#FFFFFF" }}>
+                  <td className="px-2 py-3" style={{ color: "var(--text-primary)" }}>
                     {invoice.companyName}
                   </td>
-                  <td className="px-2 py-3" style={{ color: "#FFFFFF" }}>
+                  <td className="px-2 py-3" style={{ color: "var(--text-primary)" }}>
                     {invoice.premium}
                   </td>
-                  <td className="px-2 py-3" style={{ color: "#FFFFFF" }}>
+                  <td className="px-2 py-3" style={{ color: "var(--text-primary)" }}>
                     {invoice.dueDate}
                   </td>
-                  <td className="px-2 py-3" style={{ color: "#FFFFFF" }}>
+                  <td className="px-2 py-3" style={{ color: "var(--text-primary)" }}>
                     {invoice.paymentMethod}
                   </td>
                   <td className="px-2 py-3">
@@ -251,7 +251,7 @@ export default function FailedInvoicesPage() {
                       {invoice.failureReason}
                     </span>
                   </td>
-                  <td className="px-2 py-3" style={{ color: "#FFFFFF" }}>
+                  <td className="px-2 py-3" style={{ color: "var(--text-primary)" }}>
                     {invoice.attempts} attempts
                   </td>
                   <td className="px-2 py-3">
@@ -261,11 +261,11 @@ export default function FailedInvoicesPage() {
                         className="flex items-center gap-1 px-3 py-2 rounded text-sm font-medium transition-colors"
                         style={{
                           background: "transparent",
-                          border: "1px solid #FFFFFF",
-                          color: "#FFFFFF",
+                          border: "1px solid var(--border)",
+                          color: "var(--text-primary)",
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+                          e.currentTarget.style.background = "var(--table-header-bg)";
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.background = "transparent";
@@ -278,11 +278,11 @@ export default function FailedInvoicesPage() {
                         className="flex items-center gap-1 px-3 py-2 rounded text-sm font-medium transition-colors"
                         style={{
                           background: "transparent",
-                          border: "1px solid #FFFFFF",
-                          color: "#FFFFFF",
+                          border: "1px solid var(--border)",
+                          color: "var(--text-primary)",
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+                          e.currentTarget.style.background = "var(--table-header-bg)";
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.background = "transparent";
@@ -303,11 +303,11 @@ export default function FailedInvoicesPage() {
         <div
           className="flex items-center justify-between px-4 py-3"
           style={{
-            background: "rgba(58, 58, 58, 0.3)",
-            borderTop: "0.625px solid #4A4A4A",
+            background: "var(--table-header-bg)",
+            borderTop: "0.625px solid var(--border)",
           }}
         >
-          <span style={{ color: "#A0A0A0", fontSize: "14px" }}>
+          <span style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
             Showing {startIdx + 1} to {Math.min(startIdx + itemsPerPage, filteredInvoices.length)} of{" "}
             {filteredInvoices.length} entries
           </span>
@@ -320,8 +320,8 @@ export default function FailedInvoicesPage() {
               className="flex items-center gap-1 px-3 py-2 rounded text-sm font-medium transition-colors"
               style={{
                 background: "transparent",
-                border: "1px solid #FFFFFF",
-                color: "#FFFFFF",
+                border: "1px solid var(--border)",
+                color: "var(--text-primary)",
                 opacity: currentPage === 1 ? 0.5 : 1,
                 cursor: currentPage === 1 ? "not-allowed" : "pointer",
               }}
@@ -347,8 +347,8 @@ export default function FailedInvoicesPage() {
                 className="px-3 py-2 rounded text-sm font-medium transition-colors"
                 style={{
                   background: currentPage === page ? "#1FC3EB" : "transparent",
-                  border: currentPage === page ? "none" : "1px solid #FFFFFF",
-                  color: "#FFFFFF",
+                  border: currentPage === page ? "none" : "1px solid var(--border)",
+                  color: "var(--text-primary)",
                 }}
               >
                 {page}
@@ -361,8 +361,8 @@ export default function FailedInvoicesPage() {
               className="flex items-center gap-1 px-3 py-2 rounded text-sm font-medium transition-colors"
               style={{
                 background: "transparent",
-                border: "1px solid #FFFFFF",
-                color: "#FFFFFF",
+                border: "1px solid var(--border)",
+                color: "var(--text-primary)",
                 opacity: currentPage === totalPages ? 0.5 : 1,
                 cursor: currentPage === totalPages ? "not-allowed" : "pointer",
               }}
