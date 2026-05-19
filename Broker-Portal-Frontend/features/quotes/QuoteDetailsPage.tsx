@@ -472,6 +472,7 @@ export default function QuoteDetailsPage() {
           isOpen={showApproveModal}
           onClose={() => setShowApproveModal(false)}
           quoteId={quoteId}
+          quoteReference={quoteReference}
           companyName={companyName}
           contactFirstName={quoteData.contactFirstName}
           contactLastName={quoteData.contactLastName}

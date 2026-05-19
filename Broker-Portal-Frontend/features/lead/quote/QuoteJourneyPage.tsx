@@ -108,6 +108,8 @@ export default function QuoteJourneyPage({
             averageIncome={parseFloat(formData.averageIncome) || 0}
             province={formData.province}
             industry={formData.industry}
+            companyName={companyName}
+            genderMix={formData.genderSplit}
             quoteReference={generatedQuote?.quoteReference || ""}
             onGenerateQuote={async (coverageData) => {
               setQuoteError(null);
@@ -179,6 +181,7 @@ export default function QuoteJourneyPage({
             leadReference={leadReference}
             quickQuoteData={quickQuoteData}
             quoteReference={generatedQuote?.quoteReference || ""}
+            leadId={leadId}
             onBack={() => initialType === "full" ? router.back() : setStep("SELECT_TYPE")}
             onGenerate={async (data) => {
               setQuoteError(null);
@@ -197,8 +200,6 @@ export default function QuoteJourneyPage({
                   industry: data.industry,
                   generate_options: data.generate_options,
                   benefits: data.benefits,
-                  employees: data.employees,
-                  employeeFile: data.employeeFile,
                 });
                 const quote = normaliseQuote(res.data);
                 setGeneratedQuote(quote);

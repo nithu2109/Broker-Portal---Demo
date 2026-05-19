@@ -811,7 +811,7 @@ export const saveEmployerOnboardingDetails = async (req: Request, res: Response)
     }
 
     // Update quote status to reflect that onboarding details are captured
-    await quote.update({ quote_status: "Awaiting OTP" }, { transaction: t });
+    await quote.update({ quote_status: "Awaiting Employer Acceptance" }, { transaction: t });
 
     await t.commit();
 

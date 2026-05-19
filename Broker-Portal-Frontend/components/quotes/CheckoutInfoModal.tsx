@@ -126,8 +126,8 @@ export default function CheckoutInfoModal({
       registered_address: registeredAddress,
       physical_address: physicalAddress,
       source_of_funds: sourceOfFunds,
-      tax_number: taxNumber,
-      vat_number: vatNumber,
+      company_tax_number: taxNumber,
+      company_vat_number: vatNumber,
       // Payment Details
       bank_name: bank,
       bank_account_number: accountNumber,

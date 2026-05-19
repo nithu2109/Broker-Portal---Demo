@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Plus, Search, ChevronDown, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import ApproveQuoteModal from "@/components/quotes/ApproveQuoteModal";
 import CancelQuoteModal from "@/components/quotes/CancelQuoteModal";
 import CheckoutInfoModal from "@/components/quotes/CheckoutInfoModal";
 import { getLeads, type Lead as ApiLead } from "@/lib/api/leads";
-import { updateQuoteStatus, formatRand, type Quote as ApiQuote } from "@/lib/api/quotes";
+import { updateQuoteStatus, formatRand, saveOnboardingDetails, type Quote as ApiQuote } from "@/lib/api/quotes";
 import { getRepresentativeId } from "@/lib/auth";
+import { QuoteStatus, QuoteType } from "@/lib/enums";
 
 interface Quote {
   id: string;
@@ -21,6 +22,10 @@ interface Quote {
   coverageAmount: string;
   createdDate: string;
   status: "new" | "onboarding" | "approved" | "pending" | "cancelled";
+  contactFirstName?: string;
+  contactLastName?: string;
+  contactEmail?: string;
+  contactMobile?: string;
 }
 
 interface Lead {
@@ -60,81 +65,93 @@ export default function QuotesPage() {
   }, [searchParams]);
 
   // Load leads (for the "Add New Quote" modal) and fetch actual quotes
+  const load = useCallback(async (isInitial = false) => {
+    if (isInitial) setLeadsLoading(true);
+    try {
+      const representativeId = getRepresentativeId() ?? undefined;
+      
+      // 1. Load leads for the "New Quote" selection modal
+      const apiLeads = await getLeads(representativeId);
+      setLeads(
+        apiLeads.map((l) => ({
+          id: l.leadId,
+          companyName: l.employerName,
+          employees: l.numberOfEmployees,
+          status: l.status,
+          leadId: l.leadId,
+          leadReference: l.leadReference,
+        }))
+      );
+
+      // 2. Load actual quotes from the quotes API
+      const { getQuotes } = await import("@/lib/api/quotes");
+      
+      const filters: any = {};
+      if (searchQuery) {
+        filters.search = searchQuery;
+        filters.searchFields = "quote_reference";
+        filters.clientName = searchQuery;
+      }
+      
+      const apiQuotes = await getQuotes(representativeId, filters);
+
+      // Map backend quotes to frontend Quote interface
+      const derivedQuotes: Quote[] = apiQuotes.map((q) => {
+        // Status mapping: backend -> frontend tabs
+        let tabStatus: Quote["status"] = "new";
+        const backendStatus = q.status;
+
+        if ([QuoteStatus.DRAFT, QuoteStatus.GENERATED, QuoteStatus.REVISED].includes(backendStatus as QuoteStatus)) {
+          tabStatus = "new";
+        } else if ([QuoteStatus.AWAITING_EMPLOYER_ACCEPTANCE, "Awaiting OTP"].includes(backendStatus)) {
+          tabStatus = "pending";
+        } else if (backendStatus === QuoteStatus.ACCEPTED) {
+          tabStatus = "onboarding";
+        } else if (backendStatus === QuoteStatus.EXPIRED) {
+          tabStatus = "approved";
+        } else if ([QuoteStatus.REJECTED, "Cancelled"].includes(backendStatus)) {
+          tabStatus = "cancelled";
+        }
+
+        // Calculate days remaining (using validUntilDays from API or defaulting to 30)
+        const createdDate = new Date(q.createdAt);
+        const expiryDate = new Date(createdDate.getTime() + (q.validUntilDays || 30) * 24 * 60 * 60 * 1000);
+        const daysRemaining = Math.max(0, Math.ceil((expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+
+        return {
+          id: q.quoteId, // Actual quote UUID
+          companyName: q.companyName,
+          quoteType: q.quoteType as any,
+          daysRemaining,
+          quoteId: q.quoteReference, // Human readable reference
+          quoteReference: q.quoteReference,
+          monthlyPremium: formatRand(q.monthlyPremium),
+          coverageAmount: formatRand(q.coverageAmount),
+          createdDate: createdDate.toLocaleDateString("en-ZA"),
+          status: tabStatus,
+          contactFirstName: q.contactFirstName,
+          contactLastName: q.contactLastName,
+          contactEmail: q.contactEmail,
+          contactMobile: q.contactMobile,
+        };
+      });
+
+      setQuotes(derivedQuotes);
+    } catch (err) {
+      console.error("Failed to load quotes:", err);
+    } finally {
+      if (isInitial) setLeadsLoading(false);
+    }
+  }, [searchQuery]);
+
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
-
-    async function load(isInitial = false) {
-      if (isInitial) setLeadsLoading(true);
-      try {
-        const representativeId = getRepresentativeId() ?? undefined;
-        
-        // 1. Load leads for the "New Quote" selection modal
-        const apiLeads = await getLeads(representativeId);
-        setLeads(
-          apiLeads.map((l) => ({
-            id: l.leadId,
-            companyName: l.employerName,
-            employees: l.numberOfEmployees,
-            status: l.status,
-            leadId: l.leadId,
-            leadReference: l.leadReference,
-          }))
-        );
-
-        // 2. Load actual quotes from the quotes API
-        const { getQuotes } = await import("@/lib/api/quotes");
-        const apiQuotes = await getQuotes(representativeId);
-
-        // Map backend quotes to frontend Quote interface
-        const derivedQuotes: Quote[] = apiQuotes.map((q) => {
-          // Status mapping: backend -> frontend tabs
-          let tabStatus: Quote["status"] = "new";
-          const backendStatus = q.status;
-
-          if (["Draft", "Generated", "Revised"].includes(backendStatus)) {
-            tabStatus = "new";
-          } else if (["Awaiting Employer Acceptance", "Awaiting OTP"].includes(backendStatus)) {
-            tabStatus = "pending";
-          } else if (backendStatus === "Accepted") {
-            tabStatus = "onboarding";
-          } else if (backendStatus === "Expired") {
-            tabStatus = "approved";
-          } else if (["Rejected", "Cancelled"].includes(backendStatus)) {
-            tabStatus = "cancelled";
-          }
-
-          // Calculate days remaining (using validUntilDays from API or defaulting to 30)
-          const createdDate = new Date(q.createdAt);
-          const expiryDate = new Date(createdDate.getTime() + (q.validUntilDays || 30) * 24 * 60 * 60 * 1000);
-          const daysRemaining = Math.max(0, Math.ceil((expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
-
-          return {
-            id: q.quoteId, // Actual quote UUID
-            companyName: q.companyName,
-            quoteType: q.quoteType,
-            daysRemaining,
-            quoteId: q.quoteReference, // Human readable reference
-            quoteReference: q.quoteReference,
-            monthlyPremium: formatRand(q.monthlyPremium),
-            coverageAmount: formatRand(q.coverageAmount),
-            createdDate: createdDate.toLocaleDateString("en-ZA"),
-            status: tabStatus,
-          };
-        });
-
-        setQuotes(derivedQuotes);
-      } catch (err) {
-        console.error("Failed to load quotes:", err);
-      } finally {
-        if (isInitial) setLeadsLoading(false);
-      }
-    }
 
     load(true);
     intervalId = setInterval(() => load(false), 10000); // Poll every 10s
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [load]);
 
   // Filter quotes by active tab
   const filteredQuotes = quotes.filter((quote) => quote.status === activeTab);
@@ -162,21 +179,16 @@ export default function QuotesPage() {
     setOpenActionsMenu(null);
   };
 
-  const handleCheckoutNext = async () => {
+  const handleCheckoutNext = async (onboardingData: any) => {
     if (selectedQuoteForApproval) {
-      // For now, we skip saving onboarding details to backend as requested
-      // try {
-      //   await saveOnboardingDetails(selectedQuoteForApproval.id, onboardingData);
-      //   setShowCheckoutModal(false);
-      //   setShowApproveModal(true);
-      // } catch (err) {
-      //   console.error("Failed to save onboarding details:", err);
-      //   alert("Failed to save onboarding details. Please try again.");
-      // }
-      
-      // Directly move to the approval (OTP) modal
-      setShowCheckoutModal(false);
-      setShowApproveModal(true);
+      try {
+        await saveOnboardingDetails(selectedQuoteForApproval.id, onboardingData);
+        setShowCheckoutModal(false);
+        setShowApproveModal(true);
+      } catch (err) {
+        console.error("Failed to save onboarding details:", err);
+        alert(err instanceof Error ? err.message : "Failed to save onboarding details. Please try again.");
+      }
     }
   };
 
@@ -212,30 +224,11 @@ export default function QuotesPage() {
     setActiveTab("cancelled");
   };
 
-  const handleSendOTP = async () => {
-    if (selectedQuoteForApproval) {
-      // Optimistic update
-      setQuotes((prev) =>
-        prev.map((q) =>
-          q.id === selectedQuoteForApproval.id ? { ...q, status: "approved" as const } : q
-        )
-      );
-      try {
-        await updateQuoteStatus(selectedQuoteForApproval.quoteId, "approved");
-      } catch {
-        // revert on failure
-        setQuotes((prev) =>
-          prev.map((q) =>
-            q.id === selectedQuoteForApproval.id
-              ? { ...q, status: selectedQuoteForApproval.status }
-              : q
-          )
-        );
-      }
-    }
+  const handleSendOTP = () => {
     setShowApproveModal(false);
     setSelectedQuoteForApproval(null);
-    setActiveTab("approved");
+    setActiveTab("onboarding");
+    load(false); // Trigger immediate non-blocking refresh of quotes list!
   };
 
   return (
@@ -509,8 +502,13 @@ export default function QuotesPage() {
             setShowApproveModal(false);
             setSelectedQuoteForApproval(null);
           }}
-          quoteId={selectedQuoteForApproval.quoteId}
+          quoteId={selectedQuoteForApproval.id}
+          quoteReference={selectedQuoteForApproval.quoteId}
           companyName={selectedQuoteForApproval.companyName}
+          contactFirstName={selectedQuoteForApproval.contactFirstName}
+          contactLastName={selectedQuoteForApproval.contactLastName}
+          contactEmail={selectedQuoteForApproval.contactEmail}
+          contactMobile={selectedQuoteForApproval.contactMobile}
           onSendOTP={handleSendOTP}
         />
       )}
