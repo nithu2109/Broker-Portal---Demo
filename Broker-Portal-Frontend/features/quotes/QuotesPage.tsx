@@ -276,7 +276,7 @@ export default function QuotesPage() {
 
       {/* Header */}
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: "24px", px: "24px", pt: "24px" }}>
-        <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, color: "#FFFFFF" }}>
+        <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, color: "var(--text-primary)" }}>
           Quotes
         </Typography>
         <Button
@@ -308,7 +308,7 @@ export default function QuotesPage() {
       <Box sx={{ px: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
         {/* Search Section */}
         <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>Search Quotes</Typography>
+          <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)" }}>Search Quotes</Typography>
           <TextField
             fullWidth
             placeholder="Search by company name or quote ID..."
@@ -326,7 +326,7 @@ export default function QuotesPage() {
             sx={{
               "& .MuiOutlinedInput-root": {
                 height: "44px",
-                bgcolor: "#2D2D2D",
+                bgcolor: "var(--card-secondary)",
               }
             }}
           />
@@ -346,12 +346,12 @@ export default function QuotesPage() {
                 fontSize: "14px",
                 fontWeight: 500,
                 textTransform: "none",
-                bgcolor: activeTab === tab.key ? "#1FC3EB" : "rgba(58,58,58,0.3)",
-                borderColor: activeTab === tab.key ? "none" : "#3A3A3A",
-                color: activeTab === tab.key ? "#151515" : "#FFFFFF",
+                bgcolor: activeTab === tab.key ? "#1FC3EB" : "var(--card-secondary)",
+                borderColor: activeTab === tab.key ? "none" : "var(--border)",
+                color: activeTab === tab.key ? "#151515" : "var(--text-primary)",
                 "&:hover": {
-                  bgcolor: activeTab === tab.key ? "#1AB3D9" : "rgba(58,58,58,0.5)",
-                  borderColor: "#3A3A3A",
+                  bgcolor: activeTab === tab.key ? "#1AB3D9" : "var(--card-primary)",
+                  borderColor: "var(--border)",
                 }
               }}
             >
@@ -364,15 +364,15 @@ export default function QuotesPage() {
         <Stack spacing={2} sx={{ mb: "24px" }}>
           {filteredQuotes.length === 0 ? (
             <Box sx={{ textAlignment: "center", py: "48px" }}>
-              <Typography sx={{ color: "#A0A0A0", fontSize: "14px", textAlign: "center" }}>No quotes in this category</Typography>
+              <Typography sx={{ color: "var(--text-secondary)", fontSize: "14px", textAlign: "center" }}>No quotes in this category</Typography>
             </Box>
           ) : (
             filteredQuotes.map((quote) => (
               <Card
                 key={quote.id}
                 sx={{
-                  bgcolor: "#1E1E1E",
-                  border: "1px solid #4A4A4A",
+                  bgcolor: "var(--card-secondary)",
+                  border: "1px solid var(--border)",
                   borderRadius: "10px",
                   p: "24px",
                   boxShadow: "none",
@@ -383,7 +383,7 @@ export default function QuotesPage() {
                   <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: "16px" }}>
                     {/* Company Name & Badges */}
                     <Box sx={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
-                      <Typography variant="h3" sx={{ fontSize: "18px", fontWeight: 500, color: "#FFFFFF", m: 0 }}>
+                      <Typography variant="h3" sx={{ fontSize: "18px", fontWeight: 500, color: "var(--text-primary)", m: 0 }}>
                         {quote.companyName}
                       </Typography>
                       
@@ -405,8 +405,8 @@ export default function QuotesPage() {
                         sx={{
                           height: "22px",
                           bgcolor: "transparent",
-                          border: "1px solid #4A4A4A",
-                          color: "#FFFFFF",
+                          border: "1px solid var(--border)",
+                          color: "var(--text-primary)",
                           fontSize: "12px",
                           fontWeight: 500,
                           "& .MuiChip-label": { px: "8px" }
@@ -417,20 +417,20 @@ export default function QuotesPage() {
                     {/* Quote Details Grid */}
                     <Grid container spacing={2}>
                       <Grid size={{ xs: 12, sm: 3 }}>
-                        <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Quote ID</Typography>
-                        <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>{quote.quoteId}</Typography>
+                        <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Quote ID</Typography>
+                        <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)" }}>{quote.quoteId}</Typography>
                       </Grid>
                       <Grid size={{ xs: 12, sm: 3 }}>
-                        <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Monthly Premium</Typography>
+                        <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Monthly Premium</Typography>
                         <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#1FC3EB" }}>{quote.monthlyPremium}</Typography>
                       </Grid>
                       <Grid size={{ xs: 12, sm: 3 }}>
-                        <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Coverage Amount</Typography>
-                        <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>{quote.coverageAmount}</Typography>
+                        <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Coverage Amount</Typography>
+                        <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)" }}>{quote.coverageAmount}</Typography>
                       </Grid>
                       <Grid size={{ xs: 12, sm: 3 }}>
-                        <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Created Date</Typography>
-                        <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>{quote.createdDate}</Typography>
+                        <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Created Date</Typography>
+                        <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)" }}>{quote.createdDate}</Typography>
                       </Grid>
                     </Grid>
                   </Box>
@@ -443,14 +443,14 @@ export default function QuotesPage() {
                       onClick={(e) => handleOpenMenu(e, quote)}
                       sx={{
                         height: "36px",
-                        bgcolor: "rgba(58,58,58,0.3)",
-                        borderColor: "#3A3A3A",
+                        bgcolor: "transparent",
+                        borderColor: "var(--border)",
                         borderRadius: "8px",
-                        color: "#FFFFFF",
+                        color: "var(--text-primary)",
                         textTransform: "none",
                         "&:hover": {
-                          bgcolor: "rgba(58,58,58,0.5)",
-                          borderColor: "#3A3A3A",
+                          bgcolor: "var(--border)",
+                          borderColor: "var(--border)",
                         }
                       }}
                     >
@@ -471,9 +471,9 @@ export default function QuotesPage() {
         onClose={handleCloseMenu}
         sx={{
           "& .MuiPaper-root": {
-            bgcolor: "#262626",
-            border: "1px solid #3A3A3A",
-            color: "#FFFFFF",
+            bgcolor: "var(--card-secondary)",
+            border: "1px solid var(--border)",
+            color: "var(--text-primary)",
             minWidth: "160px",
           }
         }}
@@ -536,17 +536,17 @@ export default function QuotesPage() {
         slotProps={{
           paper: {
             sx: {
-              bgcolor: "#1E1E1E",
-              border: "1px solid #4A4A4A",
+              bgcolor: "var(--card-secondary)",
+              border: "1px solid var(--border)",
               borderRadius: "10px",
-              color: "#FFFFFF",
+              color: "var(--text-primary)",
             }
           }
         }}
       >
-        <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #4A4A4A", p: "24px" }}>
-          <Typography variant="h6" sx={{ fontWeight: 500, color: "#FFFFFF" }}>Generate New Quote</Typography>
-          <IconButton onClick={() => { setShowLeadModal(false); setSelectedLead(null); }} sx={{ color: "#A0A0A0" }}>
+        <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)", p: "24px" }}>
+          <Typography variant="h6" sx={{ fontWeight: 500, color: "var(--text-primary)" }}>Generate New Quote</Typography>
+          <IconButton onClick={() => { setShowLeadModal(false); setSelectedLead(null); }} sx={{ color: "var(--text-secondary)" }}>
             <X size={24} />
           </IconButton>
         </DialogTitle>
@@ -568,20 +568,20 @@ export default function QuotesPage() {
                     p: "16px",
                     borderRadius: "10px",
                     textAlign: "left",
-                    bgcolor: "rgba(58,58,58,0.5)",
-                    border: selectedLead?.id === lead.id ? "2px solid #1FC3EB" : "1px solid #4A4A4A",
-                    color: "#FFFFFF",
+                    bgcolor: "var(--table-header-bg)",
+                    border: selectedLead?.id === lead.id ? "2px solid #1FC3EB" : "1px solid var(--border)",
+                    color: "var(--text-primary)",
                     textTransform: "none",
                     "&:hover": {
-                      bgcolor: "rgba(58,58,58,0.7)",
+                      bgcolor: "var(--border)",
                       borderColor: "#1FC3EB",
                     }
                   }}
                 >
-                  <Typography variant="subtitle1" sx={{ fontWeight: 500, color: "#FFFFFF", mb: "4px" }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 500, color: "var(--text-primary)", mb: "4px" }}>
                     {lead.companyName}
                   </Typography>
-                  <Typography variant="body2" sx={{ color: "#A0A0A0" }}>
+                  <Typography variant="body2" sx={{ color: "var(--text-secondary)" }}>
                     Employees: {lead.employees} • Status: {lead.status}
                   </Typography>
                 </Button>
@@ -590,7 +590,7 @@ export default function QuotesPage() {
           </Stack>
         </DialogContent>
 
-        <DialogActions sx={{ borderTop: "1px solid #4A4A4A", p: "24px", justifyContent: "flex-end" }}>
+        <DialogActions sx={{ borderTop: "1px solid var(--border)", p: "24px", justifyContent: "flex-end" }}>
           <Button
             onClick={handleProceedWithQuote}
             disabled={!selectedLead}
@@ -607,8 +607,8 @@ export default function QuotesPage() {
                 bgcolor: "#1AB3D9",
               },
               "&.Mui-disabled": {
-                bgcolor: "#3A3A3A",
-                color: "#6B6B6B",
+                bgcolor: "var(--border)",
+                color: "var(--text-secondary)",
               }
             }}
           >

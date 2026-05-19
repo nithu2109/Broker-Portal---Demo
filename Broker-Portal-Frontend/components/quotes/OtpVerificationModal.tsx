@@ -90,8 +90,8 @@ export default function OtpVerificationModal({
         className="flex flex-col gap-6 p-6"
         style={{
           width: "440px",
-          background: "#1E1E1E",
-          border: "0.625px solid #4A4A4A",
+          background: "var(--card-secondary)",
+          border: "1px solid var(--border)",
           borderRadius: "10px",
         }}
         onClick={(e) => e.stopPropagation()}
@@ -104,7 +104,7 @@ export default function OtpVerificationModal({
               fontWeight: 700,
               lineHeight: "30px",
               letterSpacing: "-0.449219px",
-              color: "#FFFFFF",
+              color: "var(--text-primary)",
             }}
           >
             Enter OTP
@@ -113,7 +113,7 @@ export default function OtpVerificationModal({
             onClick={onClose}
             className="flex items-center justify-center w-6 h-6"
           >
-            <X size={24} color="#E3E3E3" />
+            <X size={24} color="var(--text-secondary)" />
           </button>
         </div>
 
@@ -122,7 +122,7 @@ export default function OtpVerificationModal({
           style={{
             fontSize: "15.7764px",
             lineHeight: "19px",
-            color: "#FFFFFF",
+            color: "var(--text-secondary)",
           }}
         >
           Enter the 6-digit code sent to {email}
@@ -137,7 +137,7 @@ export default function OtpVerificationModal({
               fontWeight: 500,
               lineHeight: "14px",
               letterSpacing: "-0.150391px",
-              color: "#FFFFFF",
+              color: "var(--text-primary)",
             }}
           >
             Enter OTP
@@ -173,12 +173,13 @@ export default function OtpVerificationModal({
                 onChange={(e) => handleOtpChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 disabled={isLoading}
-                className="text-center text-white font-bold text-sm focus:outline-none"
+                className="text-center font-bold text-sm focus:outline-none"
                 style={{
                   width: "57.13px",
                   height: "42px",
-                  background: "#262626",
-                  border: "0.625px solid #363636",
+                  background: "var(--input)",
+                  border: "1px solid var(--border)",
+                  color: "var(--text-primary)",
                   borderRadius: "8px",
                   opacity: isLoading ? 0.6 : 1,
                   cursor: isLoading ? "not-allowed" : "text",
@@ -193,12 +194,12 @@ export default function OtpVerificationModal({
             disabled={otp.join("").length !== 6 || isLoading}
             className="w-full h-9 rounded-lg transition-opacity"
             style={{
-              background: otp.join("").length === 6 && !isLoading ? "#1FC3EB" : "#3A3A3A",
+              background: otp.join("").length === 6 && !isLoading ? "#1FC3EB" : "var(--border)",
               fontSize: "14px",
               fontWeight: 500,
               lineHeight: "20px",
               letterSpacing: "-0.150391px",
-              color: "#FFFFFF",
+              color: otp.join("").length === 6 && !isLoading ? "#0A0A0A" : "var(--text-secondary)",
               opacity: otp.join("").length === 6 && !isLoading ? 1 : 0.5,
               cursor: otp.join("").length === 6 && !isLoading ? "pointer" : "not-allowed",
             }}

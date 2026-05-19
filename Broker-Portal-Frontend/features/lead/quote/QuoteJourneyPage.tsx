@@ -89,7 +89,7 @@ export default function QuoteJourneyPage({
               fontSize: "31px",
               fontWeight: 500,
               lineHeight: 1.2,
-              color: "#ffffff",
+              color: "var(--text-primary)",
               mb: "24px",
             }}
           >
@@ -118,7 +118,7 @@ export default function QuoteJourneyPage({
               fontSize: "31px",
               fontWeight: 500,
               lineHeight: 1.2,
-              color: "#ffffff",
+              color: "var(--text-primary)",
               mb: "24px",
             }}
           >
@@ -203,7 +203,7 @@ export default function QuoteJourneyPage({
               fontSize: "31px",
               fontWeight: 500,
               lineHeight: 1.2,
-              color: "#ffffff",
+              color: "var(--text-primary)",
               mb: "24px",
             }}
           >
@@ -291,13 +291,13 @@ export default function QuoteJourneyPage({
           sx={{
             width: "271px",
             height: "180px",
-            bgcolor: "rgba(48,48,48,0.8)",
-            border: "1px solid #30363D",
+            bgcolor: "var(--card-secondary)",
+            border: "1px solid var(--border)",
             borderRadius: "16px",
             boxShadow: "none",
             "&:hover": {
               borderColor: "#1FC3EB",
-              bgcolor: "rgba(31,195,235,0.08)",
+              bgcolor: "var(--table-header-bg)",
             }
           }}
         >
@@ -322,19 +322,19 @@ export default function QuoteJourneyPage({
               sx={{
                 width: "40px",
                 height: "40px",
-                bgcolor: "rgba(230,230,230,0.1)",
+                bgcolor: "var(--border)",
                 borderRadius: "8px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <LayoutDashboard size={20} style={{ color: "#E3E3E3" }} />
+              <LayoutDashboard size={20} style={{ color: "var(--text-primary)" }} />
             </Box>
-            <Typography variant="subtitle1" sx={{ fontSize: "1rem", fontWeight: 600, color: "#E6EDF3", m: 0 }}>
+            <Typography variant="subtitle1" sx={{ fontSize: "1rem", fontWeight: 600, color: "var(--text-primary)", m: 0 }}>
               Quick Cost Estimate
             </Typography>
-            <Typography variant="body2" sx={{ fontSize: "0.8125rem", color: "#8B949E", lineHeight: 1.5 }}>
+            <Typography variant="body2" sx={{ fontSize: "0.8125rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
               Simple and Fast! In 30 sec or less
             </Typography>
           </CardActionArea>
@@ -345,13 +345,13 @@ export default function QuoteJourneyPage({
           sx={{
             width: "271px",
             height: "180px",
-            bgcolor: "rgba(48,48,48,0.8)",
-            border: "1px solid #30363D",
+            bgcolor: "var(--card-secondary)",
+            border: "1px solid var(--border)",
             borderRadius: "16px",
             boxShadow: "none",
             "&:hover": {
               borderColor: "#1FC3EB",
-              bgcolor: "rgba(31,195,235,0.08)",
+              bgcolor: "var(--table-header-bg)",
             }
           }}
         >
@@ -376,19 +376,19 @@ export default function QuoteJourneyPage({
               sx={{
                 width: "40px",
                 height: "40px",
-                bgcolor: "rgba(230,230,230,0.1)",
+                bgcolor: "var(--border)",
                 borderRadius: "8px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <FileText size={20} style={{ color: "#E3E3E3" }} />
+              <FileText size={20} style={{ color: "var(--text-primary)" }} />
             </Box>
-            <Typography variant="subtitle1" sx={{ fontSize: "1rem", fontWeight: 600, color: "#E6EDF3", m: 0 }}>
+            <Typography variant="subtitle1" sx={{ fontSize: "1rem", fontWeight: 600, color: "var(--text-primary)", m: 0 }}>
               Full Quote
             </Typography>
-            <Typography variant="body2" sx={{ fontSize: "0.8125rem", color: "#8B949E", lineHeight: 1.5 }}>
+            <Typography variant="body2" sx={{ fontSize: "0.8125rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
               Complete pricing using real names, the income, birthdate, and salary of each employee.
             </Typography>
           </CardActionArea>
@@ -397,13 +397,13 @@ export default function QuoteJourneyPage({
 
       {/* Eligibility Criteria Section */}
       <Stack spacing={1} sx={{ flex: 1 }}>
-        <Typography sx={{ fontSize: "0.875rem", color: "#8B949E", lineHeight: 1.6 }}>
+        <Typography sx={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
           • 18 to 64 years old
         </Typography>
-        <Typography sx={{ fontSize: "0.875rem", color: "#8B949E", lineHeight: 1.6 }}>
+        <Typography sx={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
           • Permanently employed or on 6+ month contract
         </Typography>
-        <Typography sx={{ fontSize: "0.875rem", color: "#8B949E", lineHeight: 1.6 }}>
+        <Typography sx={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
           • Legally employed & actively working 20+ hours a week in SA
         </Typography>
       </Stack>

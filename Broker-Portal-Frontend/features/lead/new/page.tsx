@@ -158,7 +158,7 @@ export default function StartNewLeadPage() {
   }
  
   const inp = (hasError: boolean) => `bp-input${hasError ? " error" : ""}`;
-  const lbl = "block font-medium text-white text-sm";
+  const lbl = "block font-medium text-sm text-[var(--foreground)] opacity-90";
   const errMsg = (msg?: string) => msg ? (
     <p style={{ fontSize: "0.875rem", fontWeight: 400, lineHeight: 1.5, color: "var(--destructive)", marginTop: "0.25rem" }}>{msg}</p>
   ) : null;
@@ -231,7 +231,7 @@ export default function StartNewLeadPage() {
           className="max-w-4xl mx-auto"
           style={{
             height: "8px",
-            backgroundColor: "#3a3a3a",
+            backgroundColor: "var(--border)",
             borderRadius: "9999px",
             overflow: "hidden",
           }}
@@ -475,14 +475,14 @@ export default function StartNewLeadPage() {
         <div>
           {step > 0 && (
             <button onClick={() => setStep(s => s - 1)}
-              style={{ fontSize: "1rem", fontWeight: 500, height: "40px", padding: "0 20px", background: "transparent", border: "1px solid var(--border)", color: "#ffffff", borderRadius: "6px", cursor: "pointer" }}>
+              style={{ fontSize: "1rem", fontWeight: 500, height: "40px", padding: "0 20px", background: "transparent", border: "1px solid var(--border)", color: "var(--text-primary)", borderRadius: "6px", cursor: "pointer" }}>
               Back
             </button>
           )}
         </div>
         <div className="flex gap-4">
           <button onClick={() => router.push("/dashboard")}
-            style={{ fontSize: "1rem", fontWeight: 500, height: "40px", padding: "0 20px", background: "transparent", border: "1px solid var(--border)", color: "#ffffff", borderRadius: "6px", cursor: "pointer" }}>
+            style={{ fontSize: "1rem", fontWeight: 500, height: "40px", padding: "0 20px", background: "transparent", border: "1px solid var(--border)", color: "var(--text-primary)", borderRadius: "6px", cursor: "pointer" }}>
             Cancel
           </button>
           {step < 2 ? (
@@ -508,15 +508,15 @@ export default function StartNewLeadPage() {
       {toast && (
         <div style={{
           position: "fixed", top: "24px", right: "24px", zIndex: 9999,
-          background: "#1e1e1e", border: "1px solid #3a3a3a", borderRadius: "8px",
+          background: "var(--card-secondary)", border: "1px solid var(--border)", borderRadius: "8px",
           padding: "12px 16px", display: "flex", alignItems: "center", gap: "10px",
-          boxShadow: "0 4px 24px rgba(0,0,0,0.4)", minWidth: "220px",
+          boxShadow: "0 4px 24px rgba(0,0,0,0.2)", minWidth: "220px",
         }}>
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
             <circle cx="9" cy="9" r="9" fill="#22c55e" opacity="0.15"/>
             <path d="M5.5 9.5l2.5 2.5 4.5-5" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          <span style={{ fontSize: "14px", fontWeight: 500, color: "#ffffff" }}>{toast}</span>
+          <span style={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)" }}>{toast}</span>
         </div>
       )}
     </>

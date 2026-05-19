@@ -58,7 +58,7 @@ function QuoteTypeSelectionContent() {
               fontSize: "31px",
               fontWeight: 500,
               lineHeight: 1.25,
-              color: "#FFFFFF",
+              color: "var(--text-primary)",
             }}
           >
             Quote Generation
@@ -73,8 +73,8 @@ function QuoteTypeSelectionContent() {
               icon={<Bolt size={15} />}
               onClick={handleQuickQuote}
               style={{
-                background: "linear-gradient(180deg, rgba(48,48,48,0.8) 0%, rgba(42,42,42,0.75) 100%)",
-                borderColor: "#30363d",
+                background: "var(--card-secondary)",
+                borderColor: "var(--border)",
                 width: "271px",
                 height: "225px",
                 minHeight: "225px",
@@ -88,11 +88,11 @@ function QuoteTypeSelectionContent() {
                 justifyContent: "center",
                 borderRadius: "12px",
                 backgroundColor: "rgba(148,163,184,0.14)",
-                color: "#d1d5db",
+                color: "var(--text-primary)",
                 marginBottom: "36px",
               }}
-              titleStyle={{ fontSize: "22px", fontWeight: 500, lineHeight: "24px", color: "#f5f5f5" }}
-              descriptionStyle={{ fontSize: "12px", color: "#8f96a3", lineHeight: "18px" }}
+              titleStyle={{ fontSize: "22px", fontWeight: 500, lineHeight: "24px", color: "var(--text-primary)" }}
+              descriptionStyle={{ fontSize: "12px", color: "var(--text-secondary)", lineHeight: "18px" }}
             />
 
             <DashboardCard
@@ -101,8 +101,8 @@ function QuoteTypeSelectionContent() {
               icon={<List size={15} />}
               onClick={handleFullQuote}
               style={{
-                background: "linear-gradient(180deg, rgba(48,48,48,0.8) 0%, rgba(42,42,42,0.75) 100%)",
-                borderColor: "#30363d",
+                background: "var(--card-secondary)",
+                borderColor: "var(--border)",
                 width: "271px",
                 height: "225px",
                 minHeight: "225px",
@@ -116,11 +116,11 @@ function QuoteTypeSelectionContent() {
                 justifyContent: "center",
                 borderRadius: "12px",
                 backgroundColor: "rgba(148,163,184,0.14)",
-                color: "#d1d5db",
+                color: "var(--text-primary)",
                 marginBottom: "24px",
               }}
-              titleStyle={{ fontSize: "22px", fontWeight: 500, lineHeight: "24px", color: "#f5f5f5" }}
-              descriptionStyle={{ fontSize: "12px", color: "#8f96a3", lineHeight: "18px" }}
+              titleStyle={{ fontSize: "22px", fontWeight: 500, lineHeight: "24px", color: "var(--text-primary)" }}
+              descriptionStyle={{ fontSize: "12px", color: "var(--text-secondary)", lineHeight: "18px" }}
             />
           </Stack>
 
@@ -129,7 +129,7 @@ function QuoteTypeSelectionContent() {
             sx={{
               mt: "16px",
               pl: "20px",
-              color: "#8f96a3",
+              color: "var(--text-secondary)",
               fontSize: "12px",
               lineHeight: "20px",
             }}
@@ -146,7 +146,7 @@ function QuoteTypeSelectionContent() {
 
 export default function QuoteTypeSelection() {
   return (
-    <Suspense fallback={<Box sx={{ px: "24px", pt: "24px", color: "#FFFFFF" }}>Loading...</Box>}>
+    <Suspense fallback={<Box sx={{ px: "24px", pt: "24px", color: "var(--text-primary)" }}>Loading...</Box>}>
       <QuoteTypeSelectionContent />
     </Suspense>
   );

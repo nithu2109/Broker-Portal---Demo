@@ -132,10 +132,10 @@ export default function TrainingPage() {
     >
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-medium mb-2" style={{ color: "#FFFFFF" }}>
+        <h1 className="text-2xl font-medium mb-2" style={{ color: "var(--text-primary)" }}>
           Training
         </h1>
-        <p style={{ color: "#A0A0A0", fontSize: "14px" }}>
+        <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
           Complete training modules to master the Broker Portal
         </p>
       </div>
@@ -147,8 +147,8 @@ export default function TrainingPage() {
             key={module.id}
             className="rounded-lg overflow-hidden transition-all hover:shadow-lg"
             style={{
-              background: "#1E1E1E",
-              border: "0.625px solid #4A4A4A",
+              background: "var(--card-secondary)",
+              border: "0.625px solid var(--border)",
             }}
           >
             {/* Card Content */}
@@ -158,9 +158,9 @@ export default function TrainingPage() {
                 <div
                   className="flex items-center gap-1 px-2 py-1 rounded text-xs font-medium"
                   style={{
-                    background: "#3A3A3A",
-                    border: "0.625px solid #4A4A4A",
-                    color: "#FFFFFF",
+                    background: "var(--table-header-bg)",
+                    border: "0.625px solid var(--border)",
+                    color: "var(--text-primary)",
                   }}
                 >
                   {getTypeIcon(module.type)}
@@ -169,8 +169,8 @@ export default function TrainingPage() {
                 <div
                   className="flex items-center gap-1 px-2 py-1 rounded text-xs font-medium"
                   style={{
-                    background: "#3A3A3A",
-                    color: "#FFFFFF",
+                    background: "var(--table-header-bg)",
+                    color: "var(--text-primary)",
                   }}
                 >
                   <span>{module.duration}</span>
@@ -180,7 +180,7 @@ export default function TrainingPage() {
               {/* Title */}
               <h3
                 className="text-base font-medium mb-2"
-                style={{ color: module.status === "start" ? "#FFFFFF" : "#A0A0A0" }}
+                style={{ color: module.status === "start" ? "var(--text-primary)" : "var(--text-secondary)" }}
               >
                 {module.title}
               </h3>
@@ -188,7 +188,7 @@ export default function TrainingPage() {
               {/* Description */}
               <p
                 className="text-sm mb-6 line-clamp-2"
-                style={{ color: "#A0A0A0", lineHeight: "1.5" }}
+                style={{ color: "var(--text-secondary)", lineHeight: "1.5" }}
               >
                 {module.description}
               </p>
@@ -198,22 +198,22 @@ export default function TrainingPage() {
                 onClick={() => setSelectedModule(module)}
                 className="w-full py-2 rounded-lg font-medium transition-colors"
                 style={{
-                  background: module.status === "start" ? "#1FC3EB" : "rgba(58, 58, 58, 0.3)",
-                  color: "#FFFFFF",
-                  border: module.status === "start" ? "none" : "0.625px solid #3A3A3A",
+                  background: module.status === "start" ? "#1FC3EB" : "var(--table-header-bg)",
+                  color: module.status === "start" ? "#FFFFFF" : "var(--text-primary)",
+                  border: module.status === "start" ? "none" : "0.625px solid var(--border)",
                 }}
                 onMouseEnter={(e) => {
                   if (module.status === "start") {
                     e.currentTarget.style.background = "#0099B8";
                   } else {
-                    e.currentTarget.style.background = "rgba(58, 58, 58, 0.5)";
+                    e.currentTarget.style.background = "var(--border)";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (module.status === "start") {
                     e.currentTarget.style.background = "#1FC3EB";
                   } else {
-                    e.currentTarget.style.background = "rgba(58, 58, 58, 0.3)";
+                    e.currentTarget.style.background = "var(--table-header-bg)";
                   }
                 }}
               >
@@ -253,8 +253,8 @@ function TrainingModuleModal({ module, onClose }: TrainingModuleModalProps) {
       <div
         className="w-full max-w-2xl rounded-lg overflow-hidden"
         style={{
-          background: "#1E1E1E",
-          border: "0.625px solid #4A4A4A",
+          background: "var(--card-secondary)",
+          border: "0.625px solid var(--border)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -262,21 +262,21 @@ function TrainingModuleModal({ module, onClose }: TrainingModuleModalProps) {
         <div
           className="flex items-start justify-between p-6 border-b"
           style={{
-            borderColor: "#4A4A4A",
+            borderColor: "var(--border)",
           }}
         >
           <div>
-            <h2 className="text-xl font-medium mb-2" style={{ color: "#FFFFFF" }}>
+            <h2 className="text-xl font-medium mb-2" style={{ color: "var(--text-primary)" }}>
               {module.title}
             </h2>
-            <p style={{ color: "#A0A0A0", fontSize: "14px" }}>
+            <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
               {module.description}
             </p>
           </div>
           <button
             onClick={onClose}
             className="p-1 hover:bg-gray-700 rounded transition-colors"
-            style={{ color: "#A0A0A0" }}
+            style={{ color: "var(--text-secondary)" }}
           >
             ✕
           </button>
@@ -289,17 +289,17 @@ function TrainingModuleModal({ module, onClose }: TrainingModuleModalProps) {
             <div
               className="p-4 rounded-lg"
               style={{
-                background: "rgba(58, 58, 58, 0.5)",
-                border: "0.625px solid #4A4A4A",
+                background: "var(--table-header-bg)",
+                border: "0.625px solid var(--border)",
               }}
             >
               <p
                 className="text-xs font-medium mb-2 uppercase"
-                style={{ color: "#A0A0A0", letterSpacing: "0.3px" }}
+                style={{ color: "var(--text-secondary)", letterSpacing: "0.3px" }}
               >
                 Module Type
               </p>
-              <p style={{ color: "#FFFFFF" }}>
+              <p style={{ color: "var(--text-primary)" }}>
                 {getTypeLabel(module.type)}
               </p>
             </div>
@@ -307,17 +307,17 @@ function TrainingModuleModal({ module, onClose }: TrainingModuleModalProps) {
             <div
               className="p-4 rounded-lg"
               style={{
-                background: "rgba(58, 58, 58, 0.5)",
-                border: "0.625px solid #4A4A4A",
+                background: "var(--table-header-bg)",
+                border: "0.625px solid var(--border)",
               }}
             >
               <p
                 className="text-xs font-medium mb-2 uppercase"
-                style={{ color: "#A0A0A0", letterSpacing: "0.3px" }}
+                style={{ color: "var(--text-secondary)", letterSpacing: "0.3px" }}
               >
                 Duration
               </p>
-              <p style={{ color: "#FFFFFF" }}>
+              <p style={{ color: "var(--text-primary)" }}>
                 {module.duration}
               </p>
             </div>
@@ -327,17 +327,17 @@ function TrainingModuleModal({ module, onClose }: TrainingModuleModalProps) {
           <div
             className="p-4 rounded-lg mb-6"
             style={{
-              background: "rgba(58, 58, 58, 0.5)",
-              border: "0.625px solid #4A4A4A",
+              background: "var(--table-header-bg)",
+              border: "0.625px solid var(--border)",
             }}
           >
             <p
               className="text-xs font-medium mb-2 uppercase"
-              style={{ color: "#A0A0A0", letterSpacing: "0.3px" }}
+              style={{ color: "var(--text-secondary)", letterSpacing: "0.3px" }}
             >
               About This Module
             </p>
-            <p style={{ color: "#FFFFFF", lineHeight: "1.6" }}>
+            <p style={{ color: "var(--text-primary)", lineHeight: "1.6" }}>
               {module.description}
             </p>
           </div>
@@ -346,7 +346,7 @@ function TrainingModuleModal({ module, onClose }: TrainingModuleModalProps) {
           <div className="mb-6">
             <h3
               className="text-sm font-medium mb-4 uppercase"
-              style={{ color: "#A0A0A0", letterSpacing: "0.2px" }}
+              style={{ color: "var(--text-secondary)", letterSpacing: "0.2px" }}
             >
               What You'll Learn
             </h3>
@@ -361,8 +361,8 @@ function TrainingModuleModal({ module, onClose }: TrainingModuleModalProps) {
                   key={idx}
                   className="flex items-start gap-3 p-3 rounded-lg"
                   style={{
-                    background: "rgba(58, 58, 58, 0.3)",
-                    border: "0.625px solid #4A4A4A",
+                    background: "var(--table-header-bg)",
+                    border: "0.625px solid var(--border)",
                   }}
                 >
                   <span
@@ -374,7 +374,7 @@ function TrainingModuleModal({ module, onClose }: TrainingModuleModalProps) {
                   >
                     ✓
                   </span>
-                  <span style={{ color: "#FFFFFF" }}>{item}</span>
+                  <span style={{ color: "var(--text-primary)" }}>{item}</span>
                 </li>
               ))}
             </ul>
@@ -385,22 +385,22 @@ function TrainingModuleModal({ module, onClose }: TrainingModuleModalProps) {
         <div
           className="flex gap-3 p-6 border-t"
           style={{
-            borderColor: "#4A4A4A",
+            borderColor: "var(--border)",
           }}
         >
           <button
             onClick={onClose}
             className="flex-1 px-4 py-2 rounded-lg font-medium transition-colors"
             style={{
-              background: "rgba(58, 58, 58, 0.3)",
-              border: "0.625px solid #3A3A3A",
-              color: "#FFFFFF",
+              background: "var(--table-header-bg)",
+              border: "0.625px solid var(--border)",
+              color: "var(--text-primary)",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(58, 58, 58, 0.5)";
+              e.currentTarget.style.background = "var(--border)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(58, 58, 58, 0.3)";
+              e.currentTarget.style.background = "var(--table-header-bg)";
             }}
           >
             Close

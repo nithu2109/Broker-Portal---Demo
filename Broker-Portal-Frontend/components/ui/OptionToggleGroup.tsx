@@ -58,7 +58,7 @@ export function OptionToggleGroup({
         }}
         sx={{
           "& .MuiToggleButtonGroup-grouped": {
-            border: `1px solid ${error ? "#ef4444" : "#333333"} !important`,
+            border: `1px solid ${error ? "#ef4444" : "var(--border)"} !important`,
             borderRadius: "8px !important",
             margin: "0 !important",
             width: orientation === "vertical" ? "100%" : undefined,

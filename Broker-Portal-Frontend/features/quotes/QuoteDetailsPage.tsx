@@ -112,10 +112,10 @@ export default function QuoteDetailsPage() {
         slotProps={{
           paper: {
             sx: {
-              bgcolor: "#1E1E1E",
-              border: "0.625px solid #4A4A4A",
+              bgcolor: "var(--card-secondary)",
+              border: "1px solid var(--border)",
               borderRadius: "10px",
-              color: "#FFFFFF",
+              color: "var(--text-primary)",
               p: "24px",
             }
           }
@@ -130,7 +130,7 @@ export default function QuoteDetailsPage() {
             {/* Title / Header */}
             <DialogTitle sx={{ p: 0, display: "flex", justifyContent: "space-between", alignItems: "center", mb: "24px" }}>
               <Box sx={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <Typography variant="h6" sx={{ fontSize: "16px", fontWeight: 500, color: "#FFFFFF" }}>
+                <Typography variant="h6" sx={{ fontSize: "16px", fontWeight: 500, color: "var(--text-primary)" }}>
                   Quote Details
                 </Typography>
                 <Chip
@@ -151,9 +151,9 @@ export default function QuoteDetailsPage() {
                   variant="outlined"
                   startIcon={<Download size={16} />}
                   sx={{
-                    bgcolor: "rgba(58, 58, 58, 0.3)",
-                    borderColor: "#3A3A3A",
-                    color: "#FFFFFF",
+                    bgcolor: "transparent",
+                    borderColor: "var(--border)",
+                    color: "var(--text-primary)",
                     fontSize: "14px",
                     fontWeight: 500,
                     textTransform: "none",
@@ -161,8 +161,8 @@ export default function QuoteDetailsPage() {
                     px: "16px",
                     borderRadius: "8px",
                     "&:hover": {
-                      bgcolor: "rgba(80,80,80,0.5)",
-                      borderColor: "#4A4A4A",
+                      bgcolor: "var(--border)",
+                      borderColor: "var(--border)",
                     }
                   }}
                 >
@@ -171,14 +171,14 @@ export default function QuoteDetailsPage() {
                 <IconButton
                   onClick={() => router.back()}
                   sx={{
-                    bgcolor: "rgba(58, 58, 58, 0.3)",
-                    border: "0.625px solid #3A3A3A",
-                    color: "#FFFFFF",
+                    bgcolor: "transparent",
+                    border: "1px solid var(--border)",
+                    color: "var(--text-primary)",
                     borderRadius: "8px",
                     width: "36px",
                     height: "36px",
                     "&:hover": {
-                      bgcolor: "rgba(80,80,80,0.5)",
+                      bgcolor: "var(--border)",
                     }
                   }}
                 >
@@ -190,98 +190,98 @@ export default function QuoteDetailsPage() {
             <DialogContent sx={{ p: 0, display: "flex", flexDirection: "column", gap: "24px" }}>
               {/* Company Details */}
               <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                <Typography sx={{ fontSize: "16px", fontWeight: 700, color: "#1FC3EB" }}>
+                <Typography sx={{ fontSize: "16px", fontWeight: 700, color: "var(--primary)" }}>
                   Company Details
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid size={{ xs: 12, sm: 6 }}>
-                    <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Company Name</Typography>
-                    <Typography sx={{ fontSize: "14px", color: "#FFFFFF" }}>{quoteData.companyName}</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Company Name</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-primary)" }}>{quoteData.companyName}</Typography>
                   </Grid>
                   <Grid size={{ xs: 12, sm: 6 }}>
-                    <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Registration Number</Typography>
-                    <Typography sx={{ fontSize: "14px", color: "#FFFFFF" }}>{quoteData.registrationNumber}</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Registration Number</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-primary)" }}>{quoteData.registrationNumber}</Typography>
                   </Grid>
                 </Grid>
               </Box>
 
-              <Divider sx={{ borderColor: "#3A3A3A" }} />
+              <Divider sx={{ borderColor: "var(--border)" }} />
 
               {/* Quote Details */}
               <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                <Typography sx={{ fontSize: "16px", fontWeight: 700, color: "#1FC3EB" }}>
+                <Typography sx={{ fontSize: "16px", fontWeight: 700, color: "var(--primary)" }}>
                   Quote Details
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Employees Covered</Typography>
-                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>{quoteData.employeesCovered}</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Employees Covered</Typography>
+                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)" }}>{quoteData.employeesCovered}</Typography>
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Average Age</Typography>
-                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>{quoteData.averageAge}</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Average Age</Typography>
+                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)" }}>{quoteData.averageAge}</Typography>
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Average Income</Typography>
-                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>{quoteData.averageIncome}</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Average Income</Typography>
+                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)" }}>{quoteData.averageIncome}</Typography>
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Gender Split</Typography>
-                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF", textTransform: "capitalize" }}>{quoteData.genderSplit}</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Gender Split</Typography>
+                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)", textTransform: "capitalize" }}>{quoteData.genderSplit}</Typography>
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Province</Typography>
-                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF", textTransform: "capitalize" }}>{quoteData.province}</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Province</Typography>
+                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)", textTransform: "capitalize" }}>{quoteData.province}</Typography>
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Industry</Typography>
-                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF", textTransform: "capitalize" }}>{quoteData.industry}</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Industry</Typography>
+                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)", textTransform: "capitalize" }}>{quoteData.industry}</Typography>
                   </Grid>
                 </Grid>
               </Box>
 
-              <Divider sx={{ borderColor: "#3A3A3A" }} />
+              <Divider sx={{ borderColor: "var(--border)" }} />
 
               {/* Scheme Details */}
               <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                <Typography sx={{ fontSize: "16px", fontWeight: 700, color: "#1FC3EB" }}>
+                <Typography sx={{ fontSize: "16px", fontWeight: 700, color: "var(--primary)" }}>
                   Scheme Details
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid size={{ xs: 12, sm: 4 }}>
-                    <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Scheme</Typography>
-                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>{quoteData.scheme}</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Scheme</Typography>
+                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)" }}>{quoteData.scheme}</Typography>
                   </Grid>
                   <Grid size={{ xs: 12, sm: 4 }}>
-                    <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Benefits</Typography>
-                    <Typography sx={{ fontSize: "14px", color: "#FFFFFF", lineHeight: 1.25 }}>{quoteData.benefits.join(" ")}</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Benefits</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", lineHeight: 1.25 }}>{quoteData.benefits.join(" ")}</Typography>
                   </Grid>
                   <Grid size={{ xs: 12, sm: 4 }}>
-                    <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Value Added Services</Typography>
-                    <Typography sx={{ fontSize: "14px", color: "#FFFFFF", lineHeight: 1.25 }}>{quoteData.valueAddedServices.join(" ")}</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Value Added Services</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", lineHeight: 1.25 }}>{quoteData.valueAddedServices.join(" ")}</Typography>
                   </Grid>
                 </Grid>
               </Box>
 
-              <Divider sx={{ borderColor: "#3A3A3A" }} />
+              <Divider sx={{ borderColor: "var(--border)" }} />
 
               {/* Premium Details */}
               <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                <Typography sx={{ fontSize: "16px", fontWeight: 700, color: "#1FC3EB" }}>
+                <Typography sx={{ fontSize: "16px", fontWeight: 700, color: "var(--primary)" }}>
                   Premium Details
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid size={{ xs: 12, sm: 4 }}>
-                    <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Estimated Monthly Premium</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Estimated Monthly Premium</Typography>
                     <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#1FC3EB" }}>{quoteData.monthlyPremium}</Typography>
                   </Grid>
                   <Grid size={{ xs: 12, sm: 4 }}>
-                    <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Total Coverage Amount</Typography>
-                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>{quoteData.coverageAmount}</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Total Coverage Amount</Typography>
+                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)" }}>{quoteData.coverageAmount}</Typography>
                   </Grid>
                   <Grid size={{ xs: 12, sm: 4 }}>
-                    <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Deductible</Typography>
-                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF" }}>{quoteData.deductible}</Typography>
+                    <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Deductible</Typography>
+                    <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)" }}>{quoteData.deductible}</Typography>
                   </Grid>
                 </Grid>
               </Box>
@@ -289,27 +289,27 @@ export default function QuoteDetailsPage() {
               {/* Coverage Details - Only for Full Quote or after conversion */}
               {isFullQuote && (
                 <>
-                  <Divider sx={{ borderColor: "#3A3A3A" }} />
+                  <Divider sx={{ borderColor: "var(--border)" }} />
                   <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                    <Typography sx={{ fontSize: "18px", fontWeight: 500, color: "#FFFFFF" }}>
+                    <Typography sx={{ fontSize: "18px", fontWeight: 500, color: "var(--text-primary)" }}>
                       Coverage Details
                     </Typography>
                     <Grid container spacing={2}>
                       {/* Life Cover Card */}
                       <Grid size={{ xs: 12, sm: 6 }}>
-                        <Card sx={{ bgcolor: "rgba(58, 58, 58, 0.5)", p: "16px", display: "flex", flexDirection: "column", gap: "4px", boxShadow: "none" }}>
-                          <Typography sx={{ fontSize: "14px", color: "#A0A0A0" }}>Life Cover</Typography>
-                          <Typography sx={{ fontSize: "20px", fontWeight: 500, color: "#FFFFFF" }}>R 0.5x monthly salary</Typography>
-                          <Typography sx={{ fontSize: "12px", color: "#A0A0A0" }}>Avg of R 6,000.00 per employee</Typography>
+                        <Card sx={{ bgcolor: "var(--table-header-bg)", border: "1px solid var(--border)", p: "16px", display: "flex", flexDirection: "column", gap: "4px", boxShadow: "none" }}>
+                          <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)" }}>Life Cover</Typography>
+                          <Typography sx={{ fontSize: "20px", fontWeight: 500, color: "var(--text-primary)" }}>R 0.5x monthly salary</Typography>
+                          <Typography sx={{ fontSize: "12px", color: "var(--text-secondary)" }}>Avg of R 6,000.00 per employee</Typography>
                         </Card>
                       </Grid>
 
                       {/* Funeral Cover Card */}
                       <Grid size={{ xs: 12, sm: 6 }}>
-                        <Card sx={{ bgcolor: "rgba(58, 58, 58, 0.5)", p: "16px", display: "flex", flexDirection: "column", gap: "4px", boxShadow: "none" }}>
-                          <Typography sx={{ fontSize: "14px", color: "#A0A0A0" }}>Funeral Cover</Typography>
-                          <Typography sx={{ fontSize: "20px", fontWeight: 500, color: "#FFFFFF" }}>R 20,000</Typography>
-                          <Typography sx={{ fontSize: "12px", color: "#A0A0A0" }}>per employee</Typography>
+                        <Card sx={{ bgcolor: "var(--table-header-bg)", border: "1px solid var(--border)", p: "16px", display: "flex", flexDirection: "column", gap: "4px", boxShadow: "none" }}>
+                          <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)" }}>Funeral Cover</Typography>
+                          <Typography sx={{ fontSize: "20px", fontWeight: 500, color: "var(--text-primary)" }}>R 20,000</Typography>
+                          <Typography sx={{ fontSize: "12px", color: "var(--text-secondary)" }}>per employee</Typography>
                         </Card>
                       </Grid>
                     </Grid>
@@ -323,8 +323,8 @@ export default function QuoteDetailsPage() {
               <Button
                 variant="contained"
                 sx={{
-                  bgcolor: "#FFFFFF",
-                  color: "#0A0A0A",
+                  bgcolor: "var(--text-primary)",
+                  color: "var(--card-primary)",
                   borderRadius: "8px",
                   fontWeight: 700,
                   fontSize: "14px",
@@ -332,7 +332,7 @@ export default function QuoteDetailsPage() {
                   height: "36px",
                   px: "16px",
                   "&:hover": {
-                    bgcolor: "#E6E6E6",
+                    bgcolor: "var(--text-secondary)",
                   }
                 }}
               >

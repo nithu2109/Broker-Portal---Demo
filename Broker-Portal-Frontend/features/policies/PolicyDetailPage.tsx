@@ -80,7 +80,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function CoverCard({ cover }: { cover: PolicyCover }) {
   return (
-    <div style={{ border: "0.63px solid var(--border)", borderRadius: "8px", padding: "16px", marginBottom: "12px", background: "#242424" }}>
+    <div style={{ border: "0.63px solid var(--border)", borderRadius: "8px", padding: "16px", marginBottom: "12px", background: "var(--card-secondary)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
         <div>
           <p style={{ fontSize: "14px", fontWeight: 600, color: "var(--foreground)" }}>{cover.type}</p>
@@ -169,7 +169,7 @@ function PolicyDocumentsTab() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
       {docs.map((doc) => (
-        <div key={doc} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", background: "#242424", border: "0.63px solid var(--border)", borderRadius: "10px" }}>
+        <div key={doc} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", background: "var(--card-secondary)", border: "0.63px solid var(--border)", borderRadius: "10px" }}>
           <span style={{ fontSize: "14px", color: "var(--foreground)" }}>{doc}</span>
           <button style={{ display: "inline-flex", alignItems: "center", gap: "6px", padding: "6px 16px", borderRadius: "6px", background: "#1FC3EB", border: "none", color: "#000", fontSize: "13px", fontWeight: 500, cursor: "pointer" }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -210,7 +210,7 @@ function MembersTab({ policy, onSelectMember }: { policy: PolicyDetail; onSelect
       <div style={{ border: "0.63px solid var(--border)", borderRadius: "10px", overflow: "hidden" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
           <thead>
-            <tr style={{ borderBottom: "0.63px solid var(--border)", background: "#3A3A3A80" }}>
+            <tr style={{ borderBottom: "0.63px solid var(--border)", background: "var(--table-header-bg)" }}>
               {["Member ID", "Name", "Gender", "Monthly Premium", "Last Payment"].map((h) => (
                 <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap" }}>{h}</th>
               ))}
@@ -219,7 +219,7 @@ function MembersTab({ policy, onSelectMember }: { policy: PolicyDetail; onSelect
           <tbody>
             {filtered.map((m, i) => (
               <tr key={m.id}
-                style={{ borderBottom: i < filtered.length - 1 ? "0.63px solid rgba(255,255,255,0.06)" : "none", transition: "background 0.15s", cursor: "pointer" }}
+                style={{ borderBottom: i < filtered.length - 1 ? "0.63px solid var(--border)" : "none", transition: "background 0.15s", cursor: "pointer" }}
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.03)"; }}
                 onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
               >
@@ -264,7 +264,7 @@ function PaymentsTab({ policy }: { policy: PolicyDetail }) {
       <div style={{ border: "0.63px solid var(--border)", borderRadius: "10px", overflow: "hidden" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
           <thead>
-            <tr style={{ borderBottom: "0.63px solid var(--border)", background: "#3A3A3A80" }}>
+            <tr style={{ borderBottom: "0.63px solid var(--border)", background: "var(--table-header-bg)" }}>
               {["Payment ID", "Date", "Amount", "Status"].map((h) => (
                 <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontWeight: 600, color: "var(--foreground)" }}>{h}</th>
               ))}
@@ -273,7 +273,7 @@ function PaymentsTab({ policy }: { policy: PolicyDetail }) {
           <tbody>
             {filtered.map((p, i) => (
               <tr key={p.id}
-                style={{ borderBottom: i < filtered.length - 1 ? "0.63px solid rgba(255,255,255,0.06)" : "none", transition: "background 0.15s" }}
+                style={{ borderBottom: i < filtered.length - 1 ? "0.63px solid var(--border)" : "none", transition: "background 0.15s" }}
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.03)"; }}
                 onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
               >

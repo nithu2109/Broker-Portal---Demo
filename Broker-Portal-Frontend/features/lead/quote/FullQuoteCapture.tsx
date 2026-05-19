@@ -40,7 +40,7 @@ interface FullQuoteCaptureProps {
 }
 
 const labelStyle: React.CSSProperties = {
-  fontSize: "0.8125rem", fontWeight: 400, color: "#9ca3af", display: "block", marginBottom: "6px",
+  fontSize: "0.8125rem", fontWeight: 400, color: "var(--text-secondary)", display: "block", marginBottom: "6px",
 };
 
 const INDUSTRIES = [
@@ -324,9 +324,9 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               {/* RMA member number */}
               <div>
-                <p style={{ fontSize: "0.875rem", color: "#d1d5db", marginBottom: "12px", lineHeight: 1.6 }}>
+                <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", marginBottom: "12px", lineHeight: 1.6 }}>
                   Please enter your RMA member number so we can pre fill your application and offer you additional products.{" "}
-                  <strong style={{ color: "#ffffff" }}>If you're not an RMA member</strong>, please skip to the next section and complete the form.
+                  <strong style={{ color: "var(--text-primary)" }}>If you're not an RMA member</strong>, please skip to the next section and complete the form.
                 </p>
                 <CustomInput
                   type="text"
@@ -338,7 +338,7 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
 
               {/* Province Selection */}
               <div>
-                <label style={{ ...labelStyle, color: "#d1d5db", fontSize: "0.875rem", marginBottom: "10px" }}>
+                <label style={{ ...labelStyle, color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "10px" }}>
                   In which province are most of the employees based?
                 </label>
                 <CustomSelect
@@ -352,7 +352,7 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
 
               {/* Permanently employed */}
               <div>
-                <label style={{ ...labelStyle, color: "#d1d5db", fontSize: "0.875rem", marginBottom: "10px" }}>
+                <label style={{ ...labelStyle, color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "10px" }}>
                   Are all the employees you plan to cover permanently employed or on 6+ month contracts?
                 </label>
                 <OptionToggleGroup
@@ -365,7 +365,7 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
 
               {/* Actively at work (Top-level) */}
               <div>
-                <label style={{ ...labelStyle, color: "#d1d5db", fontSize: "0.875rem", marginBottom: "10px" }}>
+                <label style={{ ...labelStyle, color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "10px" }}>
                   Are all the employees you plan to cover currently actively at work? i.e they are attending to their normal work duties and not off on LTD/ill
                 </label>
                 <OptionToggleGroup
@@ -378,7 +378,7 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
 
               {/* Existing policy (Trigger) */}
               <div>
-                <label style={{ ...labelStyle, color: "#d1d5db", fontSize: "0.875rem", marginBottom: "10px" }}>
+                <label style={{ ...labelStyle, color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "10px" }}>
                   Is this company offering an existing policy or is very recently cancelled policy?
                 </label>
                 <OptionToggleGroup
@@ -393,7 +393,7 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
                 <div style={{ display: "flex", flexDirection: "column", gap: "20px", marginTop: "10px" }}>
                   {/* Replaced policy includes disability */}
                   <div>
-                    <label style={{ ...labelStyle, color: "#d1d5db", fontSize: "0.875rem", marginBottom: "10px" }}>
+                    <label style={{ ...labelStyle, color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "10px" }}>
                       Did the replaced policy include disability cover?
                     </label>
                     <OptionToggleGroup
@@ -406,7 +406,7 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
 
                   {/* Is policy older than 6 months */}
                   <div>
-                    <label style={{ ...labelStyle, color: "#d1d5db", fontSize: "0.875rem", marginBottom: "10px" }}>
+                    <label style={{ ...labelStyle, color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "10px" }}>
                       Has the policy been active for more than 6 months?
                     </label>
                     <OptionToggleGroup
@@ -419,14 +419,13 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
 
                   {/* Replaced policy start date */}
                   <div>
-                    <label style={{ ...labelStyle, color: "#d1d5db", fontSize: "0.875rem", marginBottom: "10px" }}>
+                    <label style={{ ...labelStyle, color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "10px" }}>
                       What was the start date of the replaced policy?
                     </label>
                     <CustomInput
                       type="date"
                       value={replacedPolicyStartDate}
                       onChange={e => setReplacedPolicyStartDate(e.target.value)}
-                      style={{ colorScheme: "dark" }}
                     />
                   </div>
                 </div>
@@ -442,49 +441,49 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
                 <div style={{ display: "grid", gridTemplateColumns: "271px 271px", gap: "16px" }}>
                   {/* Enter manually */}
                   <button type="button" onClick={() => setShowForm(true)} style={{
-                    textAlign: "left", background: "rgba(48,48,48,0.8)",
-                    borderTop: "0.63px solid rgba(31,195,235,0.4)", borderRight: "0.63px solid #30363D",
-                    borderBottom: "0.63px solid #30363D", borderLeft: "0.63px solid #30363D",
+                    textAlign: "left", background: "var(--card-secondary)",
+                    borderTop: "0.63px solid rgba(31,195,235,0.4)", borderRight: "0.63px solid var(--border)",
+                    borderBottom: "0.63px solid var(--border)", borderLeft: "0.63px solid var(--border)",
                     borderRadius: "16px", padding: "20px", cursor: "pointer",
                     display: "flex", flexDirection: "column", gap: "14px",
                     width: "271px", height: "225px", boxSizing: "border-box", transition: "border-color 0.2s, background 0.2s",
                   }}
-                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "#1FC3EB"; el.style.background = "rgba(31,195,235,0.08)"; }}
-                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderTopColor = "rgba(31,195,235,0.4)"; el.style.borderRightColor = "#30363D"; el.style.borderBottomColor = "#30363D"; el.style.borderLeftColor = "#30363D"; el.style.background = "rgba(48,48,48,0.8)"; }}
+                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "#1FC3EB"; el.style.background = "var(--border)"; }}
+                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderTopColor = "rgba(31,195,235,0.4)"; el.style.borderRightColor = "var(--border)"; el.style.borderBottomColor = "var(--border)"; el.style.borderLeftColor = "var(--border)"; el.style.background = "var(--card-secondary)"; }}
                   >
-                    <div style={{ width: 40, height: 40, borderRadius: 8, background: "#3a3a3a", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <div style={{ width: 40, height: 40, borderRadius: 8, background: "var(--border)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                       </svg>
                     </div>
                     <div>
-                      <h3 style={{ fontSize: "0.9375rem", fontWeight: 600, color: "#ffffff", marginBottom: "6px" }}>Enter manually</h3>
-                      <p style={{ fontSize: "0.8125rem", color: "#9ca3af", lineHeight: 1.55 }}>You will need their name, monthly income and date of birth.</p>
+                      <h3 style={{ fontSize: "0.9375rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "6px" }}>Enter manually</h3>
+                      <p style={{ fontSize: "0.8125rem", color: "var(--text-secondary)", lineHeight: 1.55 }}>You will need their name, monthly income and date of birth.</p>
                     </div>
                   </button>
 
                   {/* Bulk Upload */}
                   <button type="button" onClick={() => { setShowBulkUpload(true); setFileName(""); setEmployeeList([]); }} style={{
-                    textAlign: "left", background: "rgba(48,48,48,0.8)",
-                    borderTop: "0.63px solid rgba(31,195,235,0.4)", borderRight: "0.63px solid #30363D",
-                    borderBottom: "0.63px solid #30363D", borderLeft: "0.63px solid #30363D",
+                    textAlign: "left", background: "var(--card-secondary)",
+                    borderTop: "0.63px solid rgba(31,195,235,0.4)", borderRight: "0.63px solid var(--border)",
+                    borderBottom: "0.63px solid var(--border)", borderLeft: "0.63px solid var(--border)",
                     borderRadius: "16px", padding: "20px", cursor: "pointer",
                     display: "flex", flexDirection: "column", gap: "14px",
                     width: "271px", height: "225px", boxSizing: "border-box", transition: "border-color 0.2s, background 0.2s",
                   }}
-                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "#1FC3EB"; el.style.background = "rgba(31,195,235,0.08)"; }}
-                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderTopColor = "rgba(31,195,235,0.4)"; el.style.borderRightColor = "#30363D"; el.style.borderBottomColor = "#30363D"; el.style.borderLeftColor = "#30363D"; el.style.background = "rgba(48,48,48,0.8)"; }}
+                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "#1FC3EB"; el.style.background = "var(--border)"; }}
+                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderTopColor = "rgba(31,195,235,0.4)"; el.style.borderRightColor = "var(--border)"; el.style.borderBottomColor = "var(--border)"; el.style.borderLeftColor = "var(--border)"; el.style.background = "var(--card-secondary)"; }}
                   >
-                    <div style={{ width: 40, height: 40, borderRadius: 8, background: "#3a3a3a", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <div style={{ width: 40, height: 40, borderRadius: 8, background: "var(--border)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <polyline points="14 2 14 8 20 8" /><line x1="12" y1="18" x2="12" y2="12" /><line x1="9" y1="15" x2="15" y2="15" />
                       </svg>
                     </div>
                     <div>
-                      <h3 style={{ fontSize: "0.9375rem", fontWeight: 600, color: "#ffffff", marginBottom: "6px" }}>Bulk Upload</h3>
-                      <p style={{ fontSize: "0.8125rem", color: "#9ca3af", lineHeight: 1.55 }}>Use our spreadsheet wizard to upload your employees.</p>
+                      <h3 style={{ fontSize: "0.9375rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "6px" }}>Bulk Upload</h3>
+                      <p style={{ fontSize: "0.8125rem", color: "var(--text-secondary)", lineHeight: 1.55 }}>Use our spreadsheet wizard to upload your employees.</p>
                     </div>
                   </button>
                 </div>
@@ -494,8 +493,8 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
 
               {/* Bulk upload view */}
               {showBulkUpload && (
-                <div style={{ background: "#1E1E1E", border: "1px solid #30363D", borderRadius: "12px", padding: "20px" }}>
-                  <p style={{ fontSize: "0.9375rem", fontWeight: 600, color: "#ffffff", marginBottom: "16px" }}>Bulk Upload</p>
+                <div style={{ background: "var(--card-secondary)", border: "1px solid var(--border)", borderRadius: "12px", padding: "20px" }}>
+                  <p style={{ fontSize: "0.9375rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "16px" }}>Bulk Upload</p>
 
                   {!fileName ? (
                     /* Drag and drop zone — shown before upload */
@@ -510,7 +509,7 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
                       }}
                       onClick={() => fileInputRef.current?.click()}
                       style={{
-                        border: `1.5px dashed ${isDragging ? "#1FC3EB" : "#30363D"}`,
+                        border: `1.5px dashed ${isDragging ? "#1FC3EB" : "var(--border)"}`,
                         borderRadius: "10px",
                         padding: "48px 24px",
                         display: "flex",
@@ -528,7 +527,7 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
                         <line x1="12" y1="12" x2="12" y2="21" />
                         <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
                       </svg>
-                      <p style={{ fontSize: "0.875rem", color: "#9ca3af", margin: 0 }}>
+                      <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", margin: 0 }}>
                         Drag and Drop or{" "}
                         <span style={{ color: "#1FC3EB", textDecoration: "underline" }}>Click to upload</span>
                       </p>
@@ -538,7 +537,7 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
                     /* File row — shown after upload */
                     <div style={{
                       display: "flex", alignItems: "center", justifyContent: "space-between",
-                      background: "#2a2a2a", border: "1px solid #30363D", borderRadius: "8px",
+                      background: "var(--table-header-bg)", border: "1px solid var(--border)", borderRadius: "8px",
                       padding: "10px 14px",
                     }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -546,7 +545,7 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
                           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                           <polyline points="14 2 14 8 20 8" />
                         </svg>
-                        <span style={{ fontSize: "0.875rem", color: "#d1d5db" }}>{fileName}</span>
+                        <span style={{ fontSize: "0.875rem", color: "var(--text-primary)" }}>{fileName}</span>
                       </div>
                       <button
                         onClick={() => { setFileName(""); setEmployeeList([]); if (fileInputRef.current) fileInputRef.current.value = ""; }}
@@ -568,8 +567,8 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
 
               {/* Manual entry form card */}
               {showForm && (
-                <div style={{ background: "#1E1E1E", border: "1px solid #30363D", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
-                  <p style={{ fontSize: "0.9375rem", fontWeight: 600, color: "#ffffff", margin: 0 }}>Manually add employees</p>
+                <div style={{ background: "var(--card-secondary)", border: "1px solid var(--border)", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
+                  <p style={{ fontSize: "0.9375rem", fontWeight: 600, color: "var(--text-primary)", margin: 0 }}>Manually add employees</p>
 
                   {/* Row 1: First Name, Last Name, Gender */}
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
@@ -604,8 +603,7 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
                     <div>
                       <label style={labelStyle}>Date of birth (dd/mm/yyyy)</label>
                       <CustomInput type="date" value={form.dob}
-                        onChange={e => setForm(f => ({ ...f, dob: e.target.value }))}
-                        style={{ colorScheme: "dark" }} />
+                        onChange={e => setForm(f => ({ ...f, dob: e.target.value }))} />
                     </div>
                   </div>
 
@@ -618,9 +616,9 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
 
               {/* List of Employees card */}
               {(showForm || employeeList.length > 0) && (
-                <div style={{ background: "#1E1E1E", border: "1px solid #30363D", borderRadius: "12px", padding: "20px" }}>
-                  <p style={{ fontSize: "0.9375rem", fontWeight: 600, color: "#ffffff", marginBottom: "4px" }}>List of Employees</p>
-                  <p style={{ fontSize: "0.8125rem", color: "#9ca3af", marginBottom: "16px" }}>
+                <div style={{ background: "var(--card-secondary)", border: "1px solid var(--border)", borderRadius: "12px", padding: "20px" }}>
+                  <p style={{ fontSize: "0.9375rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "4px" }}>List of Employees</p>
+                  <p style={{ fontSize: "0.8125rem", color: "var(--text-secondary)", marginBottom: "16px" }}>
                     You have a total of {employeeList.length} employee{employeeList.length !== 1 ? "s" : ""}.
                   </p>
 

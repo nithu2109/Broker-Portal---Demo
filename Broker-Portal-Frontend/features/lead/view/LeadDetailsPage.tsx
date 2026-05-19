@@ -166,8 +166,8 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
         position: "relative",
         width: "100%",
         minHeight: "calc(100vh - 120px)",
-        background: "rgba(24, 24, 24, 0.8)",
-        border: "1px solid rgba(29, 51, 68, 0.4)",
+        background: "var(--card-primary)",
+        border: "1px solid var(--border)",
         borderRadius: "16px",
         padding: "24px",
         boxSizing: "border-box",
@@ -205,7 +205,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
             fontWeight: 500,
             lineHeight: "36px",
             letterSpacing: "0.0703125px",
-            color: "#FFFFFF",
+            color: "var(--text-primary)",
             margin: 0,
           }}>
             Lead Details
@@ -284,13 +284,13 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
         </Box>
 
         {/* Divider */}
-        <Divider sx={{ borderColor: "#101D28", marginBottom: "31px" }} />
+        <Divider sx={{ borderColor: "var(--border)", marginBottom: "31px" }} />
 
         {/* Lead Details Card */}
         <Card sx={{
           boxSizing: "border-box",
-          background: "#1E1E1E",
-          border: "1px solid #30363D",
+          background: "var(--card-secondary)",
+          border: "1px solid var(--border)",
           borderRadius: "12px",
           p: "25px",
           marginBottom: "31px",
@@ -304,7 +304,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
               fontWeight: 700,
               lineHeight: "27px",
               letterSpacing: "-0.439453px",
-              color: "#E6E6E6",
+              color: "var(--text-primary)",
               margin: "0 0 12px 0",
             }}>
               Employer Details
@@ -312,33 +312,33 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
 
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Company Name</Typography>
-                <Typography sx={{ fontSize: "14px", color: "#FFFFFF", fontWeight: 500 }}>{lead.employerName}</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Company Name</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 500 }}>{lead.employerName}</Typography>
               </Grid>
 
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Registration Number</Typography>
-                <Typography sx={{ fontSize: "14px", color: "#FFFFFF" }}>{lead.registrationNumber || "N/A"}</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Registration Number</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-primary)" }}>{lead.registrationNumber || "N/A"}</Typography>
               </Grid>
 
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Industry</Typography>
-                <Typography sx={{ fontSize: "14px", color: "#FFFFFF", textTransform: "capitalize" }}>{(lead as any).industry || "N/A"}</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Industry</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", textTransform: "capitalize" }}>{(lead as any).industry || "N/A"}</Typography>
               </Grid>
 
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Number of Employees</Typography>
-                <Typography sx={{ fontSize: "14px", color: "#FFFFFF" }}>{lead.numberOfEmployees}</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Number of Employees</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-primary)" }}>{lead.numberOfEmployees}</Typography>
               </Grid>
 
               <Grid size={{ xs: 12 }}>
-                <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Address</Typography>
-                <Typography sx={{ fontSize: "14px", color: "#FFFFFF" }}>{(lead as any).address || "N/A"}</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Address</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-primary)" }}>{(lead as any).address || "N/A"}</Typography>
               </Grid>
             </Grid>
           </Box>
 
-          <Divider sx={{ borderColor: "#4A4A4A", my: "25px" }} />
+          <Divider sx={{ borderColor: "var(--border)", my: "25px" }} />
 
           {/* Contact Details */}
           <Box>
@@ -348,7 +348,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
               fontWeight: 700,
               lineHeight: "27px",
               letterSpacing: "-0.439453px",
-              color: "#E6E6E6",
+              color: "var(--text-primary)",
               margin: "0 0 12px 0",
             }}>
               Contact Details
@@ -356,23 +356,23 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
 
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Contact Person</Typography>
-                <Typography sx={{ fontSize: "14px", color: "#FFFFFF", fontWeight: 500 }}>{lead.contactFirstName} {lead.contactLastName}</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Contact Person</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 500 }}>{lead.contactFirstName} {lead.contactLastName}</Typography>
               </Grid>
 
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Position</Typography>
-                <Typography sx={{ fontSize: "14px", color: "#FFFFFF" }}>{(lead as any).contactPosition || "N/A"}</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Position</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-primary)" }}>{(lead as any).contactPosition || "N/A"}</Typography>
               </Grid>
 
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Email</Typography>
-                <Typography sx={{ fontSize: "14px", color: "#FFFFFF" }}>{lead.contactEmail}</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Email</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-primary)" }}>{lead.contactEmail}</Typography>
               </Grid>
 
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Phone</Typography>
-                <Typography sx={{ fontSize: "14px", color: "#FFFFFF" }}>{(lead as any).contactPhone || "N/A"}</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Phone</Typography>
+                <Typography sx={{ fontSize: "14px", color: "var(--text-primary)" }}>{(lead as any).contactPhone || "N/A"}</Typography>
               </Grid>
             </Grid>
           </Box>
@@ -385,7 +385,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
           fontWeight: 500,
           lineHeight: "36px",
           letterSpacing: "0.0703125px",
-          color: "#FFFFFF",
+          color: "var(--text-primary)",
           margin: "0 0 17px 0",
         }}>
           Previous Quotes
@@ -395,8 +395,8 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
           {quotes.map((quote) => (
             <Card key={quote.quoteId} sx={{
               boxSizing: "border-box",
-              background: "#1E1E1E",
-              border: "0.625px solid #4A4A4A",
+              background: "var(--card-secondary)",
+              border: "0.625px solid var(--border)",
               borderRadius: "10px",
               p: "25px",
               boxShadow: "none",
@@ -411,7 +411,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
                       fontWeight: 500,
                       lineHeight: "27px",
                       letterSpacing: "-0.439453px",
-                      color: "#FFFFFF",
+                      color: "var(--text-primary)",
                       margin: 0,
                     }}>
                       {quote.companyName}
@@ -422,23 +422,23 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
                   {/* Quote Details */}
                   <Grid container spacing={2}>
                     <Grid size={{ xs: 12, sm: 3 }}>
-                      <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Quote ID</Typography>
-                      <Typography sx={{ fontSize: "14px", color: "#FFFFFF", fontWeight: 500 }}>{quote.quoteReference}</Typography>
+                      <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Quote ID</Typography>
+                      <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 500 }}>{quote.quoteReference}</Typography>
                     </Grid>
 
                     <Grid size={{ xs: 12, sm: 3 }}>
-                      <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Monthly Premium</Typography>
+                      <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Monthly Premium</Typography>
                       <Typography sx={{ fontSize: "14px", color: "#1FC3EB", fontWeight: 500 }}>R {quote.monthlyPremium.toLocaleString()}</Typography>
                     </Grid>
 
                     <Grid size={{ xs: 12, sm: 3 }}>
-                      <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Coverage Amount</Typography>
-                      <Typography sx={{ fontSize: "14px", color: "#FFFFFF", fontWeight: 500 }}>R {quote.coverageAmount.toLocaleString()}</Typography>
+                      <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Coverage Amount</Typography>
+                      <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 500 }}>R {quote.coverageAmount.toLocaleString()}</Typography>
                     </Grid>
 
                     <Grid size={{ xs: 12, sm: 3 }}>
-                      <Typography sx={{ fontSize: "14px", color: "#A0A0A0", mb: "4px" }}>Created Date</Typography>
-                      <Typography sx={{ fontSize: "14px", color: "#FFFFFF", fontWeight: 500 }}>{fmt(quote.createdAt)}</Typography>
+                      <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Created Date</Typography>
+                      <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 500 }}>{fmt(quote.createdAt)}</Typography>
                     </Grid>
                   </Grid>
                 </Box>
@@ -454,17 +454,17 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
                     gap: "5px",
                     width: "137px",
                     height: "36px",
-                    background: "rgba(58, 58, 58, 0.3)",
-                    border: "0.625px solid #3A3A3A",
+                    background: "transparent",
+                    border: "1px solid var(--border)",
                     borderRadius: "8px",
                     fontFamily: "'Inter', sans-serif",
                     fontSize: "14px",
                     fontWeight: 500,
                     textTransform: "none",
-                    color: "#FFFFFF",
+                    color: "var(--text-primary)",
                     "&:hover": {
-                      bgcolor: "rgba(80,80,80,0.5)",
-                      borderColor: "#4A4A4A",
+                      bgcolor: "var(--border)",
+                      borderColor: "var(--border)",
                     }
                   }}
                 >

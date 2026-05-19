@@ -13,16 +13,7 @@ import {
 } from "lucide-react";
 import { ROUTES } from "@/lib/constants";
 import { useUser } from "@/lib/context/UserContext";
-
-const C = {
-  bg: "#0B0D10",
-  border: "#1D2A36",
-  primary: "#1FC3EB",
-  fg: "#C4CDD8",
-  fgMuted: "#5E6A77",
-  activeBg: "rgba(31, 195, 235, 0.14)",
-  hoverBg: "rgba(255,255,255,0.06)",
-};
+import { useThemeToggle } from "@/app/providers";
 
 const quickActions = [
   { label: "Dashboard", icon: Plus, href: ROUTES.dashboard },
@@ -50,6 +41,17 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
   const pathname = usePathname();
   const [userEmail, setUserEmail] = useState(propEmail ?? "");
   const [mounted, setMounted] = useState(false);
+  const { isDarkMode } = useThemeToggle();
+
+  const C = {
+    bg: isDarkMode ? "#0B0D10" : "#FFFFFF",
+    border: isDarkMode ? "#1D2A36" : "#E2E8F0",
+    primary: "#1FC3EB",
+    fg: isDarkMode ? "#C4CDD8" : "#334155",
+    fgMuted: isDarkMode ? "#5E6A77" : "#64748B",
+    activeBg: isDarkMode ? "rgba(31, 195, 235, 0.14)" : "rgba(31, 195, 235, 0.1)",
+    hoverBg: isDarkMode ? "rgba(255,255,255,0.06)" : "rgba(0, 0, 0, 0.04)",
+  };
 
   let user = null;
   try {
@@ -87,7 +89,7 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
         bgcolor: C.bg,
         display: "flex",
         flexDirection: "column",
-        borderRight: "none",
+        borderRight: "1px solid " + C.border,
       }}
     >
       {/* Sidebar Toggle Button */}
@@ -100,12 +102,12 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
           width: "32px",
           height: "32px",
           borderRadius: "6px",
-          color: "#E6E6E6",
+          color: isDarkMode ? "#E6E6E6" : "#64748B",
           bgcolor: "transparent",
           zIndex: 20,
           transition: "all 0.15s",
           "&:hover": {
-            bgcolor: "rgba(255, 255, 255, 0.05)",
+            bgcolor: C.hoverBg,
           },
         }}
       >
@@ -122,12 +124,12 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
             width="13"
             height="13"
             rx="1.5"
-            stroke="#E6E6E6"
+            stroke="currentColor"
             strokeWidth="1.2"
           />
           <path
             d="M5.5 1.5V14.5"
-            stroke="#E6E6E6"
+            stroke="currentColor"
             strokeWidth="1.2"
           />
         </svg>
@@ -195,15 +197,15 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
                   height: "33px",
                   px: "12px",
                   borderRadius: "8px",
-                  border: "1px solid #1E3339",
-                  bgcolor: "#0F1619",
-                  color: C.primary,
+                  border: isDarkMode ? "1px solid #1E3339" : "1px solid rgba(31, 195, 235, 0.3)",
+                  bgcolor: isDarkMode ? "#0F1619" : "rgba(31, 195, 235, 0.06)",
+                  color: isDarkMode ? C.primary : "#0090B0",
                   fontSize: "14px",
                   fontWeight: 400,
                   textTransform: "none",
                   transition: "all 0.15s ease",
                   "&:hover": {
-                    bgcolor: "#141C20",
+                    bgcolor: isDarkMode ? "#141C20" : "rgba(31, 195, 235, 0.12)",
                   },
                   "& .MuiButton-startIcon": {
                     marginRight: "10px",

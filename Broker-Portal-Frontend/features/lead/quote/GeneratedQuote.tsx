@@ -49,18 +49,18 @@ const sectionHeading: React.CSSProperties = {
 
 const fieldLabel: React.CSSProperties = {
   fontSize: "0.75rem",
-  color: "#6b7280",
+  color: "var(--text-secondary)",
   marginBottom: "2px",
 };
 
 const fieldValue: React.CSSProperties = {
   fontSize: "0.875rem",
-  color: "#ffffff",
+  color: "var(--text-primary)",
   fontWeight: 500,
 };
 
 const divider: React.CSSProperties = {
-  borderTop: "1px solid #30363D",
+  borderTop: "1px solid var(--border)",
   margin: "0",
 };
 
@@ -104,13 +104,13 @@ export default function GeneratedQuote({
 
   return (
     <>
-      <h2 style={{ fontSize: "1.125rem", fontWeight: 600, color: "#ffffff", marginBottom: "24px" }}>
+      <h2 style={{ fontSize: "1.125rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: "24px" }}>
         Quick Cost Estimate
       </h2>
 
       <div style={{
-        background: "#181818CC",
-        border: "0.63px solid #30363D",
+        background: "var(--card-secondary)",
+        border: "0.63px solid var(--border)",
         borderRadius: "10px",
         padding: "24px",
         display: "flex",
@@ -121,17 +121,17 @@ export default function GeneratedQuote({
 
         {/* Card header row */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{ fontSize: "1rem", fontWeight: 600, color: "#ffffff" }}>Quote Details</span>
+          <span style={{ fontSize: "1rem", fontWeight: 600, color: "var(--text-primary)" }}>Quote Details</span>
           <button
             style={{
               display: "flex", alignItems: "center", gap: "6px",
               background: "transparent", border: "none",
-              color: "#9ca3af", fontSize: "0.8125rem", cursor: "pointer",
+              color: "var(--text-secondary)", fontSize: "0.8125rem", cursor: "pointer",
               padding: "4px 8px", borderRadius: "6px",
               transition: "color 0.15s",
             }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "#ffffff"; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "#9ca3af"; }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "var(--text-primary)"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)"; }}
           >
             <Download size={14} />
             Download
@@ -192,12 +192,12 @@ export default function GeneratedQuote({
             style={{
               height: "33px", padding: "0 20px",
               fontSize: "0.875rem", fontWeight: 500,
-              background: "transparent", border: "1px solid #333333",
-              color: "#d1d5db", borderRadius: "100px", cursor: "pointer",
+              background: "transparent", border: "1px solid var(--border)",
+              color: "var(--text-primary)", borderRadius: "100px", cursor: "pointer",
               transition: "border-color 0.15s, color 0.15s",
             }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "#9ca3af"; (e.currentTarget as HTMLElement).style.color = "#ffffff"; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "#333333"; (e.currentTarget as HTMLElement).style.color = "#d1d5db"; }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--text-secondary)"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; }}
           >
             Save Quick Quote
           </button>

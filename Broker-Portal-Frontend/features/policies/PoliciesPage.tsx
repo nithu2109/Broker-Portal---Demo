@@ -95,7 +95,7 @@ export default function PoliciesPage() {
               <thead>
                 <tr>
                   {["Policy Number", "Company Name", "Effective Date", "Expiry Date", "Status", "Premium", "Coverage", "Actions"].map((h) => (
-                    <th key={h} style={{ height: "48.61px", padding: "0 12px", textAlign: "left", fontSize: "13px", fontWeight: 500, color: "#9ca3af", whiteSpace: "nowrap", borderBottom: "0.63px solid var(--border)" }}>
+                    <th key={h} style={{ height: "48.61px", padding: "0 12px", textAlign: "left", fontSize: "13px", fontWeight: 500, color: "var(--text-secondary)", whiteSpace: "nowrap", borderBottom: "0.63px solid var(--border)" }}>
                       {h}
                     </th>
                   ))}
@@ -103,7 +103,7 @@ export default function PoliciesPage() {
               </thead>
               <tbody>
                 {filtered.length === 0 ? (
-                  <tr><td colSpan={8} style={{ textAlign: "center", padding: "48px", color: "#9ca3af", fontSize: "13px" }}>No policies found.</td></tr>
+                  <tr><td colSpan={8} style={{ textAlign: "center", padding: "48px", color: "var(--text-secondary)", fontSize: "13px" }}>No policies found.</td></tr>
                 ) : filtered.map((policy, i) => (
                   <tr key={policy.policyNumber}
                     style={{ borderBottom: i < filtered.length - 1 ? "0.63px solid var(--border)" : "none", transition: "background 0.15s" }}

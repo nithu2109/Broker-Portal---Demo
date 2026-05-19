@@ -76,10 +76,10 @@ export default function FAQPage() {
     >
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-medium mb-2" style={{ color: "#FFFFFF" }}>
+        <h1 className="text-2xl font-medium mb-2" style={{ color: "var(--text-primary)" }}>
           FAQ's
         </h1>
-        <p style={{ color: "#A0A0A0", fontSize: "14px" }}>
+        <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
           Find answers to common questions about the Broker Portal
         </p>
       </div>
@@ -88,16 +88,16 @@ export default function FAQPage() {
       <div
         className="rounded-lg overflow-hidden"
         style={{
-          background: "#1E1E1E",
-          border: "0.625px solid #4A4A4A",
+          background: "var(--card-secondary)",
+          border: "0.625px solid var(--border)",
         }}
       >
         {/* Header */}
         <div
           className="flex items-center gap-3 p-6"
           style={{
-            background: "#1E1E1E",
-            borderBottom: "0.625px solid #4A4A4A",
+            background: "var(--card-secondary)",
+            borderBottom: "0.625px solid var(--border)",
           }}
         >
           <div
@@ -110,7 +110,7 @@ export default function FAQPage() {
           >
             <HelpCircle size={24} />
           </div>
-          <h2 className="text-lg font-medium" style={{ color: "#FFFFFF" }}>
+          <h2 className="text-lg font-medium" style={{ color: "var(--text-primary)" }}>
             Common Questions
           </h2>
         </div>
@@ -121,8 +121,8 @@ export default function FAQPage() {
             <div
               key={item.id}
               style={{
-                background: "#1E1E1E",
-                borderBottom: index < faqItems.length - 1 ? "0.625px solid #4A4A4A" : "none",
+                background: "var(--card-secondary)",
+                borderBottom: index < faqItems.length - 1 ? "0.625px solid var(--border)" : "none",
               }}
             >
               {/* Question Button */}
@@ -130,8 +130,8 @@ export default function FAQPage() {
                 onClick={() => toggleExpand(item.id)}
                 className="w-full flex items-center justify-between p-4 transition-colors hover:bg-opacity-80"
                 style={{
-                  background: expandedId === item.id ? "rgba(58, 58, 58, 0.5)" : "#262626",
-                  border: "0.625px solid #333333",
+                  background: expandedId === item.id ? "var(--table-header-bg)" : "var(--card-secondary)",
+                  border: "0.625px solid var(--border)",
                   borderRadius: expandedId === item.id ? "10px 10px 0 0" : "10px",
                   margin: "12px",
                   marginBottom: expandedId === item.id ? "0" : "12px",
@@ -139,14 +139,14 @@ export default function FAQPage() {
               >
                 <span
                   className="text-sm font-medium text-left"
-                  style={{ color: "#FFFFFF" }}
+                  style={{ color: "var(--text-primary)" }}
                 >
                   {item.question}
                 </span>
                 <ChevronDown
                   size={16}
                   style={{
-                    color: "#A0A0A0",
+                    color: "var(--text-secondary)",
                     transform: expandedId === item.id ? "rotate(180deg)" : "rotate(0deg)",
                     transition: "transform 0.3s ease",
                     flexShrink: 0,
@@ -160,15 +160,15 @@ export default function FAQPage() {
                 <div
                   className="px-4 py-4"
                   style={{
-                    background: "rgba(58, 58, 58, 0.5)",
-                    borderTop: "0.625px solid #4A4A4A",
+                    background: "var(--table-header-bg)",
+                    borderTop: "0.625px solid var(--border)",
                     borderRadius: "0 0 10px 10px",
                     margin: "0 12px 12px 12px",
                   }}
                 >
                   <p
                     className="text-sm leading-relaxed"
-                    style={{ color: "#A0A0A0", lineHeight: "1.6" }}
+                    style={{ color: "var(--text-secondary)", lineHeight: "1.6" }}
                   >
                     {item.answer}
                   </p>
@@ -184,7 +184,7 @@ export default function FAQPage() {
         <h3 className="text-base font-medium mb-2" style={{ color: "#1FC3EB" }}>
           Didn't find what you're looking for?
         </h3>
-        <p style={{ color: "#A0A0A0", fontSize: "14px", marginBottom: "12px" }}>
+        <p style={{ color: "var(--text-secondary)", fontSize: "14px", marginBottom: "12px" }}>
           Our support team is here to help. You can reach out through the Chatbot or contact support directly.
         </p>
         <button

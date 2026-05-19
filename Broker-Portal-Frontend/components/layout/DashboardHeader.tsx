@@ -6,8 +6,12 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Badge from "@mui/material/Badge";
+import Tooltip from "@mui/material/Tooltip";
 import { Bell } from "lucide-react";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useUser } from "@/lib/context/UserContext";
+import { useThemeToggle } from "@/app/providers";
 
 interface DashboardHeaderProps {
   title: string;
@@ -27,6 +31,7 @@ interface DecodedToken {
 }
 
 export default function DashboardHeader({ title, subtitle, showUser = true }: DashboardHeaderProps) {
+  const { isDarkMode, toggleTheme } = useThemeToggle();
   const [displayName, setDisplayName] = useState("");
   let user = null;
   try {
@@ -99,8 +104,8 @@ export default function DashboardHeader({ title, subtitle, showUser = true }: Da
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        bgcolor: "#0B0D10",
-        borderBottom: "none",
+        bgcolor: isDarkMode ? "#0B0D10" : "#FFFFFF",
+        borderBottom: "1px solid var(--border)",
         pl: "0px",
         pr: "24px",
         height: "56px",
@@ -188,6 +193,33 @@ export default function DashboardHeader({ title, subtitle, showUser = true }: Da
         </Box>
       </Box>
       <Box sx={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <Tooltip
+          title={isDarkMode ? "Light Mode" : "Dark Mode"}
+          aria-label="Toggle Theme"
+        >
+          <IconButton
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            sx={{
+              width: "36px",
+              height: "36px",
+              borderRadius: "6px",
+              color: isDarkMode ? "#FFFFFF" : "#616161",
+              bgcolor: "transparent",
+              "&:hover": {
+                bgcolor: "color-mix(in oklab, #1fc3eb 50%, transparent)",
+                color: isDarkMode ? "#FFFFFF" : "#0A0A0A",
+              },
+            }}
+          >
+            {isDarkMode ? (
+              <Brightness7Icon sx={{ fontSize: 18 }} />
+            ) : (
+              <Brightness4Icon sx={{ fontSize: 18 }} />
+            )}
+          </IconButton>
+        </Tooltip>
+
         <IconButton
           suppressHydrationWarning
           aria-label="Notifications"
@@ -195,11 +227,11 @@ export default function DashboardHeader({ title, subtitle, showUser = true }: Da
             width: "36px",
             height: "36px",
             borderRadius: "6px",
-            color: "#FFFFFF",
+            color: isDarkMode ? "#FFFFFF" : "#616161",
             bgcolor: "transparent",
             "&:hover": {
               bgcolor: "color-mix(in oklab, #1fc3eb 50%, transparent)",
-              color: "#FFFFFF",
+              color: isDarkMode ? "#FFFFFF" : "#0A0A0A",
             },
           }}
         >

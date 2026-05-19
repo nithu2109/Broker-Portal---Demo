@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 
 export function Table({ className = "", sx, children, ...props }: any) {
   return (
-    <MuiTableContainer component={Paper} sx={{ bgcolor: "#2D2D2D", border: "0.625px solid #4A4A4A", borderRadius: "10px", overflow: "hidden", ...sx }}>
+    <MuiTableContainer component={Paper} sx={{ bgcolor: "var(--card-secondary)", border: "0.625px solid var(--border)", borderRadius: "10px", overflow: "hidden", ...sx }}>
       <MuiTable sx={{ minWidth: 650 }} className={className} {...props}>
         {children}
       </MuiTable>
@@ -38,10 +38,10 @@ export function TableRow({ className = "", sx, children, ...props }: any) {
     <MuiTableRow
       className={className}
       sx={{
-        borderBottom: "0.625px solid #4A4A4A",
+        borderBottom: "0.625px solid var(--border)",
         transition: "background-color 0.15s ease",
         "&:hover": {
-          bgcolor: "rgba(255,255,255,0.04) !important",
+          bgcolor: "var(--table-header-bg) !important",
         },
         ...sx,
       }}
@@ -58,14 +58,14 @@ export function TableHead({ className = "", sx, children, ...props }: any) {
       variant="head"
       className={className}
       sx={{
-        color: "#9ca3af",
+        color: "var(--text-secondary)",
         padding: "10px 8px",
         fontFamily: "'Inter', sans-serif",
         fontSize: "14px",
         fontWeight: 500,
         lineHeight: "20px",
         letterSpacing: "-0.150391px",
-        borderBottom: "0.625px solid #4A4A4A",
+        borderBottom: "0.625px solid var(--border)",
         whiteSpace: "nowrap",
         ...sx,
       }}
@@ -86,8 +86,8 @@ export function TableCell({ className = "", sx, children, ...props }: any) {
         fontSize: "14px",
         fontWeight: 400,
         lineHeight: "20px",
-        color: "#FFFFFF",
-        borderBottom: "0.625px solid #4A4A4A",
+        color: "var(--text-primary)",
+        borderBottom: "0.625px solid var(--border)",
         whiteSpace: "nowrap",
         ...sx,
       }}

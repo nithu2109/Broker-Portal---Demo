@@ -93,8 +93,8 @@ export default function ViewLeadsPage() {
         position: "relative",
         width: "100%",
         minHeight: "calc(100vh - 120px)",
-        background: "rgba(24, 24, 24, 0.8)",
-        border: "1px solid rgba(29, 51, 68, 0.4)",
+        background: "var(--card-primary)",
+        border: "1px solid var(--border)",
         borderRadius: "16px",
         padding: "24px",
         boxSizing: "border-box",
@@ -159,8 +159,8 @@ export default function ViewLeadsPage() {
             <Grid size={{ xs: 12, sm: 6, md: 3 }} key={label}>
               <Box sx={{
                 boxSizing: "border-box",
-                background: "#262626",
-                border: "1px solid #30363D",
+                background: "var(--card-secondary)",
+                border: "1px solid var(--border)",
                 borderRadius: "12px",
                 height: "88px",
                 padding: "0 23px",
@@ -174,7 +174,7 @@ export default function ViewLeadsPage() {
                   fontSize: "20px",
                   fontWeight: 700,
                   lineHeight: "24px",
-                  color: "#E6E6E6",
+                  color: "var(--text-primary)",
                   margin: 0,
                 }}>
                   {value}
@@ -184,7 +184,7 @@ export default function ViewLeadsPage() {
                   fontSize: "14px",
                   fontWeight: 400,
                   lineHeight: "17px",
-                  color: "#C5C5C5",
+                  color: "var(--text-secondary)",
                   margin: 0,
                 }}>
                   {label}
@@ -215,7 +215,7 @@ export default function ViewLeadsPage() {
               sx={{
                 "& .MuiOutlinedInput-root": {
                   height: "40px",
-                  bgcolor: "#262626",
+                  bgcolor: "var(--card-secondary)",
                 }
               }}
             />
@@ -231,7 +231,7 @@ export default function ViewLeadsPage() {
                 inputProps={{ "aria-label": "Status Filter" }}
                 sx={{
                   height: "40px",
-                  bgcolor: "#262626",
+                  bgcolor: "var(--card-secondary)",
                 }}
               >
                 <MenuItem value="All">All Statuses</MenuItem>
@@ -252,7 +252,7 @@ export default function ViewLeadsPage() {
                 inputProps={{ "aria-label": "Quote Status Filter" }}
                 sx={{
                   height: "40px",
-                  bgcolor: "#262626",
+                  bgcolor: "var(--card-secondary)",
                 }}
               >
                 <MenuItem value="All">All Quote Statuses</MenuItem>
@@ -267,8 +267,8 @@ export default function ViewLeadsPage() {
         {/* Table */}
         <Box sx={{
           boxSizing: "border-box",
-          background: "#2D2D2D",
-          border: "0.625px solid #4A4A4A",
+          background: "var(--card-secondary)",
+          border: "0.625px solid var(--border)",
           borderRadius: "10px",
           overflow: "hidden",
         }}>
@@ -321,11 +321,11 @@ export default function ViewLeadsPage() {
 
                       {/* Company Name */}
                       <TableCell>
-                        <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "#FFFFFF", m: 0 }}>
+                        <Typography sx={{ fontSize: "14px", fontWeight: 500, color: "var(--text-primary)", m: 0 }}>
                           {lead.employerName}
                         </Typography>
                         {lead.registrationNumber && (
-                          <Typography sx={{ fontSize: "12px", color: "#A0A0A0", mt: "2px", m: 0 }}>
+                          <Typography sx={{ fontSize: "12px", color: "var(--text-secondary)", mt: "2px", m: 0 }}>
                             {lead.registrationNumber}
                           </Typography>
                         )}
@@ -333,10 +333,10 @@ export default function ViewLeadsPage() {
 
                       {/* Contact Person */}
                       <TableCell>
-                        <Typography sx={{ fontSize: "14px", color: "#FFFFFF", m: 0 }}>
+                        <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", m: 0 }}>
                           {lead.contactFirstName} {lead.contactLastName}
                         </Typography>
-                        <Typography sx={{ fontSize: "12px", color: "#A0A0A0", mt: "2px", m: 0 }}>
+                        <Typography sx={{ fontSize: "12px", color: "var(--text-secondary)", mt: "2px", m: 0 }}>
                           {lead.contactEmail}
                         </Typography>
                       </TableCell>
@@ -382,16 +382,16 @@ export default function ViewLeadsPage() {
                             sx={{
                               padding: "4px 10px",
                               height: "32px",
-                              bgcolor: "rgba(58,58,58,0.5)",
-                              borderColor: "#4A4A4A",
+                              bgcolor: "var(--table-header-bg)",
+                              borderColor: "var(--border)",
                               borderRadius: "8px",
-                              color: "#FFFFFF",
+                              color: "var(--text-primary)",
                               textTransform: "none",
                               fontSize: "14px",
                               fontWeight: 500,
                               "&:hover": {
-                                bgcolor: "rgba(80,80,80,0.5)",
-                                borderColor: "#666666",
+                                bgcolor: "var(--border)",
+                                borderColor: "var(--border)",
                               }
                             }}
                           >
@@ -432,15 +432,15 @@ export default function ViewLeadsPage() {
           {!loading && filtered.length > 0 && (
             <Box sx={{
               padding: "12px 16px",
-              borderTop: "0.625px solid #4A4A4A",
-              background: "rgba(58,58,58,0.3)",
+              borderTop: "0.625px solid var(--border)",
+              background: "var(--table-header-bg)",
               display: "flex", alignItems: "center", justifyContent: "space-between",
             }}>
               <Typography sx={{
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "14px",
                 fontWeight: 400,
-                color: "#A0A0A0",
+                color: "var(--text-secondary)",
               }}>
                 Showing {start + 1} to {Math.min(start + PAGE_SIZE, filtered.length)} of {filtered.length} entries
               </Typography>
@@ -455,16 +455,16 @@ export default function ViewLeadsPage() {
                     height: "32px",
                     px: "10px",
                     bgcolor: "transparent",
-                    borderColor: "#4A4A4A",
+                    borderColor: "var(--border)",
                     borderRadius: "8px",
-                    color: safePage === 1 ? "#4A4A4A" : "#FFFFFF",
+                    color: safePage === 1 ? "var(--text-muted)" : "var(--text-primary)",
                     textTransform: "none",
                     fontSize: "14px",
                     fontWeight: 500,
                     opacity: safePage === 1 ? 0.5 : 1,
                     "&:hover": {
-                      bgcolor: "rgba(255,255,255,0.05)",
-                      borderColor: "#666666",
+                      bgcolor: "var(--table-header-bg)",
+                      borderColor: "var(--border)",
                     }
                   }}
                 >
@@ -483,13 +483,13 @@ export default function ViewLeadsPage() {
                       height: "32px",
                       p: 0,
                       bgcolor: n === safePage ? "#1FC3EB" : "transparent",
-                      borderColor: n === safePage ? "none" : "#4A4A4A",
+                      borderColor: n === safePage ? "none" : "var(--border)",
                       borderRadius: "8px",
-                      color: n === safePage ? "#0A0A0A" : "#FFFFFF",
+                      color: n === safePage ? "#0A0A0A" : "var(--text-primary)",
                       fontSize: "14px",
                       fontWeight: 500,
                       "&:hover": {
-                        bgcolor: n === safePage ? "#0DB5D8" : "rgba(255,255,255,0.05)",
+                        bgcolor: n === safePage ? "#0DB5D8" : "var(--table-header-bg)",
                       }
                     }}
                   >
@@ -507,16 +507,16 @@ export default function ViewLeadsPage() {
                     height: "32px",
                     px: "10px",
                     bgcolor: "transparent",
-                    borderColor: "#4A4A4A",
+                    borderColor: "var(--border)",
                     borderRadius: "8px",
-                    color: safePage === totalPages ? "#4A4A4A" : "#FFFFFF",
+                    color: safePage === totalPages ? "var(--text-muted)" : "var(--text-primary)",
                     textTransform: "none",
                     fontSize: "14px",
                     fontWeight: 500,
                     opacity: safePage === totalPages ? 0.5 : 1,
                     "&:hover": {
-                      bgcolor: "rgba(255,255,255,0.05)",
-                      borderColor: "#666666",
+                      bgcolor: "var(--table-header-bg)",
+                      borderColor: "var(--border)",
                     }
                   }}
                 >

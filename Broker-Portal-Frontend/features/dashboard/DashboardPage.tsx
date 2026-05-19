@@ -125,7 +125,7 @@ export default function DashboardPage() {
           mb: "24px",
           fontSize: "1.5rem",
           fontWeight: 500,
-          color: "#f4f4f5",
+          color: "var(--text-primary)",
         }}
       >
         Dashboard
@@ -138,8 +138,8 @@ export default function DashboardPage() {
               sx={{
                 p: "16px",
                 borderRadius: "12px",
-                border: "1px solid rgba(100, 116, 139, 0.24)",
-                background: "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%)",
+                border: "1px solid var(--border)",
+                background: "var(--card-secondary)",
                 boxShadow: "none",
               }}
             >
@@ -157,17 +157,17 @@ export default function DashboardPage() {
                     fontSize: "1.5rem",
                     fontWeight: 600,
                     lineHeight: 1,
-                    color: "#f7f7f7",
+                    color: "var(--text-primary)",
                   }}
                 >
                   {value}
                 </Typography>
-                <Icon size={16} style={{ color: "#aeb4c0" }} />
+                <Icon size={16} style={{ color: "var(--text-secondary)" }} />
               </Box>
               <Typography
                 sx={{
                   fontSize: "0.75rem",
-                  color: "#9ca3af",
+                  color: "var(--text-secondary)",
                 }}
               >
                 {label}
@@ -184,7 +184,7 @@ export default function DashboardPage() {
             mb: "24px",
             fontSize: "1.125rem",
             fontWeight: 500,
-            color: "#ededed",
+            color: "var(--text-primary)",
           }}
         >
           Quick Actions
@@ -198,8 +198,8 @@ export default function DashboardPage() {
                 icon={<Icon size={15} />}
                 onClick={() => router.push(href)}
                 style={{
-                  background: "linear-gradient(180deg, rgba(48,48,48,0.8) 0%, rgba(42,42,42,0.75) 100%)",
-                  borderColor: "#30363d",
+                  background: "var(--card-secondary)",
+                  borderColor: "var(--border)",
                   borderRadius: "16px",
                 }}
                 iconWrapperStyle={{
@@ -210,19 +210,19 @@ export default function DashboardPage() {
                   justifyContent: "center",
                   borderRadius: "50%",
                   backgroundColor: "rgba(148,163,184,0.14)",
-                  color: "#d1d5db",
+                  color: "var(--text-primary)",
                   marginBottom: "24px",
                 }}
                 titleStyle={{
                   fontSize: "22px",
                   fontWeight: 500,
                   lineHeight: "24px",
-                  color: "#f5f5f5",
+                  color: "var(--text-primary)",
                   marginBottom: "8px",
                 }}
                 descriptionStyle={{
                   fontSize: "12px",
-                  color: "#8f96a3",
+                  color: "var(--text-secondary)",
                   lineHeight: "18px",
                 }}
               />
