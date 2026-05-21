@@ -7,11 +7,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
+import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
 import { Plus, Search, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -99,7 +95,7 @@ export default function ViewLeadsPage() {
         padding: "24px",
         boxSizing: "border-box",
         fontFamily: "'Inter', sans-serif",
-        overflow: "hidden",
+        overflow: "auto",
       }}
     >
       {/* Background blur */}
@@ -195,74 +191,92 @@ export default function ViewLeadsPage() {
         </Grid>
 
         {/* Search & Filters */}
-        <Grid container spacing={2} sx={{ marginBottom: "26px", alignItems: "center" }}>
-          {/* Search */}
-          <Grid size={{ xs: 12, md: 6 }}>
-            <TextField
-              fullWidth
+        <div className="flex gap-4 mb-6">
+          {/* Search Input */}
+          <div
+            className="flex items-center gap-2 px-3 py-2 rounded-lg flex-1"
+            style={{
+              background: "var(--card-secondary)",
+              border: "1.875px solid var(--border)",
+            }}
+          >
+            <Search size={20} style={{ color: "var(--text-secondary)" }} />
+            <input
+              type="text"
               placeholder="Search by company name or lead ID..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search size={20} color="#A0A0A0" />
-                    </InputAdornment>
-                  ),
-                }
-              }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  height: "40px",
-                  bgcolor: "var(--card-secondary)",
-                }
-              }}
+              className="flex-1 bg-transparent outline-none text-sm"
+              style={{ color: "var(--text-primary)" }}
             />
-          </Grid>
+          </div>
 
           {/* Status Filter */}
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <FormControl fullWidth>
-              <Select
-                value={statusFilter}
-                onChange={(e) => setStatus(e.target.value)}
-                displayEmpty
-                inputProps={{ "aria-label": "Status Filter" }}
-                sx={{
-                  height: "40px",
-                  bgcolor: "var(--card-secondary)",
-                }}
-              >
-                <MenuItem value="All">All Statuses</MenuItem>
-                {statusOptions.filter(opt => opt !== "All").map(opt => (
-                  <MenuItem key={opt} value={opt}>{opt}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+          <div
+            className="flex items-center gap-2 px-3 py-2 rounded-lg"
+            style={{
+              background: "var(--card-secondary)",
+              border: "1.875px solid var(--border)",
+              minWidth: "220px",
+            }}
+          >
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatus(e.target.value)}
+              className="flex-1 bg-transparent outline-none text-sm"
+              style={{ color: "var(--text-primary)" }}
+            >
+              <option value="All">All Statuses</option>
+              {statusOptions.filter(opt => opt !== "All").map(opt => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
 
           {/* Quote Status Filter */}
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <FormControl fullWidth>
-              <Select
-                value={quoteFilter}
-                onChange={(e) => setQuote(e.target.value)}
-                displayEmpty
-                inputProps={{ "aria-label": "Quote Status Filter" }}
-                sx={{
-                  height: "40px",
-                  bgcolor: "var(--card-secondary)",
-                }}
-              >
-                <MenuItem value="All">All Quote Statuses</MenuItem>
-                {quoteOptions.filter(opt => opt !== "All").map(opt => (
-                  <MenuItem key={opt} value={opt}>{opt}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
+          <div
+            className="flex items-center gap-2 px-3 py-2 rounded-lg"
+            style={{
+              background: "var(--card-secondary)",
+              border: "1.875px solid var(--border)",
+              minWidth: "220px",
+            }}
+          >
+            <select
+              value={quoteFilter}
+              onChange={(e) => setQuote(e.target.value)}
+              className="flex-1 bg-transparent outline-none text-sm"
+              style={{ color: "var(--text-primary)" }}
+            >
+              <option value="All">All Quote Statuses</option>
+              {quoteOptions.filter(opt => opt !== "All").map(opt => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+        </div>
 
         {/* Table */}
         <Box sx={{
@@ -297,7 +311,7 @@ export default function ViewLeadsPage() {
               </Button>
             </Box>
           ) : (
-            <Box sx={{ overflowX: "auto" }}>
+            <Box sx={{ overflowX: "auto", minWidth: "1400px" }}>
               <Table>
                 {/* Header */}
                 <TableHeader>

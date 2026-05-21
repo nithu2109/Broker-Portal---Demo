@@ -33,39 +33,39 @@ interface Quote {
   createdAt: string;
 }
 
-// Mock quotes data
-const MOCK_QUOTES: Quote[] = [
-  {
-    quoteId: "Q-LEAD-1744147200000-847",
-    quoteReference: "Q-LEAD-1744147200000-847",
-    companyName: "Tech Innovations Pty Ltd",
-    quoteType: "Quick Quote",
-    status: "Expired",
-    monthlyPremium: 26629,
-    coverageAmount: 395666,
-    createdAt: "2026-05-04",
-  },
-  {
-    quoteId: "Q-LEAD-1744147200000-848",
-    quoteReference: "Q-LEAD-1744147200000-848",
-    companyName: "Tech Innovations Pty Ltd",
-    quoteType: "Quick Quote",
-    status: "Expired",
-    monthlyPremium: 26629,
-    coverageAmount: 395666,
-    createdAt: "2026-05-04",
-  },
-  {
-    quoteId: "Q-LEAD-1744147200000-849",
-    quoteReference: "Q-LEAD-1744147200000-849",
-    companyName: "Tech Innovations Pty Ltd",
-    quoteType: "Full Quote",
-    status: "Cancelled",
-    monthlyPremium: 26629,
-    coverageAmount: 395666,
-    createdAt: "2026-05-04",
-  },
-];
+// // Mock quotes data
+// const MOCK_QUOTES: Quote[] = [
+//   {
+//     quoteId: "Q-LEAD-1744147200000-847",
+//     quoteReference: "Q-LEAD-1744147200000-847",
+//     companyName: "Tech Innovations Pty Ltd",
+//     quoteType: "Quick Quote",
+//     status: "Expired",
+//     monthlyPremium: 26629,
+//     coverageAmount: 395666,
+//     createdAt: "2026-05-04",
+//   },
+//   {
+//     quoteId: "Q-LEAD-1744147200000-848",
+//     quoteReference: "Q-LEAD-1744147200000-848",
+//     companyName: "Tech Innovations Pty Ltd",
+//     quoteType: "Quick Quote",
+//     status: "Expired",
+//     monthlyPremium: 26629,
+//     coverageAmount: 395666,
+//     createdAt: "2026-05-04",
+//   },
+//   {
+//     quoteId: "Q-LEAD-1744147200000-849",
+//     quoteReference: "Q-LEAD-1744147200000-849",
+//     companyName: "Tech Innovations Pty Ltd",
+//     quoteType: "Full Quote",
+//     status: "Cancelled",
+//     monthlyPremium: 26629,
+//     coverageAmount: 395666,
+//     createdAt: "2026-05-04",
+//   },
+// ];
 
 const fmt = (d: string) => {
   const dt = new Date(d);
@@ -124,7 +124,7 @@ function QuoteBadge({ type, status }: { type: string; status?: string }) {
 export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
   const router = useRouter();
   const [lead, setLead] = useState<Lead | null>(null);
-  const [quotes, setQuotes] = useState<Quote[]>(MOCK_QUOTES);
+  const [quotes, setQuotes] = useState<Quote[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -243,10 +243,18 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
                 fontSize: "14px",
                 fontWeight: 700,
                 textTransform: "none",
-                width: "150px",
+                padding: "8px 13px",
                 height: "40px",
+                minWidth: "150px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
                 "&:hover": {
                   bgcolor: "#FF5252",
+                },
+                "&:active": {
+                  bgcolor: "#FF3333",
                 },
               }}
             >
@@ -378,102 +386,103 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
           </Box>
         </Card>
 
-        {/* Previous Quotes Section */}
-        <Typography variant="h2" sx={{
-          fontFamily: "'Inter', sans-serif",
-          fontSize: "18px",
-          fontWeight: 500,
-          lineHeight: "36px",
-          letterSpacing: "0.0703125px",
-          color: "var(--text-primary)",
-          margin: "0 0 17px 0",
-        }}>
-          Previous Quotes
-        </Typography>
+        {/* Previous Quotes Section - Commented Out */}
+        {/* 
+        <>
+          <Typography variant="h2" sx={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: "18px",
+            fontWeight: 500,
+            lineHeight: "36px",
+            letterSpacing: "0.0703125px",
+            color: "var(--text-primary)",
+            margin: "0 0 17px 0",
+          }}>
+            Previous Quotes
+          </Typography>
 
-        <Stack spacing={2}>
-          {quotes.map((quote) => (
-            <Card key={quote.quoteId} sx={{
-              boxSizing: "border-box",
-              background: "var(--card-secondary)",
-              border: "0.625px solid var(--border)",
-              borderRadius: "10px",
-              p: "25px",
-              boxShadow: "none",
-            }}>
-              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                <Box sx={{ flex: 1 }}>
-                  {/* Quote Header */}
-                  <Box sx={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-                    <Typography variant="h3" sx={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "18px",
-                      fontWeight: 500,
-                      lineHeight: "27px",
-                      letterSpacing: "-0.439453px",
-                      color: "var(--text-primary)",
-                      margin: 0,
-                    }}>
-                      {quote.companyName}
-                    </Typography>
-                    <QuoteBadge type={quote.quoteType} status={quote.status} />
+          <Stack spacing={2}>
+            {quotes.map((quote) => (
+              <Card key={quote.quoteId} sx={{
+                boxSizing: "border-box",
+                background: "var(--card-secondary)",
+                border: "0.625px solid var(--border)",
+                borderRadius: "10px",
+                p: "25px",
+                boxShadow: "none",
+              }}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                  <Box sx={{ flex: 1 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
+                      <Typography variant="h3" sx={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontSize: "18px",
+                        fontWeight: 500,
+                        lineHeight: "27px",
+                        letterSpacing: "-0.439453px",
+                        color: "var(--text-primary)",
+                        margin: 0,
+                      }}>
+                        {quote.companyName}
+                      </Typography>
+                      <QuoteBadge type={quote.quoteType} status={quote.status} />
+                    </Box>
+
+                    <Grid container spacing={2}>
+                      <Grid size={{ xs: 12, sm: 3 }}>
+                        <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Quote ID</Typography>
+                        <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 500 }}>{quote.quoteReference}</Typography>
+                      </Grid>
+
+                      <Grid size={{ xs: 12, sm: 3 }}>
+                        <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Monthly Premium</Typography>
+                        <Typography sx={{ fontSize: "14px", color: "#1FC3EB", fontWeight: 500 }}>R {quote.monthlyPremium.toLocaleString()}</Typography>
+                      </Grid>
+
+                      <Grid size={{ xs: 12, sm: 3 }}>
+                        <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Coverage Amount</Typography>
+                        <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 500 }}>R {quote.coverageAmount.toLocaleString()}</Typography>
+                      </Grid>
+
+                      <Grid size={{ xs: 12, sm: 3 }}>
+                        <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Created Date</Typography>
+                        <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 500 }}>{fmt(quote.createdAt)}</Typography>
+                      </Grid>
+                    </Grid>
                   </Box>
 
-                  {/* Quote Details */}
-                  <Grid container spacing={2}>
-                    <Grid size={{ xs: 12, sm: 3 }}>
-                      <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Quote ID</Typography>
-                      <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 500 }}>{quote.quoteReference}</Typography>
-                    </Grid>
-
-                    <Grid size={{ xs: 12, sm: 3 }}>
-                      <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Monthly Premium</Typography>
-                      <Typography sx={{ fontSize: "14px", color: "#1FC3EB", fontWeight: 500 }}>R {quote.monthlyPremium.toLocaleString()}</Typography>
-                    </Grid>
-
-                    <Grid size={{ xs: 12, sm: 3 }}>
-                      <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Coverage Amount</Typography>
-                      <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 500 }}>R {quote.coverageAmount.toLocaleString()}</Typography>
-                    </Grid>
-
-                    <Grid size={{ xs: 12, sm: 3 }}>
-                      <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "4px" }}>Created Date</Typography>
-                      <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 500 }}>{fmt(quote.createdAt)}</Typography>
-                    </Grid>
-                  </Grid>
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      boxSizing: "border-box",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "5px",
+                      width: "137px",
+                      height: "36px",
+                      background: "transparent",
+                      border: "1px solid var(--border)",
+                      borderRadius: "8px",
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: "14px",
+                      fontWeight: 500,
+                      textTransform: "none",
+                      color: "var(--text-primary)",
+                      "&:hover": {
+                        bgcolor: "var(--border)",
+                        borderColor: "var(--border)",
+                      }
+                    }}
+                  >
+                    Download Quote
+                  </Button>
                 </Box>
-
-                {/* Download Button */}
-                <Button
-                  variant="outlined"
-                  sx={{
-                    boxSizing: "border-box",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "5px",
-                    width: "137px",
-                    height: "36px",
-                    background: "transparent",
-                    border: "1px solid var(--border)",
-                    borderRadius: "8px",
-                    fontFamily: "'Inter', sans-serif",
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    textTransform: "none",
-                    color: "var(--text-primary)",
-                    "&:hover": {
-                      bgcolor: "var(--border)",
-                      borderColor: "var(--border)",
-                    }
-                  }}
-                >
-                  Download Quote
-                </Button>
-              </Box>
-            </Card>
-          ))}
-        </Stack>
+              </Card>
+            ))}
+          </Stack>
+        </>
+        */}
       </Box>
     </Paper>
   );
