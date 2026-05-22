@@ -14,6 +14,7 @@ import {
 import { ROUTES } from "@/lib/constants";
 import { useUser } from "@/lib/context/UserContext";
 import { useThemeToggle } from "@/app/providers";
+import { useSidebar } from "@/lib/context/SidebarContext";
 
 const quickActions = [
   { label: "Dashboard", icon: Plus, href: ROUTES.dashboard },
@@ -42,6 +43,7 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
   const [userEmail, setUserEmail] = useState(propEmail ?? "");
   const [mounted, setMounted] = useState(false);
   const { isDarkMode } = useThemeToggle();
+  const { isCollapsed, setIsCollapsed } = useSidebar();
 
   const C = {
     bg: isDarkMode ? "#0B0D10" : "#FFFFFF",
@@ -81,7 +83,7 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
       component="aside"
       sx={{
         height: "100vh",
-        width: "240px",
+        width: isCollapsed ? "60px" : "240px",
         position: "fixed",
         left: 0,
         top: 0,
@@ -90,15 +92,17 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
         display: "flex",
         flexDirection: "column",
         borderRight: "1px solid " + C.border,
+        transition: "width 0.3s ease",
       }}
     >
       {/* Sidebar Toggle Button */}
       <IconButton
         aria-label="Toggle sidebar"
+        onClick={() => setIsCollapsed(!isCollapsed)}
         sx={{
           position: "absolute",
-          top: "12px",
-          left: "196px",
+          top: isCollapsed ? "68px" : "12px",
+          left: isCollapsed ? "14px" : "196px",
           width: "32px",
           height: "32px",
           borderRadius: "6px",
@@ -117,6 +121,7 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          style={{ transform: isCollapsed ? "scaleX(-1)" : "scaleX(1)" }}
         >
           <rect
             x="1.5"
@@ -140,11 +145,11 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
         sx={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "flex-start",
+          justifyContent: isCollapsed ? "center" : "flex-start",
           gap: "8px",
           height: "56px",
           flexShrink: 0,
-          pl: "16px",
+          pl: isCollapsed ? "0px" : "16px",
         }}
       >
         <img
@@ -162,7 +167,7 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
           overflowY: "auto",
           px: "16px",
           py: "12px",
-          display: "flex",
+          display: isCollapsed ? "none" : "flex",
           flexDirection: "column",
           gap: "4px",
         }}
@@ -422,7 +427,7 @@ export default function Sidebar({ userEmail: propEmail }: SidebarProps) {
       </Box>
 
       {/* Footer */}
-      <Box sx={{ px: "12px", pb: "16px", pt: "8px" }}>
+      <Box sx={{ px: "12px", pb: "16px", pt: "8px", display: isCollapsed ? "none" : "block" }}>
         <Button
           fullWidth
           startIcon={

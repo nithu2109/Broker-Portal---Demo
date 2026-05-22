@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { UserProvider } from "@/lib/context/UserContext";
+import { SidebarProvider } from "@/lib/context/SidebarContext";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -120,9 +121,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <ThemeToggleContext.Provider value={{ isDarkMode, toggleTheme }}>
         <ThemeProvider theme={isDarkMode ? themeDark : themeLight}>
           <CssBaseline />
-          <UserProvider>
-            {children}
-          </UserProvider>
+          <SidebarProvider>
+            <UserProvider>
+              {children}
+            </UserProvider>
+          </SidebarProvider>
         </ThemeProvider>
       </ThemeToggleContext.Provider>
     </AppRouterCacheProvider>

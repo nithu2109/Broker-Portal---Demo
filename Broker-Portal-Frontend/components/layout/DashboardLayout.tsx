@@ -5,6 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import Box from "@mui/material/Box";
 import Sidebar from "./Sidebar";
 import DashboardHeader from "./DashboardHeader";
+import { useSidebar } from "@/lib/context/SidebarContext";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children, title = "", subtitle, headerAction }: DashboardLayoutProps) {
+  const { isCollapsed } = useSidebar();
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       const expectedOrigin = process.env.NEXT_PUBLIC_CLIENT_CONNECT_URL;
@@ -56,15 +58,18 @@ export default function DashboardLayout({ children, title = "", subtitle, header
           display: "flex",
           flexDirection: "column",
           flex: 1,
-          overflowY: "auto",
           height: "100vh",
-          marginLeft: "var(--sidebar-width)",
+          marginLeft: isCollapsed ? "60px" : "240px",
           background: "var(--background)",
           fontFamily: "'Inter', sans-serif",
+          transition: "margin-left 0.3s ease",
+          overflow: "hidden",
         }}
       >
         <DashboardHeader title={title} subtitle={subtitle} showUser={true} />
-        {children}
+        <Box sx={{ flex: 1, overflowY: "auto", overflowX: "auto" }}>
+          {children}
+        </Box>
       </Box>
     </>
   );

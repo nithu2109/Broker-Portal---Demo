@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import Typography from "@mui/material/Typography";
 import {
   Plus,
   ClipboardList,
@@ -15,9 +15,9 @@ import {
   CircleDollarSign,
 } from "lucide-react";
 import { ROUTES } from "@/lib/constants";
-import DashboardCard from "@/components/ui/DashboardCard";
 import { getLeads } from "@/lib/api/leads";
 import { getRepresentativeId } from "@/lib/auth";
+import DashboardCard from "@/components/ui/DashboardCard";
 
 const quickActions = [
   {
@@ -82,6 +82,13 @@ export default function DashboardPage() {
         });
       } catch (err) {
         console.error("Failed to fetch dashboard stats", err);
+        // Set default stats on error
+        setStats({
+          activeLeads: 0,
+          failedInvoices: 0,
+          activeQuotes: 0,
+          quotesNearExpiry: 0,
+        });
       }
     })();
   }, []);
@@ -113,8 +120,6 @@ export default function DashboardPage() {
     <Box
       component="main"
       sx={{
-        flex: 1,
-        overflowY: "auto",
         p: "20px",
         bgcolor: "var(--background)",
       }}
@@ -131,104 +136,106 @@ export default function DashboardPage() {
         Dashboard
       </Typography>
 
-      <Grid container spacing={3} sx={{ mb: "32px" }}>
-        {statCards.map(({ value, label, icon: Icon }) => (
-          <Grid size={{ xs: 12, sm: 6, xl: 3 }} key={label}>
-            <Card
-              sx={{
-                p: "16px",
-                borderRadius: "12px",
-                border: "1px solid var(--border)",
-                background: "var(--card-secondary)",
-                boxShadow: "none",
-              }}
-            >
-              <Box
+      <Box sx={{ maxWidth: "100%" }}>
+        <Grid container spacing={3} sx={{ mb: "32px" }}>
+          {statCards.map(({ value, label, icon: Icon }) => (
+            <Grid size={3} key={label}>
+              <Card
                 sx={{
-                  mb: "4px",
-                  display: "flex",
-                  alignItems: "flex-start",
-                  justifyContent: "space-between",
-                  gap: "12px",
+                  p: "16px",
+                  borderRadius: "12px",
+                  border: "1px solid var(--border)",
+                  background: "var(--card-secondary)",
+                  boxShadow: "none",
                 }}
               >
-                <Typography
+                <Box
                   sx={{
-                    fontSize: "1.5rem",
-                    fontWeight: 600,
-                    lineHeight: 1,
-                    color: "var(--text-primary)",
+                    mb: "4px",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    justifyContent: "space-between",
+                    gap: "12px",
                   }}
                 >
-                  {value}
+                  <Typography
+                    sx={{
+                      fontSize: "1.5rem",
+                      fontWeight: 600,
+                      lineHeight: 1,
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    {value}
+                  </Typography>
+                  <Icon size={16} style={{ color: "var(--text-secondary)" }} />
+                </Box>
+                <Typography
+                  sx={{
+                    fontSize: "0.75rem",
+                    color: "var(--text-secondary)",
+                  }}
+                >
+                  {label}
                 </Typography>
-                <Icon size={16} style={{ color: "var(--text-secondary)" }} />
-              </Box>
-              <Typography
-                sx={{
-                  fontSize: "0.75rem",
-                  color: "var(--text-secondary)",
-                }}
-              >
-                {label}
-              </Typography>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-
-      <Box>
-        <Typography
-          variant="h3"
-          sx={{
-            mb: "24px",
-            fontSize: "1.125rem",
-            fontWeight: 500,
-            color: "var(--text-primary)",
-          }}
-        >
-          Quick Actions
-        </Typography>
-        <Grid container spacing={3}>
-          {quickActions.map(({ title, description, icon: Icon, href }) => (
-            <Grid size={{ xs: 12, sm: 6, xl: 4 }} key={title}>
-              <DashboardCard
-                title={title}
-                description={description}
-                icon={<Icon size={15} />}
-                onClick={() => router.push(href)}
-                style={{
-                  background: "var(--card-secondary)",
-                  borderColor: "var(--border)",
-                  borderRadius: "16px",
-                }}
-                iconWrapperStyle={{
-                  display: "inline-flex",
-                  height: "28px",
-                  width: "28px",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "50%",
-                  backgroundColor: "rgba(148,163,184,0.14)",
-                  color: "var(--text-primary)",
-                  marginBottom: "24px",
-                }}
-                titleStyle={{
-                  fontSize: "22px",
-                  fontWeight: 500,
-                  lineHeight: "24px",
-                  color: "var(--text-primary)",
-                  marginBottom: "8px",
-                }}
-                descriptionStyle={{
-                  fontSize: "12px",
-                  color: "var(--text-secondary)",
-                  lineHeight: "18px",
-                }}
-              />
+              </Card>
             </Grid>
           ))}
         </Grid>
+
+        <Box>
+          <Typography
+            variant="h3"
+            sx={{
+              mb: "24px",
+              fontSize: "1.125rem",
+              fontWeight: 500,
+              color: "var(--text-primary)",
+            }}
+          >
+            Quick Actions
+          </Typography>
+          <Grid container spacing={3}>
+            {quickActions.map(({ title, description, icon: Icon, href }) => (
+              <Grid size={4} key={title}>
+                <DashboardCard
+                  title={title}
+                  description={description}
+                  icon={<Icon size={15} />}
+                  onClick={() => router.push(href)}
+                  style={{
+                    background: "var(--card-secondary)",
+                    borderColor: "var(--border)",
+                    borderRadius: "16px",
+                  }}
+                  iconWrapperStyle={{
+                    display: "inline-flex",
+                    height: "28px",
+                    width: "28px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(148,163,184,0.14)",
+                    color: "var(--text-primary)",
+                    marginBottom: "24px",
+                  }}
+                  titleStyle={{
+                    fontSize: "22px",
+                    fontWeight: 500,
+                    lineHeight: "24px",
+                    color: "var(--text-primary)",
+                    marginBottom: "8px",
+                  }}
+                  descriptionStyle={{
+                    fontSize: "12px",
+                    color: "var(--text-secondary)",
+                    lineHeight: "18px",
+                  }}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       </Box>
     </Box>
   );

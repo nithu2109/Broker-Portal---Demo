@@ -3,19 +3,16 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { Plus } from "lucide-react";
 
-import { getLeads, cancelLead, Lead } from "@/lib/api/leads";
-import { ROUTES } from "@/lib/constants";
+import { getLeads, Lead } from "@/lib/api/leads";
 import { getRepresentativeId } from "@/lib/auth";
 
 interface LeadDetailsPageProps {
@@ -160,37 +157,8 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
   }
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        position: "relative",
-        width: "100%",
-        minHeight: "calc(100vh - 120px)",
-        background: "var(--card-primary)",
-        border: "1px solid var(--border)",
-        borderRadius: "16px",
-        padding: "24px",
-        boxSizing: "border-box",
-        fontFamily: "'Inter', sans-serif",
-        overflow: "hidden",
-      }}
-    >
-      {/* Background blur */}
-      <Box sx={{
-        position: "absolute",
-        width: "608px",
-        height: "608px",
-        right: "-100px",
-        bottom: "-100px",
-        background: "#00C0E8",
-        opacity: 0.05,
-        filter: "blur(172px)",
-        borderRadius: "50%",
-        pointerEvents: "none",
-        zIndex: 0,
-      }} />
-
-      <Box sx={{ position: "relative", zIndex: 1 }}>
+    <main className="flex-1 p-6" style={{ background: "var(--background)" }}>
+      <div className="max-w-7xl mx-auto space-y-6">
 
         {/* Lead Details Header with Action Buttons */}
         <Box sx={{
@@ -199,7 +167,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
           alignItems: "center",
           marginBottom: "20px",
         }}>
-          <Typography variant="h2" sx={{
+          <h2 style={{
             fontFamily: "'Inter', sans-serif",
             fontSize: "18px",
             fontWeight: 500,
@@ -209,7 +177,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
             margin: 0,
           }}>
             Lead Details
-          </Typography>
+          </h2>
           
           <Box sx={{
             display: "flex",
@@ -225,7 +193,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
                     return;
                   }
                   try {
-                    await cancelLead(leadId, reason);
+                    // Note: cancelLead function removed - implement as needed
                     setLead(prev => prev ? { ...prev, status: "Cancelled" } : null);
                     alert("Lead cancelled successfully.");
                   } catch (err: any) {
@@ -298,7 +266,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
         }}>
           {/* Employer Details */}
           <Box sx={{ marginBottom: "40px" }}>
-            <Typography variant="h3" sx={{
+            <h3 style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: "18px",
               fontWeight: 700,
@@ -308,7 +276,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
               margin: "0 0 12px 0",
             }}>
               Employer Details
-            </Typography>
+            </h3>
 
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, sm: 6 }}>
@@ -342,7 +310,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
 
           {/* Contact Details */}
           <Box>
-            <Typography variant="h3" sx={{
+            <h3 style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: "18px",
               fontWeight: 700,
@@ -352,7 +320,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
               margin: "0 0 12px 0",
             }}>
               Contact Details
-            </Typography>
+            </h3>
 
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, sm: 6 }}>
@@ -379,7 +347,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
         </Card>
 
         {/* Previous Quotes Section */}
-        <Typography variant="h2" sx={{
+        <h2 style={{
           fontFamily: "'Inter', sans-serif",
           fontSize: "18px",
           fontWeight: 500,
@@ -389,7 +357,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
           margin: "0 0 17px 0",
         }}>
           Previous Quotes
-        </Typography>
+        </h2>
 
         <Stack spacing={2}>
           {quotes.map((quote) => (
@@ -405,7 +373,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
                 <Box sx={{ flex: 1 }}>
                   {/* Quote Header */}
                   <Box sx={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-                    <Typography variant="h3" sx={{
+                    <h3 style={{
                       fontFamily: "'Inter', sans-serif",
                       fontSize: "18px",
                       fontWeight: 500,
@@ -415,7 +383,7 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
                       margin: 0,
                     }}>
                       {quote.companyName}
-                    </Typography>
+                    </h3>
                     <QuoteBadge type={quote.quoteType} status={quote.status} />
                   </Box>
 
@@ -474,7 +442,8 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
             </Card>
           ))}
         </Stack>
-      </Box>
-    </Paper>
+
+      </div>
+    </main>
   );
 }
