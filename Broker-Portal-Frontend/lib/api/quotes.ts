@@ -179,12 +179,11 @@ export interface QuoteFilterParams {
   clientName?: string;
 }
 
-/** GET /broker/quotes/representative/{representativeId} — get all quotes for a specific representative */
+/** GET /broker/quotes/representative — get all quotes for the authenticated representative */
 export async function getQuotes(
   representativeId?: string,
   filters?: QuoteFilterParams
 ): Promise<Quote[] & { pagination?: any }> {
-  const repId = representativeId || "00000000-0000-0000-0000-000000000000";
   const params = new URLSearchParams();
 
   if (filters) {
@@ -201,7 +200,7 @@ export async function getQuotes(
 
   const queryStr = params.toString();
   const json = await apiClient<{ success: boolean; data: any }>(
-    `/broker/quotes/representative/${repId}${queryStr ? `?${queryStr}` : ""}`,
+    `/broker/quotes/representative${queryStr ? `?${queryStr}` : ""}`,
     { cache: "no-store" }
   );
 

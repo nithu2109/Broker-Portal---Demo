@@ -14,6 +14,7 @@ import brokerLeadsRoutes from "./brokerLeadsRoutes";
 import brokerQuotesRoutes from "./brokerQuotesRoutes";
 import brokerOtpRoutes from "./brokerOtpRoutes";
 import brokerEmployeeRoutes from "./brokerEmployeeRoutes";
+import brokerDashboardRoutes from "./brokerDashboardRoutes";
 import productCatalog from "./productCatalogRoutes";
 import tasks from "./tasksRoutes";
 import rules from "./rules";
@@ -29,6 +30,7 @@ router.use("/broker/leads", requireBrokerRep, brokerLeadsRoutes);
 router.use("/broker/quotes", requireBrokerRep, brokerQuotesRoutes);
 router.use("/broker/otp", requireBrokerRep, brokerOtpRoutes);
 router.use("/broker/employees", requireBrokerRep, brokerEmployeeRoutes);
+router.use("/broker/dashboard", requireBrokerRep, brokerDashboardRoutes);
 router.use("/product",requireBrokerRep, productCatalog);
 
 router.use([

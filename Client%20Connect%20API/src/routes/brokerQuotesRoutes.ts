@@ -23,7 +23,7 @@ router.post("/full", validateFullQuote, generateFullQuote);
 router.post("/:quoteId/reprice", repriceQuote);
 router.get("/:quoteId/download", downloadQuoteDocument);
 router.get("/lead/:leadId", getQuotesByLeadController);
-router.get("/representative/:representativeId", getQuotesByRepresentativeController);
+router.get("/representative", getQuotesByRepresentativeController);
 router.get("/:quoteId", getQuoteByIdController);
 router.patch("/:quoteId/status", updateQuoteStatusController);
 router.post("/:quoteId/employer-details", validateEmployerOnboarding, saveEmployerOnboardingDetails);
