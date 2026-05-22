@@ -16,18 +16,12 @@ const leadService = new BrokerLeadService();
  *           schema:
  *             type: object
  *             required:
- *               - representativeId
- *               - brokerId
  *               - employerName
  *               - industryType
  *               - numberOfEmployees
  *               - averageSalary
  *               - province
  *             properties:
- *               representativeId:
- *                 type: string
- *               brokerId:
- *                 type: string
  *               employerName:
  *                 type: string
  *               industryType:
@@ -55,7 +49,19 @@ const leadService = new BrokerLeadService();
  */
 export const createLead = async (req: Request, res: Response) => {
   try {
-    const result = await leadService.createLead(req.body);
+    const authReq = req as any;
+    const representativeId = authReq?.auth?.payload?.rmaAppAppMetadata?.representativeId;
+    const brokerId = authReq?.auth?.payload?.rmaAppAppMetadata?.brokerId;
+
+    if (!representativeId || !brokerId) {
+      return res.status(401).json({
+        success: false,
+        message: "Representative or Broker ID not found in token.",
+      });
+    }
+
+    const payload = { ...req.body, representativeId, brokerId };
+    const result = await leadService.createLead(payload);
     return res.status(201).json({
       success: true,
       message: "Lead created successfully",
@@ -74,14 +80,9 @@ export const createLead = async (req: Request, res: Response) => {
  * @swagger
  * /broker/leads:
  *   get:
- *     summary: List broker leads with filtering and pagination
+ *     summary: List broker leads with filtering and pagination for the authenticated representative
  *     tags: [Broker Leads]
  *     parameters:
- *       - in: query
- *         name: representativeId
- *         required: true
- *         schema:
- *           type: string
  *       - in: query
  *         name: leadStatus
  *         schema:
@@ -120,10 +121,25 @@ export const createLead = async (req: Request, res: Response) => {
  *     responses:
  *       200:
  *         description: List of leads
+ *       401:
+ *         description: Representative ID not found in token
  */
 export const getLeads = async (req: Request, res: Response) => {
   try {
-    const { count, rows } = await leadService.getLeads(req.query);
+    const authReq = req as any;
+    const representativeId = authReq?.auth?.payload?.rmaAppAppMetadata?.representativeId;
+
+    if (!representativeId) {
+      return res.status(401).json({
+        success: false,
+        message: "Representative ID not found in token.",
+      });
+    }
+
+    // Add representativeId to query for the service to use
+    const query = { ...req.query, representativeId };
+    
+    const { count, rows } = await leadService.getLeads(query);
     return res.status(200).json({
       success: true,
       message: "Leads fetched successfully",
@@ -222,8 +238,6 @@ export const getLeadById = async (req: Request, res: Response) => {
  *                     enum: [Email, SMS]
  *               lastSavedStep:
  *                 type: integer
- *               representativeId:
- *                 type: string
  *     responses:
  *       200:
  *         description: Lead updated successfully
@@ -231,7 +245,18 @@ export const getLeadById = async (req: Request, res: Response) => {
 export const updateLead = async (req: Request, res: Response) => {
   try {
     const { leadId } = req.params;
-    const lead = await leadService.updateLead(leadId, req.body);
+    const authReq = req as any;
+    const representativeId = authReq?.auth?.payload?.rmaAppAppMetadata?.representativeId;
+
+    if (!representativeId) {
+      return res.status(401).json({
+        success: false,
+        message: "Representative ID not found in token.",
+      });
+    }
+
+    const payload = { ...req.body, representativeId };
+    const lead = await leadService.updateLead(leadId, payload);
     return res.status(200).json({
       success: true,
       message: "Lead updated successfully",

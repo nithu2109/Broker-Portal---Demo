@@ -481,16 +481,11 @@ export const updateQuoteStatusController = async (req: Request, res: Response) =
 
 /**
  * @swagger
- * /broker/quotes/representative/{representativeId}:
+ * /broker/quotes/representative:
  *   get:
- *     summary: Get all quotes for a specific broker representative
+ *     summary: Get all quotes for the authenticated broker representative
  *     tags: [Broker Quotes]
  *     parameters:
- *       - in: path
- *         name: representativeId
- *         required: true
- *         schema:
- *           type: string
  *       - in: query
  *         name: clientName
  *         schema:
@@ -498,12 +493,23 @@ export const updateQuoteStatusController = async (req: Request, res: Response) =
  *     responses:
  *       200:
  *         description: List of quotes
+ *       401:
+ *         description: Representative ID not found in token
  */
 export const getQuotesByRepresentativeController = async (req: Request, res: Response) => {
   try {
-    const { representativeId } = req.params;
+    const authReq = req as any;
+    const representativeId = authReq?.auth?.payload?.rmaAppAppMetadata?.representativeId;
+
+    if (!representativeId) {
+      return res.status(401).json({
+        success: false,
+        message: "Representative ID not found in token.",
+      });
+    }
+
     const { clientName } = req.query;
-    const { count, rows } = await quoteService.getQuotesByRepresentative(representativeId, req.query, clientName as string);
+    const { count, rows } = await quoteService.getQuotesByRepresentative(String(representativeId), req.query, clientName as string);
     return res.status(200).json({
       success: true,
       message: "Quotes fetched successfully for representative",
