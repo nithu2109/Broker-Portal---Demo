@@ -281,6 +281,28 @@ export const saveEmployerOnboardingDetails = async (req: Request, res: Response)
  *         name: quote_status
  *         schema:
  *           type: string
+ *         description: Filter by quote status (e.g., Draft, Generated, Accepted)
+ *       - in: query
+ *         name: quote_type
+ *         schema:
+ *           type: string
+ *           enum: [Quick, Full]
+ *         description: Filter by quote type
+ *       - in: query
+ *         name: quote_reference
+ *         schema:
+ *           type: string
+ *         description: Filter by unique quote reference
+ *       - in: query
+ *         name: total_premium
+ *         schema:
+ *           type: number
+ *         description: Filter by exact premium amount
+ *       - in: query
+ *         name: province
+ *         schema:
+ *           type: string
+ *         description: Filter by province
  *       - in: query
  *         name: page
  *         schema:
@@ -293,6 +315,7 @@ export const saveEmployerOnboardingDetails = async (req: Request, res: Response)
  *         name: sortBy
  *         schema:
  *           type: string
+ *         description: Field to sort by (e.g., createdAt, total_premium)
  *       - in: query
  *         name: sortOrder
  *         schema:
@@ -302,12 +325,7 @@ export const saveEmployerOnboardingDetails = async (req: Request, res: Response)
  *         name: search
  *         schema:
  *           type: string
- *       - in: query
- *         name: searchFields
- *         schema:
- *           type: array
- *           items:
- *             type: string
+ *         description: Global search (searches across reference, status, member number, and province)
  *     responses:
  *       200:
  *         description: List of quotes
@@ -533,6 +551,47 @@ export const updateQuote = async (req: Request, res: Response) => {
  *         name: clientName
  *         schema:
  *           type: string
+ *         description: Search by employer name
+ *       - in: query
+ *         name: quote_status
+ *         schema:
+ *           type: string
+ *         description: Filter by quote status
+ *       - in: query
+ *         name: quote_type
+ *         schema:
+ *           type: string
+ *           enum: [Quick, Full]
+ *       - in: query
+ *         name: quote_reference
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: province
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: sortOrder
+ *         schema:
+ *           type: string
+ *           enum: [ASC, DESC]
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Global search (searches across reference, status, member number, and province)
  *     responses:
  *       200:
  *         description: List of quotes

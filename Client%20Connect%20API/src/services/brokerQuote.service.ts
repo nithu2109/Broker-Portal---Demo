@@ -178,7 +178,35 @@ export class BrokerQuoteService {
 
   async getQuotesByLead(leadId: string, query: any) {
     const { applyFilters } = require("../utils/filterHelper");
-    const { where, limit, offset, order, pagination } = applyFilters(query, ["quote_status", "quote_type", "quote_reference"]);
+    const { where, limit, offset, order, pagination } = applyFilters(
+      query,
+      [
+        "quote_id",
+        "lead_id",
+        "product_id",
+        "quote_reference",
+        "quote_type",
+        "quote_status",
+        "quote_version",
+        "total_premium",
+        "premium_frequency",
+        "pricing_reference",
+        "quote_generated_at",
+        "quote_expiry_date",
+        "employer_accepted_at",
+        "employer_accepted_by_otp",
+        "rma_member_number",
+        "is_permanent_employees",
+        "is_actively_at_work",
+        "is_replacing_policy",
+        "replaced_policy_includes_disability",
+        "is_policy_older_than_6_months",
+        "replaced_policy_start_date",
+        "province",
+      ],
+      "createdAt",
+      ["quote_reference", "quote_status", "total_premium", "province","quote_type","quote_id","lead_id"]
+    );
     where.lead_id = leadId;
 
     return await quoteRepo.findAndCountAll({
@@ -214,7 +242,7 @@ export class BrokerQuoteService {
       if (!quote) throw new Error("Quote not found");
 
       await leadRepo.update(lead.lead_id, { lead_status: "Quote Generated" }, t);
-      await quoteRepo.update(quoteId, { quote_status: "Generated" }, t);
+      await quoteRepo.update(quote.quote_id, { quote_status: "Generated" }, t);
 
       await t.commit();
       return true;
@@ -346,7 +374,49 @@ export class BrokerQuoteService {
   async getQuotesByRepresentative(representativeId: string, query: any, clientName?: string) {
     const { applyFilters } = require("../utils/filterHelper");
     const { Op } = require("sequelize");
-    const { where, limit, offset, order, pagination } = applyFilters(query, ["quote_status", "quote_type", "quote_reference"]);
+    const { where, limit, offset, order, pagination } = applyFilters(
+      query,
+      [
+        "quote_id",
+        "lead_id",
+        "product_id",
+        "quote_reference",
+        "quote_type",
+        "quote_status",
+        "quote_version",
+        "total_premium",
+        "premium_frequency",
+        "pricing_reference",
+        "quote_generated_at",
+        "quote_expiry_date",
+        "employer_accepted_at",
+        "employer_accepted_by_otp",
+        "rma_member_number",
+        "is_permanent_employees",
+        "is_actively_at_work",
+        "is_replacing_policy",
+        "replaced_policy_includes_disability",
+        "is_policy_older_than_6_months",
+        "replaced_policy_start_date",
+        "province",
+      ],
+      "createdAt",
+      [
+        "quote_id",
+        "quote_reference", 
+        "quote_status", 
+        "quote_type",
+        "rma_member_number", 
+        "province", 
+        "pricing_reference",
+        "premium_frequency",
+        "$lead.lead_reference$",
+        "$lead.employer.employer_name$",
+        "$lead.employer.registration_number$",
+        "$lead.employer.industry_type$",
+        "$lead.employer.province$",
+      ]
+    );
 
     return await quoteRepo.findAndCountAll({
       where, limit, offset, order,
@@ -368,7 +438,8 @@ export class BrokerQuoteService {
         { model: require("../models").BrokerQuoteBenefit, as: "benefits" },
         { model: require("../models").BrokerQuickQuoteData, as: "quick_quote_data" }
       ],
-      distinct: true
+      distinct: true,
+      subQuery: false
     });
   }
 }

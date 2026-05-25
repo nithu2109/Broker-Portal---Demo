@@ -85,13 +85,52 @@ export const createLead = async (req: Request, res: Response) => {
  *     tags: [Broker Leads]
  *     parameters:
  *       - in: query
- *         name: leadStatus
+ *         name: lead_status
  *         schema:
  *           type: string
+ *         description: Filter by lead status (e.g., Draft, In Progress, Quote Generated)
+ *       - in: query
+ *         name: lead_reference
+ *         schema:
+ *           type: string
+ *         description: Filter by unique lead reference
  *       - in: query
  *         name: clientName
  *         schema:
  *           type: string
+ *         description: Search by employer name (Legacy parameter)
+ *       - in: query
+ *         name: $employer.employer_name$
+ *         schema:
+ *           type: string
+ *         description: Filter by employer name
+ *       - in: query
+ *         name: $employer.industry_type$
+ *         schema:
+ *           type: string
+ *         description: Filter by industry type
+ *       - in: query
+ *         name: $contact.contact_email$
+ *         schema:
+ *           type: string
+ *         description: Filter by contact email
+ *       - in: query
+ *         name: is_active
+ *         schema:
+ *           type: boolean
+ *         description: Filter by active/inactive leads
+ *       - in: query
+ *         name: dateFrom
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Filter by creation date starting from
+ *       - in: query
+ *         name: dateTo
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Filter by creation date up to
  *       - in: query
  *         name: page
  *         schema:
@@ -104,6 +143,7 @@ export const createLead = async (req: Request, res: Response) => {
  *         name: sortBy
  *         schema:
  *           type: string
+ *         description: Field to sort by (e.g., lead_created_at, $employer.employer_name$)
  *       - in: query
  *         name: sortOrder
  *         schema:
@@ -113,12 +153,7 @@ export const createLead = async (req: Request, res: Response) => {
  *         name: search
  *         schema:
  *           type: string
- *       - in: query
- *         name: searchFields
- *         schema:
- *           type: array
- *           items:
- *             type: string
+ *         description: Global search (searches across reference, status, and reason)
  *     responses:
  *       200:
  *         description: List of leads
