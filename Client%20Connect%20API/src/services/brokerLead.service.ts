@@ -72,8 +72,35 @@ export class BrokerLeadService {
 
     const { where, limit, offset, order, pagination } = applyFilters(
       query,
-      ["lead_status", "lead_reference", "broker_id"],
-      "lead_created_at"
+      [
+        "lead_id",
+        "lead_reference",
+        "lead_status",
+        "representative_id",
+        "broker_id",
+        "is_active",
+        "last_saved_step",
+        "cancel_reason",
+        "lead_created_at",
+        "lead_updated_at",
+        "cancelled_at",
+        "cancelled_by",
+      ],
+      "lead_created_at",
+      [
+        "lead_id",
+        "lead_reference",
+        "lead_status",
+        "cancel_reason",
+        "$employer.employer_name$",
+        "$employer.registration_number$",
+        "$employer.industry_type$",
+        "$employer.province$",
+        "$contact.contact_first_name$",
+        "$contact.contact_last_name$",
+        "$contact.contact_email$",
+        "$contact.contact_mobile$",
+      ]
     );
 
     where.representative_id = representativeId;
@@ -99,6 +126,7 @@ export class BrokerLeadService {
       limit,
       offset,
       distinct: true,
+      subQuery: false,
     });
   }
 
