@@ -5,7 +5,7 @@ const dashboardService = new BrokerDashboardService();
 
 /**
  * @swagger
- * /broker/dashboard/status:
+ * /broker/dashboard/metrics:
  *   get:
  *     summary: Get dashboard statistics for the authenticated broker representative
  *     tags: [Broker Dashboard]

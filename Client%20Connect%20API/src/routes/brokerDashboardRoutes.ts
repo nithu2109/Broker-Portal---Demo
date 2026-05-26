@@ -3,6 +3,6 @@ import { getBrokerDashboardStats } from "../controllers/brokerDashboardControlle
 
 const router = Router();
 
-router.get("/status", getBrokerDashboardStats);
+router.get("/metrics", getBrokerDashboardStats);
 
 export default router;
