@@ -192,21 +192,53 @@ export class BrokerLeadService {
         LeadStatus.ONBOARDING_SUBMITTED, 
         LeadStatus.APPROVED, 
         LeadStatus.REJECTED, 
-        LeadStatus.CANCELLED
+        LeadStatus.CANCELLED,
+        LeadStatus.POLICY_CREATED
       ];
 
       if (unmodifiableStatuses.includes(lead.lead_status as LeadStatus)) {
         throw new Error(`Cannot update a lead with status: ${lead.lead_status}`);
       }
 
-      const beforeLead = lead.toJSON();
-      const { employer, contact, lastSavedStep } = data;
+      const { employer, contact, lastSavedStep, leadStatus } = data;
 
-      if (employer) await leadRepo.updateEmployer(leadId, employer, t);
-      if (contact) await leadRepo.updateContact(leadId, contact, t);
+      if (employer) {
+        // Map UI names to DB names for employer
+        const employerUpdates: any = {};
+        if (employer.employer_name) employerUpdates.employer_name = employer.employer_name;
+        if (employer.registration_number !== undefined) employerUpdates.registration_number = employer.registration_number;
+        if (employer.industry_type) employerUpdates.industry_type = employer.industry_type;
+        if (employer.number_of_employees) employerUpdates.number_of_employees = employer.number_of_employees;
+        if (employer.average_salary !== undefined) employerUpdates.average_salary = employer.average_salary;
+        if (employer.province) employerUpdates.province = employer.province;
+
+        if (Object.keys(employerUpdates).length > 0) {
+          await leadRepo.updateEmployer(leadId, employerUpdates, t);
+        }
+      }
+
+      if (contact) {
+        // Map UI names to DB names for contact
+        const contactUpdates: any = {};
+        if (contact.contact_first_name) contactUpdates.contact_first_name = contact.contact_first_name;
+        if (contact.contact_last_name) contactUpdates.contact_last_name = contact.contact_last_name;
+        if (contact.contact_email) contactUpdates.contact_email = contact.contact_email;
+        if (contact.contact_mobile) contactUpdates.contact_mobile = contact.contact_mobile;
+        if (contact.preferred_communication_method) contactUpdates.preferred_communication_method = contact.preferred_communication_method;
+
+        if (Object.keys(contactUpdates).length > 0) {
+          await leadRepo.updateContact(leadId, contactUpdates, t);
+        }
+      }
 
       const updates: any = {};
       if (lead.lead_status === LeadStatus.DRAFT) updates.lead_status = LeadStatus.IN_PROGRESS;
+      
+      // Manual status override if provided (as per spec)
+      if (leadStatus && Object.values(LeadStatus).includes(leadStatus)) {
+        updates.lead_status = leadStatus;
+      }
+
       if (lastSavedStep) updates.last_saved_step = lastSavedStep;
 
       if (Object.keys(updates).length > 0) {
