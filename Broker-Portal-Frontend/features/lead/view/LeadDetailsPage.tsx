@@ -179,10 +179,33 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
             Lead Details
           </h2>
           
-          <Box sx={{
-            display: "flex",
-            gap: "12px",
-          }}>
+          <Box sx={{ display: "flex", gap: "12px" }}>
+            {!["Accepted", "Onboarding Submitted", "Approved", "Rejected", "Cancelled"].includes(lead.status) && (
+              <Button
+                onClick={() => router.push(`/lead/${leadId}/edit`)}
+                variant="outlined"
+                sx={{
+                  bgcolor: "var(--table-header-bg)",
+                  border: "1px solid var(--text-secondary)",
+                  color: "var(--text-primary)",
+                  borderRadius: "8px",
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  textTransform: "none",
+                  px: "22px",
+                  height: "40px",
+                  "&:hover": {
+                    bgcolor: "var(--border)",
+                    borderColor: "var(--text-primary)",
+                    borderWidth: "1px",
+                  },
+                }}
+              >
+                Edit
+              </Button>
+            )}
+
             {/* Mark as Cancelled Button */}
             <Button
               onClick={async () => {
@@ -204,17 +227,19 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
               }}
               variant="contained"
               sx={{
-                bgcolor: "#FF6C6C",
-                color: "#0A0A0A",
+                bgcolor: "#FE7F7F",
+                color: "#000000",
                 borderRadius: "8px",
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "14px",
-                fontWeight: 700,
+                fontWeight: 600,
                 textTransform: "none",
-                width: "150px",
+                px: "22px",
                 height: "40px",
+                boxShadow: "none",
                 "&:hover": {
-                  bgcolor: "#FF5252",
+                  bgcolor: "#FF6C6C",
+                  boxShadow: "none",
                 },
               }}
             >
@@ -251,7 +276,6 @@ export default function LeadDetailsPage({ leadId }: LeadDetailsPageProps) {
           </Box>
         </Box>
 
-        {/* Divider */}
         <Divider sx={{ borderColor: "var(--border)", marginBottom: "31px" }} />
 
         {/* Lead Details Card */}

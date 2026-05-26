@@ -377,7 +377,7 @@ export default function QuotesPage() {
                   boxShadow: "none",
                 }}
               >
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   {/* Left Section */}
                   <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: "16px" }}>
                     {/* Company Name & Badges */}
@@ -442,14 +442,15 @@ export default function QuotesPage() {
                       onClick={(e) => handleOpenMenu(e, quote)}
                       sx={{
                         height: "36px",
-                        bgcolor: "transparent",
-                        borderColor: "var(--border)",
+                        bgcolor: "var(--table-header-bg)",
+                        border: "1px solid var(--text-secondary)",
                         borderRadius: "8px",
                         color: "var(--text-primary)",
                         textTransform: "none",
                         "&:hover": {
                           bgcolor: "var(--border)",
-                          borderColor: "var(--border)",
+                          borderColor: "var(--text-primary)",
+                          borderWidth: "1px",
                         }
                       }}
                     >
