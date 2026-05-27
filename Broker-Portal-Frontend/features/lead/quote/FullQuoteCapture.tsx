@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useThemeToggle } from "@/app/providers";
 import { CheckCircle } from "lucide-react";
 import * as XLSX from "xlsx";
 import EmployeeListTable from "@/components/ui/EmployeeListTable";
@@ -18,8 +19,6 @@ import CheckoutInfoModal from "@/components/quotes/CheckoutInfoModal";
 import ApproveQuoteModal from "@/components/quotes/ApproveQuoteModal";
 import { useRouter } from "next/navigation";
 import { INDUSTRY_TYPE_OPTIONS, PROVINCE_OPTIONS } from "@/lib/enums";
-import CustomInput from "@/components/ui/CustomInput";
-import CustomSelect from "@/components/ui/CustomSelect";
 
 
 interface Employee {
@@ -52,11 +51,11 @@ const EMPTY_FORM = { firstName: "", surname: "", dob: "", salary: "", idType: "S
 const getInputStyle = (hasError: boolean): React.CSSProperties => ({
   width: "100%",
   height: "40px",
-  background: "#1E1E1E",
-  border: `1px solid ${hasError ? "#ef4444" : "#30363D"}`,
+  background: "var(--card-secondary)",
+  border: `1px solid ${hasError ? "#ef4444" : "var(--border)"}`,
   borderRadius: "6px",
   padding: "0 12px",
-  color: "#ffffff",
+  color: "var(--text-primary)",
   fontSize: "0.875rem",
   outline: "none",
   boxSizing: "border-box",
@@ -66,11 +65,11 @@ const getInputStyle = (hasError: boolean): React.CSSProperties => ({
 const getSelectStyle = (hasError: boolean): React.CSSProperties => ({
   width: "100%",
   height: "40px",
-  background: "#1E1E1E",
-  border: `1px solid ${hasError ? "#ef4444" : "#30363D"}`,
+  background: "var(--card-secondary)",
+  border: `1px solid ${hasError ? "#ef4444" : "var(--border)"}`,
   borderRadius: "6px",
   padding: "0 12px",
-  color: "#ffffff",
+  color: "var(--text-primary)",
   fontSize: "0.875rem",
   outline: "none",
   boxSizing: "border-box",
@@ -84,7 +83,7 @@ const onFocus = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
 };
 
 const onBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>, hasError: boolean) => {
-  e.currentTarget.style.borderColor = hasError ? "#ef4444" : "#30363D";
+  e.currentTarget.style.borderColor = hasError ? "#ef4444" : "var(--border)";
   e.currentTarget.style.boxShadow = "none";
 };
 
@@ -96,7 +95,7 @@ const onMouseEnter = (e: React.MouseEvent<HTMLInputElement | HTMLSelectElement>)
 
 const onMouseLeave = (e: React.MouseEvent<HTMLInputElement | HTMLSelectElement>, hasError: boolean) => {
   if (document.activeElement !== e.currentTarget) {
-    e.currentTarget.style.borderColor = hasError ? "#ef4444" : "#30363D";
+    e.currentTarget.style.borderColor = hasError ? "#ef4444" : "var(--border)";
   }
 };
 
@@ -359,11 +358,24 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
 
   const yesNoButtonStyle = { width: "210px", height: "44px", borderRadius: "8px" };
 
+  const { isDarkMode } = useThemeToggle();
+
   return (
     <div style={{
       width: "100%",
       boxSizing: "border-box", display: "flex", flexDirection: "column",
     }}>
+      {/* Force calendar picker icon colour based on theme */}
+      <style>{`
+        input[type="date"].full-quote-date::-webkit-calendar-picker-indicator {
+          filter: ${isDarkMode ? "invert(1) brightness(2)" : "invert(0)"};
+          cursor: pointer;
+          opacity: 0.85;
+        }
+        input[type="date"].full-quote-date::-webkit-calendar-picker-indicator:hover {
+          opacity: 1;
+        }
+      `}</style>
       {/* Stepper */}
       <StepProgress steps={STEPS} currentStep={currentStep} variant="continuous" />
 
@@ -372,14 +384,22 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
         <>
           {/* ── STEP 0: Quote Details ── */}
           {currentStep === 0 && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            <div style={{
+              background: "var(--card-secondary)",
+              border: "1px solid var(--border)",
+              borderRadius: "12px",
+              padding: "24px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+            }}>
 
               {/* Province Selection */}
               <div>
                 <label style={{ ...labelStyle, color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "10px" }}>
                   In which province are most of the employees based?
                 </label>
-                <CustomSelect
+                <select
                   value={province}
                   onChange={e => setProvince(e.target.value)}
                   style={getSelectStyle(false)}
@@ -388,9 +408,9 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
                   onMouseEnter={onMouseEnter}
                   onMouseLeave={e => onMouseLeave(e, false)}
                 >
-                  <option value="">Select Province</option>
-                  {PROVINCE_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)}
-                </CustomSelect>
+                  <option value="" style={{ background: "#1E1E1E", color: "#ffffff" }}>Select Province</option>
+                  {PROVINCE_OPTIONS.map(p => <option key={p} value={p} style={{ background: "#1E1E1E", color: "#ffffff" }}>{p}</option>)}
+                </select>
               </div>
 
               {/* Permanently employed */}
@@ -467,10 +487,16 @@ export default function FullQuoteCapture({ companyName = "—", leadReference = 
                 <label style={{ ...labelStyle, color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "10px" }}>
                   What was the start date of the replaced policy?
                 </label>
-                <CustomInput
+                <input
                   type="date"
                   value={replacedPolicyStartDate}
                   onChange={e => setReplacedPolicyStartDate(e.target.value)}
+                  className="full-quote-date"
+                  style={getInputStyle(false)}
+                  onFocus={onFocus}
+                  onBlur={e => onBlur(e, false)}
+                  onMouseEnter={onMouseEnter}
+                  onMouseLeave={e => onMouseLeave(e, false)}
                 />
               </div>
             </div>

@@ -36,11 +36,11 @@ const labelStyle: React.CSSProperties = {
 const getInputStyle = (hasError: boolean): React.CSSProperties => ({
   width: "100%",
   height: "40px",
-  background: "#1E1E1E",
-  border: `1px solid ${hasError ? "#ef4444" : "#30363D"}`,
+  background: "var(--card-secondary)",
+  border: `1px solid ${hasError ? "#ef4444" : "var(--border)"}`,
   borderRadius: "6px",
   padding: "0 12px",
-  color: "#ffffff",
+  color: "var(--text-primary)",
   fontSize: "0.875rem",
   outline: "none",
   boxSizing: "border-box",
@@ -50,11 +50,11 @@ const getInputStyle = (hasError: boolean): React.CSSProperties => ({
 const getSelectStyle = (hasError: boolean): React.CSSProperties => ({
   width: "100%",
   height: "40px",
-  background: "#1E1E1E",
-  border: `1px solid ${hasError ? "#ef4444" : "#30363D"}`,
+  background: "var(--card-secondary)",
+  border: `1px solid ${hasError ? "#ef4444" : "var(--border)"}`,
   borderRadius: "6px",
   padding: "0 12px",
-  color: "#ffffff",
+  color: "var(--text-primary)",
   fontSize: "0.875rem",
   outline: "none",
   boxSizing: "border-box",
@@ -68,7 +68,7 @@ const onFocus = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
 };
 
 const onBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>, hasError: boolean) => {
-  e.currentTarget.style.borderColor = hasError ? "#ef4444" : "#30363D";
+  e.currentTarget.style.borderColor = hasError ? "#ef4444" : "var(--border)";
   e.currentTarget.style.boxShadow = "none";
 };
 
@@ -80,7 +80,7 @@ const onMouseEnter = (e: React.MouseEvent<HTMLInputElement | HTMLSelectElement>)
 
 const onMouseLeave = (e: React.MouseEvent<HTMLInputElement | HTMLSelectElement>, hasError: boolean) => {
   if (document.activeElement !== e.currentTarget) {
-    e.currentTarget.style.borderColor = hasError ? "#ef4444" : "#30363D";
+    e.currentTarget.style.borderColor = hasError ? "#ef4444" : "var(--border)";
   }
 };
 
