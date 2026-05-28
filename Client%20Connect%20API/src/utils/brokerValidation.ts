@@ -12,10 +12,10 @@ import {
 export const createLeadSchema = Yup.object().shape({
   employerName: Yup.string().required("Employer name cannot be empty"),
   registrationNumber: Yup.string().nullable(),
-  industryType: Yup.string().oneOf(INDUSTRY_TYPE_OPTIONS, "Invalid industry type").required("Industry classification cannot be empty"),
+  industryType: Yup.string().oneOf(INDUSTRY_TYPE_OPTIONS, `Invalid industry type. Valid options are: ${INDUSTRY_TYPE_OPTIONS.join(", ")}`).required("Industry classification cannot be empty"),
   numberOfEmployees: Yup.number().integer("Must be an integer").min(1, "Workforce size must be > 0").required("Employees count is required"),
   averageSalary: Yup.number().min(0, "Average salary must be >= 0").nullable(),
-  province: Yup.string().oneOf(PROVINCE_OPTIONS, "Invalid province").required("Province cannot be empty"),
+  province: Yup.string().oneOf(PROVINCE_OPTIONS, `Invalid province. Valid options are: ${PROVINCE_OPTIONS.join(", ")}`).required("Province cannot be empty"),
   contactFirstName: Yup.string().nullable().optional(),
   contactLastName: Yup.string().nullable().optional(),
   contactEmail: Yup.string().email("Must be a valid email format").nullable().optional(),
@@ -23,8 +23,6 @@ export const createLeadSchema = Yup.object().shape({
     .matches(/^0[6-8]\d{8}$/, "Must be a valid South African mobile number (e.g., 0821234567)")
     .nullable().optional(),
   preferredCommunicationMethod: Yup.string().oneOf(PREFERRED_COMMUNICATION_METHOD_OPTIONS, "Must be valid communication preference").nullable(),
-  representativeId: Yup.string().uuid("Must be valid ID format").required("Representative ID is required"),
-  brokerId: Yup.string().uuid("Must be valid ID format").required("Broker ID is required"),
 });
 
 export const updateLeadSchema = Yup.object().shape({

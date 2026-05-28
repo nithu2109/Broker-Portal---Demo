@@ -3,7 +3,7 @@ import { BrokerQuoteRepository } from "../repositories/brokerQuote.repository";
 import { BrokerLeadRepository } from "../repositories/brokerLead.repository";
 import { PricingHelper } from "../utils/pricingHelper";
 import { AuditService } from "./auditService";
-import { AuditEventType, ActionOutcome } from "../enums/brokerPortalEnums";
+import { AuditEventType, ActionOutcome, LeadStatus, QuoteStatus } from "../enums/brokerPortalEnums";
 import { v4 as uuidv4 } from "uuid";
 
 const quoteRepo = new BrokerQuoteRepository();
@@ -23,7 +23,7 @@ export class BrokerQuoteService {
         lead_id: data.lead_id,
         quote_reference,
         quote_type: "Quick",
-        quote_status: "Draft",
+        quote_status: QuoteStatus.DRAFT,
         quote_version: 1,
         province: data.province,
       }, t);
@@ -87,7 +87,7 @@ export class BrokerQuoteService {
         product_id: data.product_id,
         quote_reference,
         quote_type: "Full",
-        quote_status: "Draft",
+        quote_status: QuoteStatus.DRAFT,
         quote_version: 1,
         rma_member_number: data.rma_member_number,
         is_permanent_employees: data.is_permanent_employees,
@@ -108,8 +108,8 @@ export class BrokerQuoteService {
       }, t);
 
       // Update Lead and Quote status to reflect successful generation
-      await leadRepo.update(data.lead_id, { lead_status: "Quote Generated" }, t);
-      await quoteRepo.update(quote.quote_id, { quote_status: "Generated" }, t);
+      await leadRepo.update(data.lead_id, { lead_status: LeadStatus.QUOTE_GENERATED }, t);
+      await quoteRepo.update(quote.quote_id, { quote_status: QuoteStatus.GENERATED }, t);
 
       await t.commit();
 
@@ -248,8 +248,8 @@ export class BrokerQuoteService {
       const quote = await quoteRepo.findById(quoteId);
       if (!quote) throw new Error("Quote not found");
 
-      await leadRepo.update(lead.lead_id, { lead_status: "Quote Generated" }, t);
-      await quoteRepo.update(quote.quote_id, { quote_status: "Generated" }, t);
+      await leadRepo.update(lead.lead_id, { lead_status: LeadStatus.QUOTE_GENERATED }, t);
+      await quoteRepo.update(quote.quote_id, { quote_status: QuoteStatus.GENERATED }, t);
 
       await t.commit();
       return true;
@@ -260,22 +260,36 @@ export class BrokerQuoteService {
   }
 
   async repriceQuote(quoteId: string, benefits: any) {
-    const quote = await quoteRepo.findOne({
-      where: { quote_id: quoteId },
-      include: [
-        { model: require("../models").BrokerQuoteBenefit, as: "benefits" },
-        { model: require("../models").BrokerQuickQuoteData, as: "quick_quote_data" }
-      ]
-    });
+    const t = await sequelize.transaction();
+    try {
+      const quote = await quoteRepo.findOne({
+        where: { quote_id: quoteId },
+        include: [
+          { model: require("../models").BrokerQuoteBenefit, as: "benefits" },
+          { model: require("../models").BrokerQuickQuoteData, as: "quick_quote_data" }
+        ],
+        transaction: t
+      });
 
-    if (!quote) throw new Error("Quote not found");
+      if (!quote) throw new Error("Quote not found");
 
-    return await PricingHelper.calculateQuotePricing({
-      quote_id: quote.quote_id,
-      quote_type: quote.quote_type,
-      quick_quote_data: quote.quick_quote_data,
-      benefits: benefits || quote.benefits,
-    });
+      const pricingResult = await PricingHelper.calculateQuotePricing({
+        quote_id: quote.quote_id,
+        quote_type: quote.quote_type,
+        quick_quote_data: quote.quick_quote_data,
+        benefits: benefits || quote.benefits,
+      }, t);
+
+      // Update status to REVISED after repricing
+      await quoteRepo.update(quote.quote_id, { quote_status: QuoteStatus.REVISED }, t);
+      await leadRepo.update(quote.lead_id, { lead_status: LeadStatus.QUOTE_GENERATED }, t);
+
+      await t.commit();
+      return pricingResult;
+    } catch (error) {
+      await t.rollback();
+      throw error;
+    }
   }
 
   async updateQuote(quoteId: string, data: any) {
@@ -299,7 +313,9 @@ export class BrokerQuoteService {
         replaced_policy_includes_disability,
         is_policy_older_than_6_months,
         replaced_policy_start_date,
-        province
+        province,
+        industry,
+        gender_split
       } = data;
 
       // 1. Update Header / Full Quote Data
@@ -320,12 +336,21 @@ export class BrokerQuoteService {
       }
 
       // 2. Update Quick Quote Data (if applicable)
-      if (workforce_count !== undefined || average_age !== undefined || average_salary !== undefined) {
+      if (
+        workforce_count !== undefined || 
+        average_age !== undefined || 
+        average_salary !== undefined || 
+        province !== undefined || 
+        industry !== undefined || 
+        gender_split !== undefined
+      ) {
         if (!quote.quick_quote_data) {
           // If it doesn't exist, we might need to create it if we are switching to Quick Quote
           // But usually QuoteType change is handled separately.
           // For now, assume it must exist for updates.
-          throw new Error("Cannot update Quick Quote fields for a non-Quick Quote");
+          if (quote.quote_type !== "Quick") {
+            throw new Error("Cannot update Quick Quote fields for a non-Quick Quote");
+          }
         }
 
         const qqUpdates: any = {};
@@ -341,9 +366,20 @@ export class BrokerQuoteService {
           if (average_salary < 0) throw new Error("AverageSalary must be greater than or equal to 0");
           qqUpdates.average_salary = average_salary;
         }
+        if (province !== undefined) qqUpdates.province = province;
+        if (industry !== undefined) qqUpdates.industry_type = industry;
+        if (gender_split !== undefined) qqUpdates.gender_split = gender_split;
 
         if (Object.keys(qqUpdates).length > 0) {
-          await quote.quick_quote_data.update(qqUpdates, { transaction: t });
+          if (quote.quick_quote_data) {
+            await quote.quick_quote_data.update(qqUpdates, { transaction: t });
+          } else {
+            const { BrokerQuickQuoteData } = require("../models");
+            await BrokerQuickQuoteData.create({
+              quote_id: quoteId,
+              ...qqUpdates
+            }, { transaction: t });
+          }
         }
       }
 
