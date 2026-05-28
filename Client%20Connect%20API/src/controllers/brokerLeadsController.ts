@@ -24,6 +24,8 @@ const leadService = new BrokerLeadService();
  *             properties:
  *               employerName:
  *                 type: string
+ *               registrationNumber:
+ *                 type: string
  *               industryType:
  *                 type: string
  *               numberOfEmployees:
@@ -249,13 +251,15 @@ export const getLeadById = async (req: Request, res: Response) => {
  *               employer:
  *                 type: object
  *                 properties:
- *                   employer_name:
+ *                   employerName:
  *                     type: string
- *                   industry_type:
+ *                   registrationNumber:
  *                     type: string
- *                   number_of_employees:
+ *                   industryType:
+ *                     type: string
+ *                   numberOfEmployees:
  *                     type: integer
- *                   average_salary:
+ *                   averageSalary:
  *                     type: number
  *                   province:
  *                     type: string

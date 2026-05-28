@@ -13,32 +13,55 @@ export class BrokerLeadService {
   async createLead(data: any) {
     const t = await sequelize.transaction();
     try {
+      const { 
+        employerName, 
+        registrationNumber, 
+        industryType, 
+        numberOfEmployees, 
+        averageSalary, 
+        province,
+        contactFirstName,
+        contactLastName,
+        contactEmail,
+        contactMobile,
+        representativeId,
+        brokerId
+      } = data;
+
+      // Validation
+      if (!employerName) throw new Error("Employer name is required");
+      if (!industryType) throw new Error("Industry type is required");
+      if (numberOfEmployees === undefined || numberOfEmployees === null) throw new Error("Number of employees is required");
+      if (averageSalary === undefined || averageSalary === null) throw new Error("Average salary is required");
+      if (!province) throw new Error("Province is required");
+
       const leadReference = `LR-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
 
       const lead = await leadRepo.create({
         lead_reference: leadReference,
-        lead_status: (data.contactFirstName && data.contactEmail) ? LeadStatus.IN_PROGRESS : LeadStatus.DRAFT,
-        last_saved_step: (data.contactFirstName && data.contactEmail) ? 2 : 1,
-        representative_id: data.representativeId,
-        broker_id: data.brokerId,
+        lead_status: (contactFirstName && contactEmail) ? LeadStatus.IN_PROGRESS : LeadStatus.DRAFT,
+        last_saved_step: (contactFirstName && contactEmail) ? 2 : 1,
+        representative_id: representativeId,
+        broker_id: brokerId,
         is_active: true,
       }, t);
 
       await leadRepo.createEmployer({
         lead_id: lead.lead_id,
-        employer_name: data.employerName,
-        industry_type: data.industryType,
-        number_of_employees: data.numberOfEmployees,
-        average_salary: data.averageSalary,
-        province: data.province,
+        employer_name: employerName,
+        registration_number: registrationNumber,
+        industry_type: industryType,
+        number_of_employees: numberOfEmployees,
+        average_salary: averageSalary,
+        province: province,
       }, t);
 
       await leadRepo.createContact({
         lead_id: lead.lead_id,
-        contact_first_name: data.contactFirstName,
-        contact_last_name: data.contactLastName,
-        contact_email: data.contactEmail,
-        contact_mobile: data.contactMobile,
+        contact_first_name: contactFirstName,
+        contact_last_name: contactLastName,
+        contact_email: contactEmail,
+        contact_mobile: contactMobile,
         preferred_communication_method: data.preferredCommunicationMethod || "Email",
       }, t);
 
@@ -47,14 +70,14 @@ export class BrokerLeadService {
       await AuditService.logEvent({
         eventType: AuditEventType.LEAD_CREATED,
         outcome: ActionOutcome.SUCCESS,
-        userId: data.representativeId,
+        userId: representativeId,
         metadata: { leadId: lead.lead_id, leadReference: lead.lead_reference },
         ipAddress: data.ipAddress
       });
 
       return { leadId: lead.lead_id, leadReference: lead.lead_reference };
     } catch (error: any) {
-      await t.rollback();
+      if (t && !t.finished) await t.rollback();
 
       await AuditService.logEvent({
         eventType: AuditEventType.LEAD_CREATED,
@@ -205,11 +228,11 @@ export class BrokerLeadService {
       if (employer) {
         // Map UI names to DB names for employer
         const employerUpdates: any = {};
-        if (employer.employer_name) employerUpdates.employer_name = employer.employer_name;
-        if (employer.registration_number !== undefined) employerUpdates.registration_number = employer.registration_number;
-        if (employer.industry_type) employerUpdates.industry_type = employer.industry_type;
-        if (employer.number_of_employees) employerUpdates.number_of_employees = employer.number_of_employees;
-        if (employer.average_salary !== undefined) employerUpdates.average_salary = employer.average_salary;
+        if (employer.employerName) employerUpdates.employer_name = employer.employerName;
+        if (employer.registrationNumber !== undefined) employerUpdates.registration_number = employer.registrationNumber;
+        if (employer.industryType) employerUpdates.industry_type = employer.industryType;
+        if (employer.numberOfEmployees !== undefined) employerUpdates.number_of_employees = employer.numberOfEmployees;
+        if (employer.averageSalary !== undefined) employerUpdates.average_salary = employer.averageSalary;
         if (employer.province) employerUpdates.province = employer.province;
 
         if (Object.keys(employerUpdates).length > 0) {

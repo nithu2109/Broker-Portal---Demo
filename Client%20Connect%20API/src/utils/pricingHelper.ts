@@ -1,5 +1,6 @@
 const { sequelize, BrokerQuote, BrokerQuoteBenefit, BrokerEmployee, BrokerLead, BrokerEmployer } = require("../models");
 import { v4 as uuidv4 } from "uuid";
+import { QuoteStatus } from "../enums/brokerPortalEnums";
 
 export class PricingHelper {
   private static readonly MAX_BENEFIT = 2000000;
@@ -263,7 +264,7 @@ export class PricingHelper {
         total_premium: result.total_premium,
         quote_type: quote_type,
         product_id: originalData.product_id || undefined,
-        quote_status: "Generated"
+        quote_status: QuoteStatus.GENERATED
       },
       { where: { quote_id }, transaction }
     );
